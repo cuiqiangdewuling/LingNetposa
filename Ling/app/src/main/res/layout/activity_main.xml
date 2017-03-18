@@ -30,4 +30,11 @@
         android:layout_height="wrap_content"
         android:text="mhz测试" />
 
+    <Button
+        android:id="@+id/btn_pic"
+        android:layout_below="@+id/btn_model_test"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="上传图片" />
+
 </RelativeLayout>

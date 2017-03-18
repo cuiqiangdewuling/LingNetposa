@@ -27,7 +27,7 @@ public class NLUModelGet extends BaseRequestModel<TNLUEntity> {
         params.put("userid","xxxxx");
         params.put("words",text);
         params.put("score","0.99");
-        INLUGetRequest netRequest= retrofit().create(INLUGetRequest.class);
+        INLUGetRequest netRequest = retrofit().create(INLUGetRequest.class);
         Call<TNLUEntity> call = netRequest.getCallBack(params);
         execute(call);
     }

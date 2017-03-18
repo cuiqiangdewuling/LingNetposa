@@ -15,11 +15,12 @@ import com.ling.jibonetposa.tools.IRequestCallback;
 
 public class MainActivity extends AppCompatActivity {
 
-
+    private final static String TAG = "http";
     private Button mBtnGet;
     private Button mBtnPost;
     private Button mBtnMHZ;
     private String baseUrl = "http://60.205.170.27:9001/";
+    private Button mBtnGetPic;
 
 
     @Override
@@ -34,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
         mBtnGet = (Button) findViewById(R.id.btn_get);
         mBtnPost = (Button) findViewById(R.id.btn_post);
         mBtnMHZ = (Button) findViewById(R.id.btn_model_test);
+        mBtnGetPic = (Button) findViewById(R.id.btn_pic);
     }
 
     private void initData() {
@@ -55,6 +57,12 @@ public class MainActivity extends AppCompatActivity {
                 jsonPost();
             }
         });
+        mBtnGetPic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                testUploadPic();
+            }
+        });
     }
 
     public void jsonPost() {
@@ -62,9 +70,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void responsedCallback(BaseEntity entity, int errorCode, Throwable error) {
                 if (errorCode == 0) {
-                    Log.d("IOTAgent", "entity  " + entity.toString());
+                    Log.d(TAG, "entity  " + entity.toString());
                 } else {
-                    Log.d("IOTAgent", "errorCode  " + errorCode);
+                    Log.d(TAG, "errorCode  " + errorCode);
                 }
             }
         }).executeResult();
@@ -78,9 +86,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void responsedCallback(BaseEntity entity, int errorCode, Throwable error) {
                 if (errorCode == 0) {
-                    Log.d("IOTAgent", "entity  " + entity.toString());
+                    Log.d(TAG, "entity  " + entity.toString());
                 } else {
-                    Log.d("IOTAgent", "errorCode  " + errorCode);
+                    Log.d(TAG, "errorCode  " + errorCode);
                 }
             }
         });
@@ -92,9 +100,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void responsedCallback(BaseEntity entity, int errorCode, Throwable error) {
                 if (errorCode == 0) {
-                    Log.d("IOTAgent", "entity  " + entity.toString());
+                    Log.d(TAG, "entity  " + entity.toString());
                 } else {
-                    Log.d("IOTAgent", "errorCode  " + errorCode);
+                    Log.d(TAG, "errorCode  " + errorCode);
                 }
             }
         }).executedNetRequest(text);
@@ -107,12 +115,16 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void responsedCallback(BaseEntity entity, int errorCode, Throwable error) {
                 if (errorCode == 0) {
-                    Log.d("IOTAgent", "entity  " + entity.toString());
+                    Log.d(TAG, "entity  " + entity.toString());
                 } else {
-                    Log.d("IOTAgent", "errorCode  " + errorCode);
+                    Log.d(TAG, "errorCode  " + errorCode);
                 }
             }
         }).executedNetRequest(text);
+    }
+
+    private void testUploadPic(){
+
     }
 
 }
