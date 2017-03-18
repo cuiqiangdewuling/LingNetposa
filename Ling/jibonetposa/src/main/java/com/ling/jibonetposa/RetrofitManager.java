@@ -1,11 +1,9 @@
 package com.ling.jibonetposa;
 
-import com.ling.jibonetposa.constants.Constans;
 import com.ling.jibonetposa.entities.NLUResult;
-import com.ling.jibonetposa.tools.INLUGetRequest;
+import com.ling.jibonetposa.models.NLUModelGet;
+import com.ling.jibonetposa.models.NLUModelPost;
 import com.ling.jibonetposa.tools.IRetrofitHttp;
-
-import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -35,54 +33,40 @@ public class RetrofitManager {
 
     /**
      * nlu的get网络请求
-     * @param params
+     * @param text
      */
-    public void NLURetrofitGet(Map<String,String> params){
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Constans.NLUBaseUrl)
-                .addConverterFactory(ScalarsConverterFactory.create())
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        INLUGetRequest netRequest= retrofit.create(INLUGetRequest.class);
-        Call<NLUResult> callGet = netRequest.getCallBack(params);
-        callGet.enqueue(new Callback<NLUResult>() {
+    public void NLURetrofitNetGet(String text,final IRetrofitHttp retrofitHttp){
+        NLUModelGet nluModelGet = new NLUModelGet(this);
+        Call<NLUResult> nluResultCall = nluModelGet.executedNetRequest(text);
+        nluResultCall.enqueue(new Callback<NLUResult>() {
             @Override
             public void onResponse(Call<NLUResult> call, Response<NLUResult> response) {
-                mIRetrofitHttp.onResponse(call,response);
+                retrofitHttp.onResponse(call,response);
             }
 
             @Override
             public void onFailure(Call<NLUResult> call, Throwable throwable) {
-                mIRetrofitHttp.onFailure(call,throwable);
+                retrofitHttp.onFailure(call,throwable);
             }
         });
     }
 
     /**
      * nlu的post网络请求
-     * @param params
+     * @param text
      */
-    public void NLURetrofitPost(Map<String,String> params){
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Constans.NLUBaseUrl)
-                .addConverterFactory(ScalarsConverterFactory.create())
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        INLUGetRequest netRequest= retrofit.create(INLUGetRequest.class);
-
-        Call<NLUResult> call = netRequest.getCallBack(params);
-
-        call.enqueue(new Callback<NLUResult>() {
+    public void NLURetrofitNetPost(String text,final IRetrofitHttp retrofitHttp){
+        NLUModelPost nluModelPost = new NLUModelPost(this);
+        Call<NLUResult> nluResultCall = nluModelPost.executedNetRequest(text);
+        nluResultCall.enqueue(new Callback<NLUResult>() {
             @Override
             public void onResponse(Call<NLUResult> call, Response<NLUResult> response) {
-                mIRetrofitHttp.onResponse(call,response);
+                retrofitHttp.onResponse(call,response);
             }
 
             @Override
             public void onFailure(Call<NLUResult> call, Throwable throwable) {
-                mIRetrofitHttp.onFailure(call,throwable);
+                retrofitHttp.onFailure(call,throwable);
             }
         });
     }

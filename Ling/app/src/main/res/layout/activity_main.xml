@@ -23,18 +23,4 @@
         android:layout_height="wrap_content"
         android:text="post请求测试" />
 
-    <Button
-        android:id="@+id/btn_get_url"
-        android:layout_below="@+id/btn_post"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="get请求测试2" />
-
-    <Button
-        android:id="@+id/btn_post_url"
-        android:layout_below="@+id/btn_get_url"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="post请求测试2" />
-
 </RelativeLayout>

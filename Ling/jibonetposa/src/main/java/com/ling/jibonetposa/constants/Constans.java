@@ -5,5 +5,6 @@ package com.ling.jibonetposa.constants;
  */
 
 public class Constans {
+
     public static final String NLUBaseUrl="http://60.205.170.27:9001/";
 }
