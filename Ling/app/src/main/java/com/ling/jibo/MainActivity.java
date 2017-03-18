@@ -7,8 +7,14 @@ import android.view.View;
 import android.widget.Button;
 
 import com.ling.jibonetposa.RetrofitManager;
+import com.ling.jibonetposa.base.BaseEntity;
+import com.ling.jibonetposa.entities.AuthorizedEntity;
 import com.ling.jibonetposa.entities.NLUResult;
+import com.ling.jibonetposa.models.iot.IOTAgent;
+import com.ling.jibonetposa.models.testnlu.TNLUModel;
 import com.ling.jibonetposa.tools.INLUGetRequest;
+import com.ling.jibonetposa.tools.INLUPostRequest;
+import com.ling.jibonetposa.tools.IRequestCallback;
 import com.ling.jibonetposa.tools.IRetrofitHttp;
 
 import java.util.HashMap;
@@ -21,11 +27,13 @@ import retrofit2.Retrofit;
 
 public class MainActivity extends AppCompatActivity {
 
+
     private Button mBtnGet;
     private Button mBtnPost;
     private Button mBtnGetUrl;
     private Button mBtnPostUrl;
-    private String baseUrl="http://60.205.170.27:9001/";
+    private Button mBtnMHZ;
+    private String baseUrl = "http://60.205.170.27:9001/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
         mBtnPost = (Button) findViewById(R.id.btn_post);
         mBtnGetUrl = (Button) findViewById(R.id.btn_get_url);
         mBtnPostUrl = (Button) findViewById(R.id.btn_post_url);
+        mBtnMHZ = (Button) findViewById(R.id.btn_model_test);
     }
 
     private void initData() {
@@ -67,6 +76,41 @@ public class MainActivity extends AppCompatActivity {
                 testPostUrl();
             }
         });
+        mBtnMHZ.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                jsonPost();
+            }
+        });
+    }
+
+    public void jsonPost() {
+        new TNLUModel(new IRequestCallback() {
+            @Override
+            public void responsedCallback(BaseEntity entity, int errorCode, Throwable error) {
+                if (errorCode == 0) {
+                    Log.d("IOTAgent", "entity  " + entity.toString());
+                } else {
+                    Log.d("IOTAgent", "errorCode  " + errorCode);
+                }
+            }
+        }).executeResult();
+    }
+
+    public void jsonIOTPost() {
+        String code = "af0202145df6f34129adda4853da9797b9ccda1a3e7b3bc3122990692b431d77";
+        AuthorizedEntity authorizedEntity = new AuthorizedEntity();
+        authorizedEntity.setAuthorizedCode(code);
+        new IOTAgent().doAuthorized(authorizedEntity, new IRequestCallback() {
+            @Override
+            public void responsedCallback(BaseEntity entity, int errorCode, Throwable error) {
+                if (errorCode == 0) {
+                    Log.d("IOTAgent", "entity  " + entity.toString());
+                } else {
+                    Log.d("IOTAgent", "errorCode  " + errorCode);
+                }
+            }
+        });
     }
 
     /**
@@ -74,27 +118,27 @@ public class MainActivity extends AppCompatActivity {
      * 该示例为get请求
      * 只需要传递map形式的参数，url，entities以及接口类封装在依赖库中
      */
-    private void testGet(){
+    private void testGet() {
         RetrofitManager retrofitManager = new RetrofitManager();
-        Map<String,String> params = new HashMap<>();
-        params.put("userid","xxxxx");
-        params.put("words","你好");
-        params.put("score","0.99");
+        Map<String, String> params = new HashMap<>();
+        params.put("userid", "xxxxx");
+        params.put("words", "你好");
+        params.put("score", "0.99");
         retrofitManager.NLURetrofitGet(params);
         retrofitManager.setRetrofitHttp(new IRetrofitHttp<NLUResult>() {
 
             @Override
             public void onResponse(Call<NLUResult> call, Response<NLUResult> response) {
-                if (response.isSuccessful()){
-                    NLUResult result =  response.body();
+                if (response.isSuccessful()) {
+                    NLUResult result = response.body();
                     String answer = result.getAnswer();
-                    Log.d("1111","testGet"+answer);
+                    Log.d("1111", "testGet" + answer);
                 }
             }
 
             @Override
-            public void onFailure(Call<NLUResult> call, Throwable t){
-                Log.d("1111","t"+t);
+            public void onFailure(Call<NLUResult> call, Throwable t) {
+                Log.d("1111", "t" + t);
             }
         });
     }
@@ -104,22 +148,22 @@ public class MainActivity extends AppCompatActivity {
      * 该示例为get请求
      * 需要传递url，并写出相关entities以及接口类
      */
-    private void testGetUrl(){
+    private void testGetUrl() {
         RetrofitManager retrofitManager = new RetrofitManager();
-        Map<String,String> params = new HashMap<>();
-        params.put("userid","xxxxx");
-        params.put("words","你好");
-        params.put("score","0.99");
+        Map<String, String> params = new HashMap<>();
+        params.put("userid", "xxxxx");
+        params.put("words", "你好");
+        params.put("score", "0.99");
         Retrofit retrofit = retrofitManager.retrofit(baseUrl);
-        INLUGetRequest netRequest= retrofit.create(INLUGetRequest.class);
+        INLUGetRequest netRequest = retrofit.create(INLUGetRequest.class);
         Call<NLUResult> call = netRequest.getCallBack(params);
         call.enqueue(new Callback<NLUResult>() {
             @Override
             public void onResponse(Call<NLUResult> call, Response<NLUResult> response) {
-                if (response.isSuccessful()){
-                    NLUResult result =  response.body();
+                if (response.isSuccessful()) {
+                    NLUResult result = response.body();
                     String answer = result.getAnswer();
-                    Log.d("1111","testGetUrl"+answer);
+                    Log.d("1111", "testGetUrl" + answer);
                 }
             }
 
@@ -135,24 +179,24 @@ public class MainActivity extends AppCompatActivity {
      * 该示例为post请求
      * 需要传递url，并写出相关entities以及接口类
      */
-    private void testPostUrl(){
+    private void testPostUrl() {
         RetrofitManager retrofitManager = new RetrofitManager();
-        Map<String,String> params = new HashMap<>();
-        params.put("userid","xxxxx");
-        params.put("words","你好");
-        params.put("score","0.99");
+        Map<String, String> params = new HashMap<>();
+        params.put("userid", "xxxxx");
+        params.put("words", "你好");
+        params.put("score", "0.99");
         Retrofit retrofit = retrofitManager.retrofit(baseUrl);
-        INLUGetRequest netRequest= retrofit.create(INLUGetRequest.class);
+        INLUPostRequest netRequest = retrofit.create(INLUPostRequest.class);
 
-        Call<NLUResult> call = netRequest.getCallBack(params);
+        Call<NLUResult> call = netRequest.postCallBack(params);
 
         call.enqueue(new Callback<NLUResult>() {
             @Override
             public void onResponse(Call<NLUResult> call, Response<NLUResult> response) {
-                if (response.isSuccessful()){
-                    NLUResult result =  response.body();
+                if (response.isSuccessful()) {
+                    NLUResult result = response.body();
                     String answer = result.getAnswer();
-                    Log.d("1111","testPostUrl"+answer);
+                    Log.d("1111", "testPostUrl" + answer);
                 }
             }
 
@@ -168,26 +212,26 @@ public class MainActivity extends AppCompatActivity {
      * 该示例为post请求
      * 只需要传递map形式的参数，url，entities以及接口类封装在依赖库中
      */
-    private void testPost(){
+    private void testPost() {
         RetrofitManager retrofitManager = new RetrofitManager();
-        Map<String,String> params = new HashMap<>();
-        params.put("userid","xxxxx");
-        params.put("words","你好");
-        params.put("score","0.99");
+        Map<String, String> params = new HashMap<>();
+        params.put("userid", "xxxxx");
+        params.put("words", "你好");
+        params.put("score", "0.99");
         retrofitManager.NLURetrofitPost(params);
         retrofitManager.setRetrofitHttp(new IRetrofitHttp<NLUResult>() {
             @Override
             public void onResponse(Call<NLUResult> call, Response<NLUResult> response) {
-                if (response.isSuccessful()){
-                    NLUResult result =  response.body();
+                if (response.isSuccessful()) {
+                    NLUResult result = response.body();
                     String answer = result.getAnswer();
-                    Log.d("1111","testPost"+answer);
+                    Log.d("1111", "testPost" + answer);
                 }
             }
 
             @Override
             public void onFailure(Call<NLUResult> call, Throwable t) {
-                Log.d("1111","t"+t);
+                Log.d("1111", "t" + t);
             }
         });
     }

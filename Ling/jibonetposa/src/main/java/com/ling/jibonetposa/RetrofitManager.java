@@ -43,7 +43,6 @@ public class RetrofitManager {
                 .addConverterFactory(ScalarsConverterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
-
         INLUGetRequest netRequest= retrofit.create(INLUGetRequest.class);
         Call<NLUResult> callGet = netRequest.getCallBack(params);
         callGet.enqueue(new Callback<NLUResult>() {
