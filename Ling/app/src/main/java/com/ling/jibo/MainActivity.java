@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+
 import com.ling.jibonetposa.base.BaseEntity;
 import com.ling.jibonetposa.base.BaseRequestModel;
 import com.ling.jibonetposa.entities.AuthorizedEntity;
@@ -16,10 +17,7 @@ import com.ling.jibonetposa.tools.IRequestCallback;
 
 public class MainActivity extends AppCompatActivity {
 
-<<<<<<< HEAD
-=======
     private final static String TAG = "http";
->>>>>>> upstream/master
     private Button mBtnGet;
     private Button mBtnPost;
     private Button mBtnMHZ;
@@ -90,13 +88,8 @@ public class MainActivity extends AppCompatActivity {
         new IOTAgent().getPhantomAuthorized(authorizedEntity, new IRequestCallback() {
             @Override
             public void responsedCallback(BaseEntity entity, int errorCode, Throwable error) {
-<<<<<<< HEAD
                 if (errorCode == BaseRequestModel.RETROFIT_SUCCESS) {
-                    Log.d("IOTAgent", "entity  " + entity.toString());
-=======
-                if (errorCode == 0) {
                     Log.d(TAG, "entity  " + entity.toString());
->>>>>>> upstream/master
                 } else {
                     Log.d(TAG, "errorCode  " + errorCode);
                 }
