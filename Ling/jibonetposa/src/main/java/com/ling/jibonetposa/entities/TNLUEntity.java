@@ -1,4 +1,4 @@
-package com.ling.jibonetposa.models.testnlu;
+package com.ling.jibonetposa.entities;
 
 import com.ling.jibonetposa.base.BaseEntity;
 

@@ -8,5 +8,5 @@ import com.ling.jibonetposa.base.BaseEntity;
 
 public interface IRequestCallback<T extends BaseEntity> {
 
-    void responsedCallback(T entity, int code, Throwable error);
+    void responsedCallback(T entity, int errorCode, Throwable error);
 }

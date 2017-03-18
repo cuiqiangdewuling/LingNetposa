@@ -2,6 +2,7 @@ package com.ling.jibonetposa.models.testnlu;
 
 import com.ling.jibonetposa.base.BaseRequestModel;
 import com.ling.jibonetposa.constants.Constans;
+import com.ling.jibonetposa.entities.TNLUEntity;
 import com.ling.jibonetposa.tools.IRequestCallback;
 
 import retrofit2.Call;
