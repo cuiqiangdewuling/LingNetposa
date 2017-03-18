@@ -5,6 +5,15 @@ import com.ling.jibonetposa.base.BaseRequestModel;
 import com.ling.jibonetposa.entities.AuthorizedEntity;
 import com.ling.jibonetposa.entities.TokenEntity;
 import com.ling.jibonetposa.tools.IRequestCallback;
+import com.ling.jibonetposa.utils.NetWorkUtil;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import static com.ling.jibonetposa.constants.IOTApiConstan.API_PATH_PHANTON_AUTHORIZE;
+import static com.ling.jibonetposa.constants.IOTApiConstan.PHANTON_APP_ID;
+import static com.ling.jibonetposa.constants.IOTApiConstan.PHANTON_REDIRECT_URI;
+import static com.ling.jibonetposa.constants.IOTApiConstan.PHANTON_SCOPE;
 
 /**
  * Created by mhz小志 on 2017/3/17.
@@ -38,17 +47,7 @@ public class IOTAgent {
      * 将Token保存
      */
     private void doSaveToken(String userId, TokenEntity tokenEntity, final IRequestCallback requestCallback) {
-        new IOTSavePhantomTokenModel(new IRequestCallback() {
-            @Override
-            public void responsedCallback(BaseEntity entity, int errorCode, Throwable error) {
-                if (errorCode == BaseRequestModel.RETROFIT_SUCCESS) {
-                    requestCallback.responsedCallback(entity, BaseRequestModel.RETROFIT_SUCCESS, null);
-                } else {
-                    requestCallback.responsedCallback(entity, errorCode, error);
-                }
-            }
-
-        }).savePhantomToken(userId, tokenEntity);
+        new IOTSavePhantomTokenModel(requestCallback).savePhantomToken(userId, tokenEntity);
     }
 
     /**
@@ -56,6 +55,19 @@ public class IOTAgent {
      */
     public void cancelPhantomAuthorized(final AuthorizedEntity authorizedEntity, final IRequestCallback requestCallback) {
         new CancelAuthorizedModel(requestCallback).cancelAuthorized(authorizedEntity.getUserId());
+    }
+
+    /**
+     * 合成授权页面的请求地址
+     */
+    public String getPhantomAuthorizedUrl() {
+
+        Map<String, Object> mParams = new HashMap<String, Object>();
+        mParams.put("client_id", PHANTON_APP_ID);
+        mParams.put("redirect_uri", PHANTON_REDIRECT_URI);
+        mParams.put("response_type", "code");
+        mParams.put("scope", PHANTON_SCOPE);//PHANTON_SCOPE
+        return  API_PATH_PHANTON_AUTHORIZE + NetWorkUtil.organizeParams(mParams);
     }
 
 }

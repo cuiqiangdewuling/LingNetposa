@@ -79,7 +79,7 @@ public class BaseRequestModel<T extends BaseEntity> {
                     BaseRequestModel.this.mRequestCallback.responsedCallback(response.body(), RETROFIT_SUCCESS, (Throwable) null);
                 } else {
                     Log.d("123123", "response.toString()   " + response.toString());
-                    BaseRequestModel.this.mRequestCallback.responsedCallback(null, RETROFIT_WRONG, new ReException(response.toString()));
+                    BaseRequestModel.this.mRequestCallback.responsedCallback(null, RETROFIT_WRONG, new RetrofitException(response.toString()));
                 }
             }
 

@@ -22,10 +22,21 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="post请求测试" />
-
+    <Button
+        android:id="@+id/btn_getauth"
+        android:layout_below="@+id/btn_post"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="获取授权测试" />
+    <Button
+        android:id="@+id/btn_delauth"
+        android:layout_below="@+id/btn_getauth"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="取消授权测试" />
     <Button
         android:id="@+id/btn_model_test"
-        android:layout_below="@+id/btn_post"
+        android:layout_below="@+id/btn_delauth"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="mhz测试" />

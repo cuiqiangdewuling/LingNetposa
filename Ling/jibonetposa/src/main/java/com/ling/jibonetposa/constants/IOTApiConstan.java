@@ -8,7 +8,7 @@ public class IOTApiConstan {
 
     //幻腾授权ApiPath
     public static final String API_PATH_PHANTON = "https://huantengsmart.com/";
-    public static final String API_PATH_PHANTON_AUTHORIZE = "/oauth2/authorize";
+    public static final String API_PATH_PHANTON_AUTHORIZE = "https://huantengsmart.com/oauth2/authorize";
     public static final String API_PATH_PHANTON_TOKEN = "/oauth2/token";
 
     //Ling服务ApiPath
