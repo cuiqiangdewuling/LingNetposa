@@ -1,6 +1,8 @@
 package com.ling.jibonetposa.models.testnlu;
 
 
+import com.ling.jibonetposa.entities.TNLUEntity;
+
 import java.util.Map;
 
 import retrofit2.Call;

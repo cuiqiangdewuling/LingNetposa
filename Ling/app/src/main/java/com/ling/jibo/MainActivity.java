@@ -5,17 +5,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import com.ling.jibonetposa.RetrofitManager;
 import com.ling.jibonetposa.base.BaseEntity;
 import com.ling.jibonetposa.entities.AuthorizedEntity;
-import com.ling.jibonetposa.entities.NLUResult;
+import com.ling.jibonetposa.models.NLUModelGet;
+import com.ling.jibonetposa.models.NLUModelPost;
 import com.ling.jibonetposa.models.iot.IOTAgent;
 import com.ling.jibonetposa.models.testnlu.TNLUModel;
 import com.ling.jibonetposa.tools.IRequestCallback;
-import com.ling.jibonetposa.tools.IRetrofitHttp;
-
-import retrofit2.Call;
-import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -92,40 +88,31 @@ public class MainActivity extends AppCompatActivity {
 
     private void testGetModel(){
         String text="你好";
-        RetrofitManager retrofitManager = new RetrofitManager();
-        retrofitManager.NLURetrofitNetGet(text, new IRetrofitHttp<NLUResult>() {
+        new NLUModelGet(new IRequestCallback() {
             @Override
-            public void onResponse(Call<NLUResult> call, Response<NLUResult> response) {
-                if (response.isSuccessful()) {
-                    NLUResult result = response.body();
-                    String answer = result.getAnswer();
-                    Log.d("1111", "testGet" + answer);
+            public void responsedCallback(BaseEntity entity, int errorCode, Throwable error) {
+                if (errorCode == 0) {
+                    Log.d("IOTAgent", "entity  " + entity.toString());
+                } else {
+                    Log.d("IOTAgent", "errorCode  " + errorCode);
                 }
             }
-
-            @Override
-            public void onFailure(Call<NLUResult> call, Throwable t) {
-                Log.d("1111", "t" + t);
-            }
-        });
+        }).executedNetRequest(text);
     }
 
 
     private void testPostModel(){
         String text="你好";
-        RetrofitManager retrofitManager = new RetrofitManager();
-        retrofitManager.NLURetrofitNetPost(text, new IRetrofitHttp<NLUResult>() {
-
+        new NLUModelPost(new IRequestCallback() {
             @Override
-            public void onResponse(Call<NLUResult> call, Response<NLUResult> response) {
-
+            public void responsedCallback(BaseEntity entity, int errorCode, Throwable error) {
+                if (errorCode == 0) {
+                    Log.d("IOTAgent", "entity  " + entity.toString());
+                } else {
+                    Log.d("IOTAgent", "errorCode  " + errorCode);
+                }
             }
-
-            @Override
-            public void onFailure(Call<NLUResult> call, Throwable t) {
-
-            }
-        });
+        }).executedNetRequest(text);
     }
 
 }

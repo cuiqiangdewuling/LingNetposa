@@ -1,5 +1,7 @@
 package com.ling.jibonetposa.models.testnlu;
 
+import com.ling.jibonetposa.entities.TNLUEntity;
+
 import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
