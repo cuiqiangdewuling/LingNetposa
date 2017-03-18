@@ -2,6 +2,7 @@ package com.ling.jibonetposa.models.iot;
 
 import com.ling.jibonetposa.base.BaseRequestModel;
 import com.ling.jibonetposa.entities.TokenEntity;
+import com.ling.jibonetposa.tools.IIOTGetToken;
 import com.ling.jibonetposa.tools.IRequestCallback;
 
 import retrofit2.Call;
@@ -15,14 +16,14 @@ import static com.ling.jibonetposa.constants.IOTApiConstan.PHANTON_REDIRECT_URI;
  * Created by mhz小志 on 2017/3/17.
  */
 
-public class IOTGetTokenModel extends BaseRequestModel {
+public class IOTGetPhantomTokenModel extends BaseRequestModel<TokenEntity> {
 
-    public IOTGetTokenModel(IRequestCallback requestCallback) {
+    public IOTGetPhantomTokenModel(IRequestCallback requestCallback) {
             super(requestCallback);
             this.mApiPath = API_PATH_PHANTON;
         }
 
-    public void executeReqTokenResult(String authorizeCode) {
+    public void getPhantomToken(String authorizeCode) {
         mParams.put("client_id", PHANTON_APP_ID);
         mParams.put("redirect_uri", PHANTON_REDIRECT_URI);
         mParams.put("client_secret", PHANTON_APP_SECRET);

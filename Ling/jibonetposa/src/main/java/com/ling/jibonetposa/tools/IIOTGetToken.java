@@ -1,4 +1,4 @@
-package com.ling.jibonetposa.models.iot;
+package com.ling.jibonetposa.tools;
 
 import com.ling.jibonetposa.entities.TokenEntity;
 

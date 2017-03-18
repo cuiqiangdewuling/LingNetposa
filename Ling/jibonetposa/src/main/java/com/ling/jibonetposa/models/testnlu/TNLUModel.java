@@ -21,8 +21,18 @@ public class TNLUModel extends BaseRequestModel<TNLUEntity> {
         mParams.put("userid", "xxxxx");
         mParams.put("words", "你好");
         mParams.put("score", "0.99");
+        TNLUPostRequest tnluPostRequest = retrofit().create(TNLUPostRequest.class);
+        Call<TNLUEntity> token = tnluPostRequest.postCallBack("/nlu", organizeParams());
+        execute(token);
+    }
+
+    public void executeJsonResult() {
+
+        mParams.put("userid", "xxxxx");
+        mParams.put("words", "你好");
+        mParams.put("score", "0.99");
         TNLUPostJson tnluPostRequest = retrofit().create(TNLUPostJson.class);
-        Call<TNLUEntity> token = tnluPostRequest.testJson(organizeJsonParams());
+        Call<TNLUEntity> token = tnluPostRequest.testJson("/nlu", organizeJsonParams());
         execute(token);
     }
 }

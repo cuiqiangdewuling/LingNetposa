@@ -8,6 +8,7 @@ import android.widget.Button;
 
 import com.ling.jibonetposa.RetrofitManager;
 import com.ling.jibonetposa.base.BaseEntity;
+import com.ling.jibonetposa.base.BaseRequestModel;
 import com.ling.jibonetposa.entities.AuthorizedEntity;
 import com.ling.jibonetposa.entities.NLUResult;
 import com.ling.jibonetposa.models.iot.IOTAgent;
@@ -26,7 +27,6 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 
 public class MainActivity extends AppCompatActivity {
-
 
     private Button mBtnGet;
     private Button mBtnPost;
@@ -94,17 +94,18 @@ public class MainActivity extends AppCompatActivity {
                     Log.d("IOTAgent", "errorCode  " + errorCode);
                 }
             }
-        }).executeResult();
+        }).executeJsonResult();
     }
 
     public void jsonIOTPost() {
-        String code = "af0202145df6f34129adda4853da9797b9ccda1a3e7b3bc3122990692b431d77";
+        String code = "1ae221f62b8f677e8fd607d59d2759a3a2680986834914db573bfc9b18362f70";
         AuthorizedEntity authorizedEntity = new AuthorizedEntity();
+        authorizedEntity.setUserId("123456");
         authorizedEntity.setAuthorizedCode(code);
-        new IOTAgent().doAuthorized(authorizedEntity, new IRequestCallback() {
+        new IOTAgent().getPhantomAuthorized(authorizedEntity, new IRequestCallback() {
             @Override
             public void responsedCallback(BaseEntity entity, int errorCode, Throwable error) {
-                if (errorCode == 0) {
+                if (errorCode == BaseRequestModel.RETROFIT_SUCCESS) {
                     Log.d("IOTAgent", "entity  " + entity.toString());
                 } else {
                     Log.d("IOTAgent", "errorCode  " + errorCode);
