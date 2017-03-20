@@ -6,7 +6,7 @@ import android.content.res.Resources;
 import android.net.Uri;
 import android.util.Log;
 
-import com.ling.jibonetposa.modules.test.testpicpost.IImageRequestPost;
+import com.ling.jibonetposa.iretrofit.test.IImageRequestPost;
 
 import java.io.File;
 import java.util.ArrayList;

@@ -1,7 +1,9 @@
 package com.ling.jibonetposa.base;
 
+import android.util.Log;
+
 import com.google.gson.Gson;
-import com.ling.jibonetposa.modules.IRequestCallback;
+import com.ling.jibonetposa.iretrofit.IRequestCallback;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,6 +22,10 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class BaseRequestModel<T extends BaseEntity> {
 
+    public static final int RETROFIT_SUCCESS = 0;
+    public static final int RETROFIT_ERROR = 1;
+    public static final int RETROFIT_WRONG = -1;
+
     protected IRequestCallback mRequestCallback;
     protected Map<String, Object> mParams = new HashMap<>();
     protected String mApiPath;
@@ -28,6 +34,9 @@ public class BaseRequestModel<T extends BaseEntity> {
         mRequestCallback = requestCallback;
     }
 
+    /**
+     * 获取Retrofit网络请求对象
+     */
     public Retrofit retrofit() {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(mApiPath)
@@ -37,6 +46,9 @@ public class BaseRequestModel<T extends BaseEntity> {
         return retrofit;
     }
 
+    /**
+     * 如果请求是带Json格式的请求，执行此方法将参数转换成Json
+     */
     protected RequestBody organizeJsonParams() {
         StringBuilder sb = new StringBuilder();
         Gson gson = new Gson();
@@ -45,24 +57,35 @@ public class BaseRequestModel<T extends BaseEntity> {
         return RequestBody.create(okhttp3.MediaType.parse("application/json;charset=UTF-8"), sb.toString());
     }
 
+    /**
+     * 如果请求是带普通参数的请求，执行此方法返回mParams，
+     * <p>
+     * 以后如果有需求的话，可以在这里对Params做数据处理
+     */
     protected Map<String, Object> organizeParams() {
         return mParams;
     }
 
+    /**
+     * Retrofit进行网络请求，
+     *
+     * @param call
+     */
     protected void execute(Call<T> call) {
         call.enqueue(new Callback<T>() {
             @Override
             public void onResponse(Call<T> call, Response<T> response) {
                 if (response.isSuccessful()) {
-                    BaseRequestModel.this.mRequestCallback.responsedCallback(response.body(), 0, null);
+                    BaseRequestModel.this.mRequestCallback.responsedCallback(response.body(), RETROFIT_SUCCESS, (Throwable) null);
                 } else {
-                    BaseRequestModel.this.mRequestCallback.responsedCallback(null, -1, null);
+                    Log.d("123123", "response.toString()   " + response.toString());
+                    BaseRequestModel.this.mRequestCallback.responsedCallback(null, RETROFIT_WRONG, new RetrofitException(response.toString()));
                 }
             }
 
             @Override
-            public void onFailure(Call<T> call, Throwable t) {
-                BaseRequestModel.this.mRequestCallback.responsedCallback(null, 1, t);
+            public void onFailure(Call<T> call, Throwable throwable) {
+                BaseRequestModel.this.mRequestCallback.responsedCallback(null, RETROFIT_ERROR, throwable);
             }
         });
     }
