@@ -1,7 +1,7 @@
 package com.ling.jibonetposa.base;
 
 import com.google.gson.Gson;
-import com.ling.jibonetposa.tools.IRequestCallback;
+import com.ling.jibonetposa.modules.IRequestCallback;
 
 import java.util.HashMap;
 import java.util.Map;

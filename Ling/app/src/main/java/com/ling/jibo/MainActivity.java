@@ -5,21 +5,23 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+
+import com.ling.jibonetposa.RetrofitManager;
 import com.ling.jibonetposa.base.BaseEntity;
 import com.ling.jibonetposa.entities.AuthorizedEntity;
-import com.ling.jibonetposa.models.NLUModelGet;
-import com.ling.jibonetposa.models.NLUModelPost;
-import com.ling.jibonetposa.models.iot.IOTAgent;
-import com.ling.jibonetposa.models.testnlu.TNLUModel;
-import com.ling.jibonetposa.tools.IRequestCallback;
+import com.ling.jibonetposa.modules.test.testnluget.NLUModelGet;
+import com.ling.jibonetposa.modules.test.testnlupost.NLUModelPost;
+import com.ling.jibonetposa.modules.iot.IOTAgent;
+import com.ling.jibonetposa.modules.test.testnlu.TNLUModel;
+import com.ling.jibonetposa.modules.IRequestCallback;
 
 public class MainActivity extends AppCompatActivity {
 
     private final static String TAG = "http";
+    private String baseUrl = "http://60.205.170.27:9001/";
     private Button mBtnGet;
     private Button mBtnPost;
     private Button mBtnMHZ;
-    private String baseUrl = "http://60.205.170.27:9001/";
     private Button mBtnGetPic;
 
 
@@ -124,7 +126,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void testUploadPic(){
-
+        String url="";
+        RetrofitManager retrofitManager = new RetrofitManager();
+        retrofitManager.uploadpic(url,MainActivity.this);
     }
 
 }
