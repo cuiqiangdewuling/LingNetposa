@@ -5,14 +5,11 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.net.Uri;
 import android.util.Log;
-
 import com.ling.jibonetposa.iretrofit.test.IImageRequestPost;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import retrofit2.Call;
@@ -21,7 +18,6 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
-
 
 
 /**
@@ -102,7 +98,6 @@ public class RetrofitManager {
                 Log.d("1111", "onFailure() called with: " + "call = [" + call + "], t = [" + t + "]");
             }
         });
-
     }
 
 }

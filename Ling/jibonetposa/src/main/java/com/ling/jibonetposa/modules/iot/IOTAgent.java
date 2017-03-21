@@ -9,10 +9,8 @@ import com.ling.jibonetposa.models.iot.CancelAuthorizedModel;
 import com.ling.jibonetposa.models.iot.IOTGetPhantomTokenModel;
 import com.ling.jibonetposa.models.iot.IOTSavePhantomTokenModel;
 import com.ling.jibonetposa.utils.NetWorkUtil;
-
 import java.util.HashMap;
 import java.util.Map;
-
 import static com.ling.jibonetposa.constants.IOTApiConstan.API_PATH_PHANTON_AUTHORIZE;
 import static com.ling.jibonetposa.constants.IOTApiConstan.PHANTON_APP_ID;
 import static com.ling.jibonetposa.constants.IOTApiConstan.PHANTON_REDIRECT_URI;
