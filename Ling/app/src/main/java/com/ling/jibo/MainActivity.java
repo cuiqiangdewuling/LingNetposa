@@ -61,7 +61,8 @@ public class MainActivity extends AppCompatActivity {
         mBtnMHZ.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                jsonPost();
+//                jsonPost();
+                cancelAuth();
             }
         });
         mGetAuth.setOnClickListener(new View.OnClickListener() {
@@ -80,6 +81,24 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 testUploadPic();
+            }
+        });
+    }
+
+    private void cancelAuth() {
+        String code = "1ae221f62b8f677e8fd607d59d2759a3a2680986834914db573bfc9b18362f70";
+        AuthorizedEntity authorizedEntity = new AuthorizedEntity();
+        authorizedEntity.setUserId("1234asdf12341asdf2342134");
+        authorizedEntity.setAuthorizedCode(code);
+        new IOTAgent().cancelPhantomAuthorized(authorizedEntity, new IRequestCallback() {
+            @Override
+            public void responsedCallback(BaseEntity entity, int errorCode, Throwable error) {
+                if (errorCode == BaseRequestModel.RETROFIT_SUCCESS) {
+                    Log.d(TAG, "entity  " + entity.toString());
+                } else {
+                    Log.d(TAG, "errorCode  " + errorCode);
+                    if (error != null) error.printStackTrace();
+                }
             }
         });
     }

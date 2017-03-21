@@ -70,5 +70,4 @@ public class IOTAgent {
         mParams.put("scope", PHANTON_SCOPE);//PHANTON_SCOPE
         return  API_PATH_PHANTON_AUTHORIZE + NetWorkUtil.organizeParams(mParams);
     }
-
 }
