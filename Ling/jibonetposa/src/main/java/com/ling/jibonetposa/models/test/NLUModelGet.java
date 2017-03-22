@@ -1,7 +1,7 @@
 package com.ling.jibonetposa.models.test;
 
 import com.ling.jibonetposa.base.BaseRequestModel;
-import com.ling.jibonetposa.constants.NLUConstans;
+import com.ling.jibonetposa.constants.NLUConstant;
 import com.ling.jibonetposa.entities.NLUEntity;
 import com.ling.jibonetposa.iretrofit.IRequestCallback;
 import com.ling.jibonetposa.iretrofit.test.INLUGetRequest;
@@ -19,7 +19,7 @@ public class NLUModelGet extends BaseRequestModel<NLUEntity> {
 
     public NLUModelGet(IRequestCallback requestCallback){
         super(requestCallback);
-        mApiPath = NLUConstans.NLUBaseUrl;
+        mApiPath = NLUConstant.NLUBaseUrl;
     }
 
     public void executedNetRequest(String text){

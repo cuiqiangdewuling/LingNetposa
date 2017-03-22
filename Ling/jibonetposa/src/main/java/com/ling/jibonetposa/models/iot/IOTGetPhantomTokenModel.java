@@ -7,10 +7,10 @@ import com.ling.jibonetposa.iretrofit.iot.IIOTGetToken;
 
 import retrofit2.Call;
 
-import static com.ling.jibonetposa.constants.IOTApiConstan.API_PATH_PHANTON;
-import static com.ling.jibonetposa.constants.IOTApiConstan.PHANTON_APP_ID;
-import static com.ling.jibonetposa.constants.IOTApiConstan.PHANTON_APP_SECRET;
-import static com.ling.jibonetposa.constants.IOTApiConstan.PHANTON_REDIRECT_URI;
+import static com.ling.jibonetposa.constants.IOTApiConstant.API_PATH_PHANTON;
+import static com.ling.jibonetposa.constants.IOTApiConstant.PHANTON_APP_ID;
+import static com.ling.jibonetposa.constants.IOTApiConstant.PHANTON_APP_SECRET;
+import static com.ling.jibonetposa.constants.IOTApiConstant.PHANTON_REDIRECT_URI;
 
 /**
  * Created by mhz小志 on 2017/3/17.
