@@ -88,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
     private void cancelAuth() {
         String code = "1ae221f62b8f677e8fd607d59d2759a3a2680986834914db573bfc9b18362f70";
         AuthorizedEntity authorizedEntity = new AuthorizedEntity();
-        authorizedEntity.setUserId("1234asdf12341asdf2342134");
+        authorizedEntity.setUserId("1234123412342134");
         authorizedEntity.setAuthorizedCode(code);
         new IOTAgent().cancelPhantomAuthorized(authorizedEntity, new IRequestCallback() {
             @Override
