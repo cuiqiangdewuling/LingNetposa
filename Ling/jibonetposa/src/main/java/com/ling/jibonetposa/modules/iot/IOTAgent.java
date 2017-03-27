@@ -28,8 +28,7 @@ public class IOTAgent {
      * 根据authorizedCode去获取幻腾Token，然后将Token保存到服务器
      * @param authorizedEntity 获取授权所需要的参数
      */
-    public void getPhantomAuthorized(final AuthorizedEntity authorizedEntity, final IRequestCallback requestCallback) {
-
+    public static void getPhantomAuthorized(final AuthorizedEntity authorizedEntity, final IRequestCallback requestCallback) {
         new IOTGetPhantomTokenModel(new IRequestCallback() {
             @Override
             public void responsedCallback(BaseEntity entity, int errorCode, Throwable error) {
@@ -46,7 +45,7 @@ public class IOTAgent {
     /**
      * 将Token保存
      */
-    private void doSaveToken(String userId, TokenEntity tokenEntity, final IRequestCallback requestCallback) {
+    private static void doSaveToken(String userId, TokenEntity tokenEntity, final IRequestCallback requestCallback) {
         new IOTSavePhantomTokenModel(requestCallback).savePhantomToken(userId, tokenEntity);
     }
 
@@ -60,7 +59,7 @@ public class IOTAgent {
     /**
      * 合成授权页面的请求地址
      */
-    public String getPhantomAuthorizedUrl() {
+    public static String getPhantomAuthorizedUrl() {
 
         Map<String, Object> mParams = new HashMap<String, Object>();
         mParams.put("client_id", PHANTON_APP_ID);

@@ -19,9 +19,9 @@ import static com.ling.jibonetposa.constants.IOTApiConstant.PHANTON_REDIRECT_URI
 public class IOTGetPhantomTokenModel extends BaseRequestModel<TokenEntity> {
 
     public IOTGetPhantomTokenModel(IRequestCallback requestCallback) {
-            super(requestCallback);
-            this.mApiPath = API_PATH_PHANTON;
-        }
+        super(requestCallback);
+        this.mApiPath = API_PATH_PHANTON;
+    }
 
     public void getPhantomToken(String authorizeCode) {
         mParams.put("client_id", PHANTON_APP_ID);
