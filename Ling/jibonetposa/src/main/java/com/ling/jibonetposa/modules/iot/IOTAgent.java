@@ -9,14 +9,12 @@ import com.ling.jibonetposa.models.iot.CancelAuthorizedModel;
 import com.ling.jibonetposa.models.iot.IOTGetPhantomTokenModel;
 import com.ling.jibonetposa.models.iot.IOTSavePhantomTokenModel;
 import com.ling.jibonetposa.utils.NetWorkUtil;
-
 import java.util.HashMap;
 import java.util.Map;
-
-import static com.ling.jibonetposa.constants.IOTApiConstan.API_PATH_PHANTON_AUTHORIZE;
-import static com.ling.jibonetposa.constants.IOTApiConstan.PHANTON_APP_ID;
-import static com.ling.jibonetposa.constants.IOTApiConstan.PHANTON_REDIRECT_URI;
-import static com.ling.jibonetposa.constants.IOTApiConstan.PHANTON_SCOPE;
+import static com.ling.jibonetposa.constants.IOTApiConstant.API_PATH_PHANTON_AUTHORIZE;
+import static com.ling.jibonetposa.constants.IOTApiConstant.PHANTON_APP_ID;
+import static com.ling.jibonetposa.constants.IOTApiConstant.PHANTON_REDIRECT_URI;
+import static com.ling.jibonetposa.constants.IOTApiConstant.PHANTON_SCOPE;
 
 /**
  * Created by mhz小志 on 2017/3/17.
@@ -28,7 +26,6 @@ public class IOTAgent {
      * 获取幻腾授权
      * <p>
      * 根据authorizedCode去获取幻腾Token，然后将Token保存到服务器
-     *
      * @param authorizedEntity 获取授权所需要的参数
      */
     public void getPhantomAuthorized(final AuthorizedEntity authorizedEntity, final IRequestCallback requestCallback) {

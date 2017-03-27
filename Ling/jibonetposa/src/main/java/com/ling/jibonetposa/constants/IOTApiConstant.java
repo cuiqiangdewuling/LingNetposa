@@ -4,7 +4,7 @@ package com.ling.jibonetposa.constants;
  * Created by mhz小志 on 2017/3/17.
  */
 
-public class IOTApiConstan {
+public class IOTApiConstant {
 
     //幻腾授权ApiPath
     public static final String API_PATH_PHANTON = "https://huantengsmart.com/";

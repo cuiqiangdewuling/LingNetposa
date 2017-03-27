@@ -8,7 +8,7 @@ import com.ling.jibonetposa.iretrofit.iot.IIOTSaveToken;
 
 import retrofit2.Call;
 
-import static com.ling.jibonetposa.constants.IOTApiConstan.API_PATH_JIBO;
+import static com.ling.jibonetposa.constants.IOTApiConstant.API_PATH_JIBO;
 
 /**
  * Created by mhz小志 on 2017/3/17.

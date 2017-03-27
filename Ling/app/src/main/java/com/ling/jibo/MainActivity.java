@@ -6,15 +6,16 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
-import com.ling.jibonetposa.RetrofitManager;
 import com.ling.jibonetposa.base.BaseEntity;
 import com.ling.jibonetposa.base.BaseRequestModel;
 import com.ling.jibonetposa.entities.AuthorizedEntity;
+import com.ling.jibonetposa.entities.NLUEntity;
 import com.ling.jibonetposa.iretrofit.IRequestCallback;
-import com.ling.jibonetposa.modules.iot.IOTAgent;
-import com.ling.jibonetposa.models.test.TNLUModel;
+import com.ling.jibonetposa.models.test.NLUModelCacheGet;
 import com.ling.jibonetposa.models.test.NLUModelGet;
 import com.ling.jibonetposa.models.test.NLUModelPost;
+import com.ling.jibonetposa.models.test.TNLUModel;
+import com.ling.jibonetposa.modules.iot.IOTAgent;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -26,7 +27,6 @@ public class MainActivity extends AppCompatActivity {
     private Button mDelAuth;
     private Button mBtnMHZ;
     private Button mBtnGetPic;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +61,6 @@ public class MainActivity extends AppCompatActivity {
         mBtnMHZ.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                jsonPost();
                 cancelAuth();
             }
         });
@@ -151,7 +150,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void testGetModel() {
         String text = "你好";
-        new NLUModelGet(new IRequestCallback() {
+        NLUModelGet nluModelGet  = new NLUModelGet(new IRequestCallback() {
             @Override
             public void responsedCallback(BaseEntity entity, int errorCode, Throwable error) {
                 if (errorCode == 0) {
@@ -160,12 +159,16 @@ public class MainActivity extends AppCompatActivity {
                     Log.d(TAG, "errorCode  " + errorCode);
                 }
             }
-        }).executedNetRequest(text);
+        });
+        nluModelGet.executedNetRequest(text);
+       // nluModelGet.cancel();
+        nluModelGet.resetExecute();
+
     }
 
     private void testPostModel() {
         String text = "你好";
-        new NLUModelPost(new IRequestCallback() {
+        NLUModelPost nluModelPost = new NLUModelPost(new IRequestCallback() {
             @Override
             public void responsedCallback(BaseEntity entity, int errorCode, Throwable error) {
                 if (errorCode == 0) {
@@ -174,13 +177,24 @@ public class MainActivity extends AppCompatActivity {
                     Log.d(TAG, "errorCode  " + errorCode);
                 }
             }
-        }).executedNetRequest(text);
+        });
+        nluModelPost.executedNetRequest(text);
     }
 
     private void testUploadPic(){
-        String url="";
-        RetrofitManager retrofitManager = new RetrofitManager();
-        retrofitManager.uploadpic(url,MainActivity.this);
+        NLUModelCacheGet nluModelCacheGet = new NLUModelCacheGet(new IRequestCallback() {
+            @Override
+            public void responsedCallback(BaseEntity entity, int errorCode, Throwable error) {
+                if (entity!=null){
+                    NLUEntity nluEntity = (NLUEntity)entity;
+                    String answer = nluEntity.getAnswer();
+                    Log.d(TAG, "answer" + answer);
+                }else{
+                    Log.d(TAG, "error" + error.getMessage());
+                }
+            }
+        });
+        nluModelCacheGet.executedNetRequest("你好",MainActivity.this);
     }
 
 }

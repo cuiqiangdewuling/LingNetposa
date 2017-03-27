@@ -1,7 +1,7 @@
 package com.ling.jibonetposa.models.test;
 
 import com.ling.jibonetposa.base.BaseRequestModel;
-import com.ling.jibonetposa.constants.NLUConstans;
+import com.ling.jibonetposa.constants.NLUConstant;
 import com.ling.jibonetposa.entities.NLUEntity;
 import com.ling.jibonetposa.iretrofit.IRequestCallback;
 import com.ling.jibonetposa.iretrofit.test.INLUPostRequest;
@@ -19,7 +19,7 @@ public class NLUModelPost extends BaseRequestModel<NLUEntity> {
 
     public NLUModelPost(IRequestCallback requestCallback){
         super(requestCallback);
-        mApiPath = NLUConstans.NLUBaseUrl;
+        mApiPath = NLUConstant.NLUBaseUrl;
     }
 
     public void executedNetRequest(String text){
@@ -28,8 +28,7 @@ public class NLUModelPost extends BaseRequestModel<NLUEntity> {
         params.put("words",text);
         params.put("score","0.99");
         INLUPostRequest netRequest= retrofit().create(INLUPostRequest.class);
-        Call<NLUEntity> call = netRequest.postCallBack(params);
+        Call<NLUEntity> call= netRequest.postCallBack(params);
         execute(call);
     }
-
 }

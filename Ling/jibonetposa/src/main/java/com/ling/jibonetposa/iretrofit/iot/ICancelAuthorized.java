@@ -8,7 +8,7 @@ import retrofit2.http.Body;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
 
-import static com.ling.jibonetposa.constants.IOTApiConstan.API_PATH_JIBO_CANCLE_AUTHORIZE;
+import static com.ling.jibonetposa.constants.IOTApiConstant.API_PATH_JIBO_CANCLE_AUTHORIZE;
 
 /**
  * Created by mhz小志 on 2017/3/17.
