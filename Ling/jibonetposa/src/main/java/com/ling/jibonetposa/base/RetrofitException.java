@@ -5,6 +5,7 @@ package com.ling.jibonetposa.base;
  */
 
 public class RetrofitException extends Exception {
+
     public RetrofitException(String msg) {
         super(msg);
     }

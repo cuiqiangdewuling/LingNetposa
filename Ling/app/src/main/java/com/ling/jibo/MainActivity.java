@@ -1,11 +1,11 @@
 package com.ling.jibo;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import com.ling.jibonetposa.base.BaseActivity;
 import com.ling.jibonetposa.base.BaseEntity;
 import com.ling.jibonetposa.base.BaseRequestModel;
 import com.ling.jibonetposa.entities.AuthorizedEntity;
@@ -17,7 +17,7 @@ import com.ling.jibonetposa.models.test.NLUModelPost;
 import com.ling.jibonetposa.models.test.TNLUModel;
 import com.ling.jibonetposa.modules.iot.IOTAgent;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
 
     private final static String TAG = "http";
     private String baseUrl = "http://60.205.170.27:9001/";
@@ -149,8 +149,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void testGetModel() {
-        String text = "你好";
-        NLUModelGet nluModelGet  = new NLUModelGet(new IRequestCallback() {
+        String text = "再见";
+        NLUModelGet  nluModelGet= new NLUModelGet(new IRequestCallback() {
             @Override
             public void responsedCallback(BaseEntity entity, int errorCode, Throwable error) {
                 if (errorCode == 0) {
@@ -179,10 +179,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         nluModelPost.executedNetRequest(text);
+       // nluModelPost.resetExecute();
     }
 
     private void testUploadPic(){
-        NLUModelCacheGet nluModelCacheGet = new NLUModelCacheGet(new IRequestCallback() {
+       NLUModelCacheGet nluModelCacheGet = new NLUModelCacheGet(new IRequestCallback() {
             @Override
             public void responsedCallback(BaseEntity entity, int errorCode, Throwable error) {
                 if (entity!=null){
@@ -195,6 +196,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         nluModelCacheGet.executedNetRequest("你好",MainActivity.this);
+
     }
 
 }
