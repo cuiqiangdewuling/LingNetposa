@@ -12,7 +12,8 @@ public class IOTApiConstant {
     public static final String API_PATH_PHANTON_TOKEN = "/oauth2/token";
 
     //Ling服务ApiPath
-    public static final String API_PATH_JIBO = "http://101.201.144.210:8082/";
+//    public static final String API_PATH_JIBO = "http://101.201.144.210:8082/";
+    public static final String API_PATH_JIBO = "http://101.201.72.216:8082";
     public static final String API_PATH_JIBO_SAVETOKEN = "/jibo/token/save";
     public static final String API_PATH_JIBO_CANCLE_AUTHORIZE = "/jibo/token/delete";
 
