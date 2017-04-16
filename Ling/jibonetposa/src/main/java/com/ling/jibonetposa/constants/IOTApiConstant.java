@@ -8,14 +8,17 @@ public class IOTApiConstant {
 
     //幻腾授权ApiPath
     public static final String API_PATH_PHANTON = "https://huantengsmart.com/";
+    public static final String API_PATH_PHANTON_DEV = "http://huantengsmart.com:80/";
     public static final String API_PATH_PHANTON_AUTHORIZE = "https://huantengsmart.com/oauth2/authorize";
     public static final String API_PATH_PHANTON_TOKEN = "/oauth2/token";
+    public static final String API_PATH_PHANTON_GET_DEV_ALL = "/api/devices.json";   // 获取当前用户的所有设备
 
-    //Ling服务ApiPath
-//    public static final String API_PATH_JIBO = "http://101.201.144.210:8082/";
+    // Ling服务ApiPath
+    // public static final String API_PATH_JIBO = "http://101.201.144.210:8082/";
     public static final String API_PATH_JIBO = "http://101.201.72.216:8082";
-    public static final String API_PATH_JIBO_SAVETOKEN = "/jibo/token/save";
-    public static final String API_PATH_JIBO_CANCLE_AUTHORIZE = "/jibo/token/delete";
+    public static final String API_PATH_JIBO_TOKEN_SAVE = "/jibo/token/save";
+    public static final String API_PATH_JIBO_TOKEN_GET = "/jibo/token/get";
+    public static final String API_PATH_JIBO_TOKEN_DELETE = "/jibo/token/delete";
 
     // 幻腾授权相关参数
     public static final String PHANTON_APP_ID = "f871bd790d58a4b4cf6544ff0f97722136571390d4aaf4e8b17acc9d46d842c2";

@@ -1,8 +1,28 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.ling.jibonetposa">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          package="com.ling.jibonetposa">
 
-    <application android:allowBackup="true" android:label="@string/app_name"
+    <application
+        android:allowBackup="true"
+        android:label="@string/app_name"
         android:supportsRtl="true">
 
+        <meta-data
+            android:name="LET_LICENSE"
+            android:value="bO0svbHFxQnB6F1k2H1PTVEZcyIuInjYNmmEqHd2TZ2+c+Z5WqmuSUK3T3rUN2g+658xVwAAAADTGxz36w3DzAQdABAhGASJdUNFZ/NDpuqoJFduSypi1hJajXYYyUTSWHETF7nakKVdHPVjXPMmKKlZZiOH8ksJsEkbxXTfoUSQjDzWcfVjcAAAAAA="/>
+        <meta-data
+            android:name="LET_CHANNEL"
+            android:value=""/>
+        <meta-data
+            android:name="APP_ID"
+            android:value="MB-DEMOANDROID-0000"/>
+        <meta-data
+            android:name="APP_KEY"
+            android:value="c23825ad3a4ec3ad3edda556cae7ba40"/>
+        <meta-data
+            android:name="DEVELOPER_URL"
+            android:value=""/>
+
     </application>
+
 
 </manifest>

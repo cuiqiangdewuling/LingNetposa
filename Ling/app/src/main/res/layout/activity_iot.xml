@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:id="@+id/activity_iot"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              android:paddingBottom="@dimen/activity_vertical_margin"
+              android:paddingLeft="@dimen/activity_horizontal_margin"
+              android:paddingRight="@dimen/activity_horizontal_margin"
+              android:paddingTop="@dimen/activity_vertical_margin"
+              tools:context="com.ling.jibo.IOTTestActivity">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/btn_getPhantomAuthorized"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="获取幻腾授权"/>
+
+            <Button
+                android:id="@+id/btn_cancelPhantomAuthorized"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="取消幻腾授权"/>
+
+            <Button
+                android:id="@+id/btn_getPhantomTokenFromeServer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="获取幻腾Token"/>
+
+            <Button
+                android:id="@+id/btn_getPhantomDeviceList"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="获取幻腾设备列表"/>
+
+        </LinearLayout>
+    </ScrollView>
+
+
+</LinearLayout>
