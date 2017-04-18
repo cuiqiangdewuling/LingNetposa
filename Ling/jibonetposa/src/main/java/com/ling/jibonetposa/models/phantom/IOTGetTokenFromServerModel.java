@@ -1,4 +1,4 @@
-package com.ling.jibonetposa.models.iot;
+package com.ling.jibonetposa.models.phantom;
 
 import com.ling.jibonetposa.base.BaseRequestModel;
 import com.ling.jibonetposa.entities.LingResultEntity;
@@ -13,9 +13,9 @@ import static com.ling.jibonetposa.constants.IOTApiConstant.API_PATH_JIBO;
  * Created by mhz小志 on 2017/3/17.
  */
 
-public class IOTGetPhantomTokenFromServerModel extends BaseRequestModel<LingResultEntity> {
+public class IOTGetTokenFromServerModel extends BaseRequestModel<LingResultEntity> {
 
-    public IOTGetPhantomTokenFromServerModel(IRequestCallback requestCallback) {
+    public IOTGetTokenFromServerModel(IRequestCallback requestCallback) {
         super(requestCallback);
         this.mApiPath = API_PATH_JIBO;
     }

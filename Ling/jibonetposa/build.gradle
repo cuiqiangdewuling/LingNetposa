@@ -19,11 +19,6 @@ android {
         }
     }
 }
-repositories {
-    flatDir {
-        dirs 'libs'
-    }
-}
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
@@ -37,5 +32,6 @@ dependencies {
     compile files('libs/okhttp-3.6.0.jar')
     compile files('libs/okio-1.11.0.jar')
     compile files('libs/gson-2.7.jar')
-//    compile(name: 'uSDK4.1.01_Phone_Android', ext: 'aar')
+    compile files('libs/libLet.jar')
+    compile project(':uSDK4.1.01_Phone_Android')
 }

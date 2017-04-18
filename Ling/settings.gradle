@@ -1,1 +1,1 @@
-include ':app', ':jibonetposa'
+include ':app', ':jibonetposa', ':uSDK4.1.01_Phone_Android'

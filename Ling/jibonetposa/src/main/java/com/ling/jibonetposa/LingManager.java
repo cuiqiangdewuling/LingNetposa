@@ -2,6 +2,11 @@ package com.ling.jibonetposa;
 
 import android.content.Context;
 
+import com.haier.uhome.usdk.api.uSDKManager;
+import com.ling.jibonetposa.modules.iot.IOTAgent;
+
+import cn.com.broadlink.sdk.BLLet;
+
 /**
  * Created by mhz小志 on 2017/4/16.
  */
@@ -9,7 +14,8 @@ import android.content.Context;
 public class LingManager {
 
     public static LingManager INSTANCE;
-    public static Context mHaierApplication;
+    public static Context mApplication;
+    public IOTAgent mIOTAgent;
 
     private LingManager() {
     }
@@ -26,12 +32,30 @@ public class LingManager {
     }
 
     public void init(Context context) {
-        mHaierApplication = context;
-//        uSDKManager sdkMgr = uSDKManager.getSingleInstance();
-//        sdkMgr.init(context);
+        mApplication = context;
+        initBroadLink();
+        initHaier();
+        initIOTAgent();
+    }
+
+    private void initIOTAgent() {
+        mIOTAgent = new IOTAgent();
+    }
+
+    private void initHaier() {
+        uSDKManager.getSingleInstance().init(mApplication);
+    }
+
+    private void initBroadLink() {
+        BLLet.init(mApplication);
+        BLLet.DebugLog.on();
+    }
+
+    public IOTAgent getIOTAgent() {
+        return mIOTAgent;
     }
 
     public static Context getAppContext() {
-        return mHaierApplication;
+        return mApplication;
     }
 }

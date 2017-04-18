@@ -5,12 +5,12 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
+import com.ling.jibonetposa.LingManager;
 import com.ling.jibonetposa.base.BaseEntity;
 import com.ling.jibonetposa.base.BaseRequestModel;
 import com.ling.jibonetposa.entities.AuthorizedCodeEntity;
 import com.ling.jibonetposa.entities.PhantomDevicesEntity;
 import com.ling.jibonetposa.iretrofit.IRequestCallback;
-import com.ling.jibonetposa.modules.iot.IOTAgent;
 
 import butterknife.ButterKnife;
 
@@ -18,7 +18,7 @@ import butterknife.ButterKnife;
  * Created by mhz小志 on 2017/4/13.
  */
 
-public class IOTTestActivity extends Activity {
+public class IOTTestActivity extends Activity implements View.OnClickListener {
 
     public static final String TAG = "Ling ";
 
@@ -31,38 +31,52 @@ public class IOTTestActivity extends Activity {
     }
 
     private void initClick() {
-        findViewById(R.id.btn_getPhantomTokenFromeServer).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getPhantomTokenFromeServer();
-            }
-        });
-        findViewById(R.id.btn_cancelPhantomAuthorized).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                cancelPhantomAuthorized();
-            }
-        });
-        findViewById(R.id.btn_getPhantomAuthorized).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getPhantomAuthorized();
-            }
-        });
-        findViewById(R.id.btn_getPhantomDeviceList).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getPhantomDeviceList();
-            }
-        });
+        findViewById(R.id.btn_ht_getAccessToken).setOnClickListener(this);
+        findViewById(R.id.btn_ht_cancelAuthorized).setOnClickListener(this);
+        findViewById(R.id.btn_ht_getAuthorized).setOnClickListener(this);
+        findViewById(R.id.btn_ht_getDevices).setOnClickListener(this);
+        findViewById(R.id.btn_bl_login).setOnClickListener(this);
+        findViewById(R.id.btn_bl_getDevices).setOnClickListener(this);
     }
 
-    public void getPhantomAuthorized() {
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.btn_ht_cancelAuthorized:
+                doHTCancelAuthorized();
+                break;
+            case R.id.btn_ht_getAuthorized:
+                doHTGetAuthorized();
+                break;
+            case R.id.btn_ht_getAccessToken:
+                doHTGetAccessToken();
+                break;
+            case R.id.btn_ht_getDevices:
+                doHTGetDevice();
+                break;
+            case R.id.btn_bl_login:
+                doBLLogin();
+                break;
+            case R.id.btn_bl_getDevices:
+                doBLGetDevices();
+                break;
+        }
+    }
+
+    private void doBLGetDevices() {
+
+    }
+
+    private void doBLLogin() {
+//        LingManager.getInstance().getIOTAgent().doBLLogin();
+    }
+
+    public void doHTGetAuthorized() {
         String code = "0f0003e906fa8a0fd49c62b8c819aad9c599ea580652eb305e8a28fabfbc6b20";
         AuthorizedCodeEntity authorizedEntity = new AuthorizedCodeEntity();
         authorizedEntity.setUserId("123456");
         authorizedEntity.setAuthorizedCode(code);
-        IOTAgent.getPhantomAuthorized(authorizedEntity, new IRequestCallback() {
+        LingManager.getInstance().getIOTAgent().getPhantomAuthorized(authorizedEntity, new IRequestCallback() {
             @Override
             public void responsedCallback(BaseEntity entity, int errorCode, Throwable error) {
                 if (errorCode == BaseRequestModel.RETROFIT_SUCCESS) {
@@ -75,10 +89,10 @@ public class IOTTestActivity extends Activity {
         });
     }
 
-    public void cancelPhantomAuthorized() {
+    public void doHTCancelAuthorized() {
         AuthorizedCodeEntity authorizedEntity = new AuthorizedCodeEntity();
         authorizedEntity.setUserId("123456");
-        IOTAgent.cancelPhantomAuthorized(authorizedEntity, new IRequestCallback() {
+        LingManager.getInstance().getIOTAgent().cancelPhantomAuthorized(authorizedEntity, new IRequestCallback() {
             @Override
             public void responsedCallback(BaseEntity entity, int errorCode, Throwable error) {
                 if (errorCode == BaseRequestModel.RETROFIT_SUCCESS) {
@@ -90,8 +104,8 @@ public class IOTTestActivity extends Activity {
         });
     }
 
-    public void getPhantomTokenFromeServer() {
-        IOTAgent.getPhantomTokenFromServer("123456", new IRequestCallback() {
+    public void doHTGetAccessToken() {
+        LingManager.getInstance().getIOTAgent().getPhantomTokenFromServer("123456", new IRequestCallback() {
             @Override
             public void responsedCallback(BaseEntity entity, int errorCode, Throwable error) {
                 if (errorCode == BaseRequestModel.RETROFIT_SUCCESS) {
@@ -103,9 +117,9 @@ public class IOTTestActivity extends Activity {
         });
     }
 
-    public void getPhantomDeviceList() {
+    public void doHTGetDevice() {
         String access_token = "d715bea1d64bd4c19693cdaeb4b1b3aecbbca5f0f84fadd0e852de7763e4d8b9";
-        IOTAgent.getPhantomDevicesFromPhantom(access_token, new IRequestCallback() {
+        LingManager.getInstance().getIOTAgent().getPhantomDevicesFromPhantom(access_token, new IRequestCallback() {
             @Override
             public void responsedCallback(BaseEntity entity, int errorCode, Throwable error) {
                 if (errorCode == BaseRequestModel.RETROFIT_SUCCESS) {

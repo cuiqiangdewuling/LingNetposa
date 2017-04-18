@@ -1,4 +1,4 @@
-package com.ling.jibonetposa.models.iot;
+package com.ling.jibonetposa.models.phantom;
 
 import android.util.Log;
 
@@ -22,10 +22,10 @@ import static com.ling.jibonetposa.constants.IOTApiConstant.API_PATH_PHANTON_DEV
  * Created by mhz小志 on 2017/3/17.
  */
 
-public class IOTGetPhantomDevicesFromPhantomModel extends BaseRequestModel<PhantomDevicesEntity> {
+public class IOTGetDevicesFromPhantomModel extends BaseRequestModel<PhantomDevicesEntity> {
     private PhantomDevicesEntity mPhantomDevices = new PhantomDevicesEntity();
 
-    public IOTGetPhantomDevicesFromPhantomModel(IRequestCallback requestCallback) {
+    public IOTGetDevicesFromPhantomModel(IRequestCallback requestCallback) {
         super(requestCallback);
         this.mApiPath = API_PATH_PHANTON_DEV;
     }

@@ -1,4 +1,4 @@
-package com.ling.jibonetposa.models.iot;
+package com.ling.jibonetposa.models.phantom;
 
 import com.ling.jibonetposa.base.BaseRequestModel;
 import com.ling.jibonetposa.entities.PhantomAccessTokenEntity;
