@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.haier.uhome.usdk.api.uSDKManager;
 import com.ling.jibonetposa.modules.iot.IOTAgent;
+import com.ling.jibonetposa.utils.LingLog;
 
 import cn.com.broadlink.sdk.BLLet;
 
@@ -13,11 +14,14 @@ import cn.com.broadlink.sdk.BLLet;
 
 public class LingManager {
 
+    private boolean isInit;
     public static LingManager INSTANCE;
-    public static Context mApplication;
+    public Context mApplication;
     public IOTAgent mIOTAgent;
+    public LingLog mLingLog;
 
     private LingManager() {
+        initDebug();
     }
 
     public static LingManager getInstance() {
@@ -32,14 +36,31 @@ public class LingManager {
     }
 
     public void init(Context context) {
+        isInit = true;
         mApplication = context;
-        initBroadLink();
-        initHaier();
         initIOTAgent();
+    }
+
+    private void initDebug() {
+        mLingLog = new LingLog();
+    }
+
+    public void debugOn() {
+        mLingLog.on();
+    }
+
+    public void debugOff() {
+        mLingLog.off();
+    }
+
+    public LingLog getLingLog() {
+        return mLingLog;
     }
 
     private void initIOTAgent() {
         mIOTAgent = new IOTAgent();
+//        initBroadLink();
+        initHaier();
     }
 
     private void initHaier() {
@@ -55,7 +76,8 @@ public class LingManager {
         return mIOTAgent;
     }
 
-    public static Context getAppContext() {
+    public Context getAppContext() {
         return mApplication;
     }
+
 }

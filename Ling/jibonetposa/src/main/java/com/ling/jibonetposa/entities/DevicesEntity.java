@@ -5,12 +5,29 @@ import com.ling.jibonetposa.base.BaseEntity;
 import java.util.List;
 
 /**
- * Created by mhz小志 on 2017/4/14.
+ * Created by mhz小志 on 2017/4/17.
  */
-
 public class DevicesEntity extends BaseEntity {
 
+    @Override
+    public String toString() {
+        return "DevicesEntity{" +
+                "userid='" + userid + '\'' +
+                ", brand_list=" + brand_list +
+                '}';
+    }
+
+    private String userid;
+
     private List<Brand> brand_list;
+
+    public String getUserid() {
+        return userid;
+    }
+
+    public void setUserid(String userid) {
+        this.userid = userid;
+    }
 
     public List<Brand> getBrand_list() {
         return brand_list;
@@ -20,18 +37,16 @@ public class DevicesEntity extends BaseEntity {
         this.brand_list = brand_list;
     }
 
-    @Override
-    public String toString() {
-        return "DevicesEntity{" +
-                "brand_list=" + brand_list +
-                '}';
-    }
-
     public static class Brand {
 
-        private String brand_id;
-        private String brand_name;
-        private List<Device> device_list;
+        @Override
+        public String toString() {
+            return "Brand{" +
+                    "brand_id='" + brand_id + '\'' +
+                    ", brand_name='" + brand_name + '\'' +
+                    ", device_list=" + device_list +
+                    '}';
+        }
 
         public String getBrand_id() {
             return brand_id;
@@ -49,32 +64,38 @@ public class DevicesEntity extends BaseEntity {
             this.brand_name = brand_name;
         }
 
-        public List<Device> getDevice_list() {
+        public List<DeviceItem> getDevice_list() {
             return device_list;
         }
 
-        public void setDevice_list(List<Device> device_list) {
+        public void setDevice_list(List<DeviceItem> device_list) {
             this.device_list = device_list;
+        }
+
+        private String brand_id;
+        private String brand_name;
+        private List<DeviceItem> device_list;
+    }
+
+    public static class DeviceItem {
+
+        public DeviceItem() {
+        }
+
+        public DeviceItem(String name) {
+            this.name = name;
         }
 
         @Override
         public String toString() {
-            return "Brand{" +
-                    "brand_id='" + brand_id + '\'' +
-                    ", brand_name='" + brand_name + '\'' +
-                    ", device_list=" + device_list +
+            return "DeviceItem{" +
+                    "id='" + id + '\'' +
+                    ", name='" + name + '\'' +
+                    ", device_type='" + device_type + '\'' +
+                    ", device_type_name='" + device_type_name + '\'' +
+                    ", device_identifier='" + device_identifier + '\'' +
                     '}';
         }
-
-    }
-
-    public static class Device {
-
-        private String id;
-        private String name;
-        private String device_type;
-        private String device_type_name;
-        private String device_identifier;// 海尔改名用
 
         public String getId() {
             return id;
@@ -116,63 +137,10 @@ public class DevicesEntity extends BaseEntity {
             this.device_identifier = device_identifier;
         }
 
-        @Override
-        public String toString() {
-            return "Device{" +
-                    "id='" + id + '\'' +
-                    ", name='" + name + '\'' +
-                    ", device_type='" + device_type + '\'' +
-                    ", device_type_name='" + device_type_name + '\'' +
-                    ", device_identifier='" + device_identifier + '\'' +
-                    '}';
-        }
+        private String id;
+        private String name;
+        private String device_type;
+        private String device_type_name;
+        private String device_identifier;// 海尔改名用
     }
 }
-/*
- {
-    "data": {
-        "brand_list": [
-            {
-                "brand_id": "abc123456",
-                "brand_name": "huanteng",
-                "device_list": [
-                    {
-                        "id": "123123",
-                        "name": "客厅灯",
-                        "device_type": "nova2",
-                        "device_type_name": "ASDasd",
-                        "device_identifier": "Qasd"
-                    },
-                    {
-                        "id": "12123",
-                        "name": "客厅空调",
-                        "device_type": "nova2",
-                        "device_type_name": "ASDasd",
-                        "device_identifier": "Qasd"
-                    }
-                ]
-            },
-            {
-                "brand_id": "abc123456",
-                "brand_name": "huanteng",
-                "device_list": [
-                    {
-                        "id": "123123",
-                        "name": "客厅灯",
-                        "device_type": "nova2",
-                        "device_type_name": "ASDasd",
-                        "device_identifier": "Qasd"
-                    },
-                    {
-                        "id": "12123",
-                        "name": "客厅空调",
-                        "device_type": "nova2",
-                        "device_type_name": "ASDasd",
-                        "device_identifier": "Qasd"
-                    }
-                ]
-            }
-        ]
-    }
-}
- */

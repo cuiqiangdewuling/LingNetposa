@@ -7,13 +7,14 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import com.ling.jibo.test.NLUEntity;
+import com.ling.jibo.test.NLUModelCacheGet;
+import com.ling.jibo.test.NLUModelGet;
+import com.ling.jibo.test.NLUModelPost;
+import com.ling.jibo.test.TNLUModel;
 import com.ling.jibonetposa.base.BaseEntity;
-import com.ling.jibonetposa.entities.NLUEntity;
 import com.ling.jibonetposa.iretrofit.IRequestCallback;
-import com.ling.jibonetposa.models.test.NLUModelCacheGet;
-import com.ling.jibonetposa.models.test.NLUModelGet;
-import com.ling.jibonetposa.models.test.NLUModelPost;
-import com.ling.jibonetposa.models.test.TNLUModel;
+
 
 public class MainActivity extends Activity {
 

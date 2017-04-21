@@ -21,6 +21,18 @@
             android:gravity="center_horizontal"
             android:orientation="vertical">
 
+            <Button
+                android:id="@+id/btn_getdev"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="获取设有设备"/>
+
+            <Button
+                android:id="@+id/btn_checkbrand"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="获取绑定状态"/>
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
@@ -46,11 +58,18 @@
                 android:layout_height="wrap_content"
                 android:text="幻腾—获取AccessToken"/>
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp"
+                android:background="#7c7c7c"/>
+
             <Button
-                android:id="@+id/btn_ht_getDevices"
+                android:id="@+id/btn_he_login"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="幻腾—获取设备"/>
+                android:text="海尔—登录"/>
 
             <View
                 android:layout_width="match_parent"
@@ -66,10 +85,10 @@
                 android:text="博联—登录"/>
 
             <Button
-                android:id="@+id/btn_bl_getDevices"
+                android:id="@+id/btn_bl_3login"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="博联—获取设备"/>
+                android:text="博联—third登录"/>
 
             <View
                 android:layout_width="match_parent"
@@ -77,6 +96,7 @@
                 android:layout_marginBottom="5dp"
                 android:layout_marginTop="5dp"
                 android:background="#7c7c7c"/>
+
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

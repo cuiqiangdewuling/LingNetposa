@@ -9,10 +9,16 @@ import com.ling.jibonetposa.LingManager;
 import com.ling.jibonetposa.base.BaseEntity;
 import com.ling.jibonetposa.base.BaseRequestModel;
 import com.ling.jibonetposa.entities.AuthorizedCodeEntity;
+import com.ling.jibonetposa.entities.DevicesEntity;
+import com.ling.jibonetposa.entities.HaierAccountEntity;
 import com.ling.jibonetposa.entities.PhantomDevicesEntity;
 import com.ling.jibonetposa.iretrofit.IRequestCallback;
+import com.ling.jibonetposa.models.iot.broadlink.BLLoginModel;
 
 import butterknife.ButterKnife;
+import cn.com.broadlink.sdk.result.account.BLLoginResult;
+
+import static com.ling.jibonetposa.base.BaseRequestModel.RETROFIT_SUCCESS;
 
 /**
  * Created by mhz小志 on 2017/4/13.
@@ -31,17 +37,25 @@ public class IOTTestActivity extends Activity implements View.OnClickListener {
     }
 
     private void initClick() {
+        findViewById(R.id.btn_getdev).setOnClickListener(this);
+        findViewById(R.id.btn_checkbrand).setOnClickListener(this);
         findViewById(R.id.btn_ht_getAccessToken).setOnClickListener(this);
         findViewById(R.id.btn_ht_cancelAuthorized).setOnClickListener(this);
         findViewById(R.id.btn_ht_getAuthorized).setOnClickListener(this);
-        findViewById(R.id.btn_ht_getDevices).setOnClickListener(this);
         findViewById(R.id.btn_bl_login).setOnClickListener(this);
-        findViewById(R.id.btn_bl_getDevices).setOnClickListener(this);
+        findViewById(R.id.btn_bl_3login).setOnClickListener(this);
+        findViewById(R.id.btn_he_login).setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.btn_getdev:
+                getDev();
+                break;
+            case R.id.btn_checkbrand:
+                checkBrand();
+                break;
             case R.id.btn_ht_cancelAuthorized:
                 doHTCancelAuthorized();
                 break;
@@ -51,24 +65,88 @@ public class IOTTestActivity extends Activity implements View.OnClickListener {
             case R.id.btn_ht_getAccessToken:
                 doHTGetAccessToken();
                 break;
-            case R.id.btn_ht_getDevices:
-                doHTGetDevice();
-                break;
             case R.id.btn_bl_login:
                 doBLLogin();
                 break;
-            case R.id.btn_bl_getDevices:
-                doBLGetDevices();
+            case R.id.btn_bl_3login:
+                doBLThirdLogin();
+                break;
+            case R.id.btn_he_login:
+                doHELogin();
                 break;
         }
     }
 
-    private void doBLGetDevices() {
+    private void checkBrand() {
+        LingManager.getInstance().getIOTAgent().checkBrandStatus("123456", new IRequestCallback() {
+            @Override
+            public void responsedCallback(BaseEntity entity, int errorCode, Throwable error) {
+                DevicesEntity entity1 = (DevicesEntity) entity;
+                LingManager.getInstance().getLingLog().LOGD("checkBrandStatus: " + entity1.toString());
+            }
+        });
+    }
 
+    private void getDev() {
+        LingManager.getInstance().getIOTAgent().getAllDevices("123456", 0, new IRequestCallback() {
+            @Override
+            public void responsedCallback(BaseEntity entity, int errorCode, Throwable error) {
+                DevicesEntity devicesEntity = (DevicesEntity) entity;
+                LingManager.getInstance().getLingLog().LOGD("getAllDevices: " + devicesEntity.toString());
+            }
+        });
+    }
+
+    private void doHELogin() {
+        String name = "18600941987";
+        String pass = "yt19870301";
+        LingManager.getInstance().getIOTAgent().doHELogin(name, pass, new IRequestCallback() {
+            @Override
+            public void responsedCallback(BaseEntity entity, int errorCode, Throwable error) {
+                if (errorCode == RETROFIT_SUCCESS) {
+                    HaierAccountEntity accountEntity = (HaierAccountEntity) entity;
+                    if (accountEntity != null) {
+                        LingManager.getInstance().getLingLog().LOGD("loginResult: accountEntity" + accountEntity.toString());
+                    }
+                } else {
+                    LingManager.getInstance().getLingLog().LOGD("loginResult: error" + error.getMessage());
+                }
+            }
+        });
     }
 
     private void doBLLogin() {
-//        LingManager.getInstance().getIOTAgent().doBLLogin();
+        String name = "15643407227";
+        String pass = "Mahuaizhi123";
+        LingManager.getInstance().getIOTAgent().doBLLogin(name, pass, new IRequestCallback() {
+            @Override
+            public void responsedCallback(BaseEntity entity, int errorCode, Throwable error) {
+                if (errorCode == RETROFIT_SUCCESS) {
+                    HaierAccountEntity accountEntity = (HaierAccountEntity) entity;
+                    if (accountEntity != null) {
+                        LingManager.getInstance().getLingLog().LOGD("loginResult: accountEntity" + accountEntity.toString());
+                    }
+                } else {
+                    LingManager.getInstance().getLingLog().LOGD("loginResult: error" + error.getMessage());
+                }
+            }
+        });
+    }
+
+    private void doBLThirdLogin() {
+        String name = "20";
+        LingManager.getInstance().getIOTAgent().doBLThirdAuth(name, new BLLoginModel.BLTaskListener() {
+            @Override
+            public void onPreExecute() {
+
+            }
+
+            @Override
+            public void onPostExecute(Object result) {
+                BLLoginResult loginResult = (BLLoginResult) result;
+                LingManager.getInstance().getLingLog().LOGD("doBLThirdLogin " + loginResult.getMsg());
+            }
+        });
     }
 
     public void doHTGetAuthorized() {
@@ -131,4 +209,5 @@ public class IOTTestActivity extends Activity implements View.OnClickListener {
             }
         });
     }
+
 }

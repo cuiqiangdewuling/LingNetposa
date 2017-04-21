@@ -9,23 +9,23 @@ import android.util.Log;
 
 public class LingLog {
 
-    private static boolean isLog = true;
+    private boolean isLog = true;
 
-    public static void on() {
+    public void on() {
         isLog = true;
     }
 
-    public static void off() {
+    public void off() {
         isLog = false;
     }
 
-    public static final String TAG_D = "[LING_DEBUG]";
+    public final String TAG_D = "[LING_DEBUG]";
 
-    public static void LOGD(String test) {
+    public void LOGD(String test) {
         LOGD(null, test);
     }
 
-    public static void LOGD(String TAG, String test) {
+    public void LOGD(String TAG, String test) {
         if (!isLog) return;
         if (TAG == null || TextUtils.isEmpty(TAG)) {
             Log.d(TAG_D, test);
