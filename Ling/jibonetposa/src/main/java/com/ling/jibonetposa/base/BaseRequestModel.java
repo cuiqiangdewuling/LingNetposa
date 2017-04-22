@@ -1,9 +1,9 @@
 package com.ling.jibonetposa.base;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.google.gson.Gson;
+import com.ling.jibonetposa.LingManager;
 import com.ling.jibonetposa.constants.BaseHttpConstant;
 import com.ling.jibonetposa.iretrofit.IRequestCallback;
 import com.ling.jibonetposa.utils.NetStatusUtil;
@@ -33,6 +33,8 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class BaseRequestModel<T extends BaseEntity> {
 
+    private static final String TAG = BaseRequestModel.class.getSimpleName();
+
     public static final int RETROFIT_SUCCESS = 0;
     public static final int RETROFIT_ERROR = 1;
     public static final int RETROFIT_WRONG = -1;
@@ -61,8 +63,8 @@ public class BaseRequestModel<T extends BaseEntity> {
     /**
      * 获取Retrofit网络请求带缓存的对象
      */
-    public Retrofit retrofitCache(Context context,String cacheUrl,String fileName) {
-        OkHttpClient okHttpClient = setClient(context,cacheUrl,fileName);
+    public Retrofit retrofitCache(Context context, String cacheUrl, String fileName) {
+        OkHttpClient okHttpClient = setClient(context, cacheUrl, fileName);
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(mApiPath)
                 .client(okHttpClient)
@@ -94,6 +96,7 @@ public class BaseRequestModel<T extends BaseEntity> {
 
     /**
      * Retrofit进行网络请求，
+     *
      * @param call
      */
     protected void execute(Call<T> call) {
@@ -102,22 +105,22 @@ public class BaseRequestModel<T extends BaseEntity> {
             @Override
             public void onResponse(Call<T> call, Response<T> response) {
                 if (response.isSuccessful()) {
-                    Log.d("1111", "response1" + response.toString());
+                    LingManager.getInstance().getLingLog().LOGD(TAG, "executeSuccess " + response.toString());
                     BaseRequestModel.this.mRequestCallback.responsedCallback(response.body(), RETROFIT_SUCCESS, (Throwable) null);
                 } else {
-                    Log.d("1111", "response1" + response.toString());
+                    LingManager.getInstance().getLingLog().LOGD(TAG, "executeError" + response.toString());
                     BaseRequestModel.this.mRequestCallback.responsedCallback(null, RETROFIT_WRONG, new RetrofitException(response.toString()));
                 }
             }
 
             @Override
             public void onFailure(Call<T> call, Throwable throwable) {
-                Log.i("1111", "throwable1" + throwable.toString());
+                LingManager.getInstance().getLingLog().LOGD(TAG, "throwable1" + throwable.toString());
                 BaseRequestModel.this.mRequestCallback.responsedCallback(null, RETROFIT_ERROR, throwable);
 //                if (call.isCanceled()) {
-//                    Log.i("1111", "request is canceled");
+//                    LingManager.getInstance().getLingLog().LOGD(TAG, "request is canceled");
 //                } else {
-//                    Log.i("1111", "error:" + throwable.getMessage());
+//                    LingManager.getInstance().getLingLog().LOGD(TAG, "error:" + throwable.getMessage());
 //                }
             }
         });
@@ -126,23 +129,23 @@ public class BaseRequestModel<T extends BaseEntity> {
     /**
      * 请求复用
      */
-    public void resetExecute(){
+    public void resetExecute() {
         Call<T> newCall = mCall.clone();
         newCall.enqueue(new Callback<T>() {
             @Override
             public void onResponse(Call<T> call, Response<T> response) {
                 if (response.isSuccessful()) {
-                    Log.d("1111", "response2" + response.toString());
+                    LingManager.getInstance().getLingLog().LOGD(TAG, "resetExecuteSuccess: " + response.toString());
                     BaseRequestModel.this.mRequestCallback.responsedCallback(response.body(), RETROFIT_SUCCESS, (Throwable) null);
                 } else {
-                    Log.d("1111", "response2" + response.toString());
+                    LingManager.getInstance().getLingLog().LOGD(TAG, "resetExecuteError: " + response.toString());
                     BaseRequestModel.this.mRequestCallback.responsedCallback(null, RETROFIT_WRONG, new RetrofitException(response.toString()));
                 }
             }
 
             @Override
             public void onFailure(Call<T> call, Throwable throwable) {
-                Log.i("1111", "throwable2" + throwable.toString());
+                LingManager.getInstance().getLingLog().LOGD(TAG, "resetExecuteThrowable: " + throwable.toString());
                 BaseRequestModel.this.mRequestCallback.responsedCallback(null, RETROFIT_ERROR, throwable);
             }
         });
@@ -155,7 +158,6 @@ public class BaseRequestModel<T extends BaseEntity> {
         Interceptor baseInterceptor = new Interceptor() {
             @Override
             public okhttp3.Response intercept(Chain chain) throws IOException {
-
                 Request request = chain.request();
                 if (NetStatusUtil.hasNetwork()) {
                     /**
@@ -178,11 +180,10 @@ public class BaseRequestModel<T extends BaseEntity> {
 
 
     /**
-     *  只有网络拦截器环节 才会写入缓存写入缓存,在有网络的时候
-     *  设置缓存时间
+     * 只有网络拦截器环节 才会写入缓存写入缓存,在有网络的时候
+     * 设置缓存时间
      */
     public Interceptor getRewriteCacheControlInterceptor() {
-
         Interceptor rewriteCacheControlInterceptor = new Interceptor() {
             @Override
             public okhttp3.Response intercept(Chain chain) throws IOException {
@@ -201,23 +202,24 @@ public class BaseRequestModel<T extends BaseEntity> {
 
     /**
      * 设置okhttp的client
+     *
      * @param context
      * @param CacheDirectory
      * @return
      */
-    public OkHttpClient setClient(Context context, String CacheDirectory,String fileName){
+    public OkHttpClient setClient(Context context, String CacheDirectory, String fileName) {
 
         File httpCacheDirectory;
 
-        if (BaseHttpConstant.EXTERNAL.equals(CacheDirectory) ){
+        if (BaseHttpConstant.EXTERNAL.equals(CacheDirectory)) {
             //外部存储
             httpCacheDirectory = new File(context.getExternalCacheDir(), fileName);
-        }else if (BaseHttpConstant.INTERNAL.equals(CacheDirectory)){
+        } else if (BaseHttpConstant.INTERNAL.equals(CacheDirectory)) {
             //设置缓存路径 内置存储
             httpCacheDirectory = new File(context.getCacheDir(), fileName);
-        }else{
+        } else {
             File file = new File(CacheDirectory);
-            httpCacheDirectory = new File(file,fileName);
+            httpCacheDirectory = new File(file, fileName);
         }
 
         //设置缓存 10M
@@ -235,7 +237,8 @@ public class BaseRequestModel<T extends BaseEntity> {
     /**
      * 取消当前对象的网络请求
      */
-    public void cancel(){
-        mCall.cancel();
+    public void cancel() {
+        if (mCall != null)
+            mCall.cancel();
     }
 }

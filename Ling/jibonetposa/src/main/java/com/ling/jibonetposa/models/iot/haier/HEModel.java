@@ -42,7 +42,7 @@ public class HEModel {
 
             @Override
             public void onResponseFailed(RespCommonModel respCommonModel) {
-              LingManager.getInstance().getLingLog().LOGD("onResponseFailed:" + respCommonModel);
+                LingManager.getInstance().getLingLog().LOGD("onResponseFailed:" + respCommonModel);
                 if (requestCallback != null)
                     requestCallback.responsedCallback(null, RETROFIT_ERROR, new RetrofitException(respCommonModel.getRetInfo()));
             }

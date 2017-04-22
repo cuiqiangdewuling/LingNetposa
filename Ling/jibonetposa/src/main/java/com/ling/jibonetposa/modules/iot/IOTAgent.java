@@ -1,21 +1,17 @@
 package com.ling.jibonetposa.modules.iot;
 
 import com.ling.jibonetposa.LingManager;
-import com.ling.jibonetposa.base.BaseEntity;
-import com.ling.jibonetposa.base.BaseRequestModel;
-import com.ling.jibonetposa.entities.AuthorizedCodeEntity;
-import com.ling.jibonetposa.entities.SaveTokenEntity;
+import com.ling.jibonetposa.entities.SaveAuthDataEntity;
 import com.ling.jibonetposa.iretrofit.IRequestCallback;
-import com.ling.jibonetposa.models.iot.CheckBrandsStatusModel;
-import com.ling.jibonetposa.models.iot.GetDevicesModel;
+import com.ling.jibonetposa.models.iot.CancelAuthorizedModel;
+import com.ling.jibonetposa.models.iot.CheckBrandsFromServerModel;
+import com.ling.jibonetposa.models.iot.GetDevicesFromServerModel;
+import com.ling.jibonetposa.models.iot.GetTokenFromServerModel;
+import com.ling.jibonetposa.models.iot.SaveTokenToServerModel;
 import com.ling.jibonetposa.models.iot.broadlink.BLDevicesModel;
 import com.ling.jibonetposa.models.iot.broadlink.BLLoginModel;
 import com.ling.jibonetposa.models.iot.haier.HEModel;
-import com.ling.jibonetposa.models.iot.phantom.CancelAuthorizedModel;
-import com.ling.jibonetposa.models.iot.phantom.GetDevicesFromPhantomModel;
 import com.ling.jibonetposa.models.iot.phantom.GetPhantomTokenModel;
-import com.ling.jibonetposa.models.iot.phantom.GetTokenFromServerModel;
-import com.ling.jibonetposa.models.iot.phantom.SaveTokenToServerModel;
 import com.ling.jibonetposa.utils.NetWorkUtil;
 
 import java.util.HashMap;
@@ -34,27 +30,43 @@ import static com.ling.jibonetposa.constants.IOTApiConstant.PHANTON_SCOPE;
 
 public class IOTAgent {
 
-    public boolean isStop1 = true;
-    public boolean isStop2 = true;
-    public boolean isStop3 = true;
-    public boolean isStop4 = true;
-    public boolean isStop5 = true;
-    public boolean isStop6 = true;
-    public boolean isStop7 = true;
-
     private BLDevicesModel mBLDevicesModel = new BLDevicesModel();
     private BLLoginModel mBLLoginModel = new BLLoginModel();
+    private HEModel mHEModel;
+
+    private GetDevicesFromServerModel mGetDevicesFromServerModel;
+    private CheckBrandsFromServerModel mCheckBrandsFromServerModel;
+    private CancelAuthorizedModel mCancelAuthorizedModel;
+    private GetTokenFromServerModel mGetTokenFromServerModel;
+    private SaveTokenToServerModel mSaveTokenToServerModel;
+    private GetPhantomTokenModel mGetPhantomTokenModel;
 
     public void shutdownResponsed() {
-        isStop1 = true;
-        isStop2 = true;
-        isStop3 = true;
-        isStop4 = true;
-        isStop5 = true;
-        isStop6 = true;
-        isStop7 = true;
+        if (mGetDevicesFromServerModel != null) {
+            mGetDevicesFromServerModel.cancel();
+            mGetDevicesFromServerModel = null;
+        }
+        if (mCheckBrandsFromServerModel != null) {
+            mCheckBrandsFromServerModel.cancel();
+            mCheckBrandsFromServerModel = null;
+        }
+        if (mCancelAuthorizedModel != null) {
+            mCancelAuthorizedModel.cancel();
+            mCancelAuthorizedModel = null;
+        }
+        if (mGetTokenFromServerModel != null) {
+            mGetTokenFromServerModel.cancel();
+            mGetTokenFromServerModel = null;
+        }
+        if (mSaveTokenToServerModel != null) {
+            mSaveTokenToServerModel.cancel();
+            mSaveTokenToServerModel = null;
+        }
+        if (mGetPhantomTokenModel != null) {
+            mGetPhantomTokenModel.cancel();
+            mGetPhantomTokenModel = null;
+        }
     }
-
 
     /**
      * 获取所有设备
@@ -62,16 +74,13 @@ public class IOTAgent {
      * @param userid 用户id
      * @param type   刷新的类别，（0：获取存储在Ling服务器的设备信息。1：获取所有第三方最新的设备信息）
      */
-    public void getAllDevices(String userid, int type, final IRequestCallback requestCallback) {
-        isStop1 = false;
-        new GetDevicesModel(new IRequestCallback() {
-            @Override
-            public void responsedCallback(BaseEntity entity, int errorCode, Throwable error) {
-                if (!isStop1) {
-                    requestCallback.responsedCallback(entity, errorCode, error);
-                }
-            }
-        }).getDevices(userid);
+    public void getAllDevices(final String userid, int type, final IRequestCallback requestCallback) {
+        if (mGetDevicesFromServerModel != null) {
+            mGetDevicesFromServerModel.cancel();
+            mGetDevicesFromServerModel = null;
+        }
+        mGetDevicesFromServerModel = new GetDevicesFromServerModel(requestCallback);
+        mGetDevicesFromServerModel.getDevices(userid, type);
     }
 
     /**
@@ -80,100 +89,71 @@ public class IOTAgent {
      * @param userid
      */
     public void checkBrandStatus(String userid, final IRequestCallback requestCallback) {
-        isStop2 = false;
-        new CheckBrandsStatusModel(new IRequestCallback() {
-            @Override
-            public void responsedCallback(BaseEntity entity, int errorCode, Throwable error) {
-                if (!isStop2) {
-                    requestCallback.responsedCallback(entity, errorCode, error);
-                }
-            }
-        }).checkBrandStatus(userid);
+        if (mCheckBrandsFromServerModel != null) {
+            mCheckBrandsFromServerModel.cancel();
+            mCheckBrandsFromServerModel = null;
+        }
+        mCheckBrandsFromServerModel = new CheckBrandsFromServerModel(requestCallback);
+        mCheckBrandsFromServerModel.getBrands(userid);
+    }
+
+    /**
+     * 取消用户授权
+     */
+    public void cancelAuthorized(String userid, int brandtype, final IRequestCallback requestCallback) {
+        if (mCancelAuthorizedModel != null) {
+            mCancelAuthorizedModel.cancel();
+            mCancelAuthorizedModel = null;
+        }
+        mCancelAuthorizedModel = new CancelAuthorizedModel(requestCallback);
+        mCancelAuthorizedModel.cancelAuthorized(userid, brandtype);
     }
 
     /**
      * 获取保存的Phantom Token
      */
-    public void getPhantomTokenFromServer(String userId, final IRequestCallback requestCallback) {
-        isStop3 = false;
-        new GetTokenFromServerModel(new IRequestCallback() {
-            @Override
-            public void responsedCallback(BaseEntity entity, int errorCode, Throwable error) {
-                if (!isStop3) {
-                    requestCallback.responsedCallback(entity, errorCode, error);
-                }
-            }
-        }).getPhantomToken(userId);
+    public void getTokenFromServer(String userId, String type, final IRequestCallback requestCallback) {
+        if (mGetTokenFromServerModel != null) {
+            mGetTokenFromServerModel.cancel();
+            mGetTokenFromServerModel = null;
+        }
+        mGetTokenFromServerModel = new GetTokenFromServerModel(requestCallback);
+        mGetTokenFromServerModel.getPhantomToken(userId, type);
+    }
+
+
+    /**
+     * 登录海尔账号  成功后将账号数据存到server
+     */
+    public void doHELogin(String username, String password, final IRequestCallback requestCallback) {
+        mHEModel = new HEModel(LingManager.getInstance().getAppContext());
+        mHEModel.doHELogin(username, password, requestCallback);
     }
 
     /**
      * 获取幻腾授权
      * <p>
      * 根据authorizedCode去获取幻腾Token，然后将Token保存到服务器
-     *
-     * @param authorizedEntity 获取授权所需要的参数
      */
-    public void getPhantomAuthorized(final AuthorizedCodeEntity authorizedEntity, final IRequestCallback requestCallback) {
-        isStop4 = false;
-        new GetPhantomTokenModel(new IRequestCallback() {
-            @Override
-            public void responsedCallback(BaseEntity entity, int errorCode, Throwable error) {
-                if (errorCode == BaseRequestModel.RETROFIT_SUCCESS) {
-                    SaveTokenEntity tokenEntity = (SaveTokenEntity) entity;
-                    if (!isStop4) {
-                        doSaveAuthorizedTokenToServer(authorizedEntity.getUserId(), tokenEntity, requestCallback);
-                    }
-                } else {
-                    if (!isStop4) {
-                        requestCallback.responsedCallback(entity, errorCode, error);
-                    }
-                }
-            }
-        }).getPhantomToken(authorizedEntity.getAuthorizedCode());
+    public void getPhantomAuthorized(final String authorizedCode, final IRequestCallback requestCallback) {
+        if (mGetPhantomTokenModel != null) {
+            mGetPhantomTokenModel.cancel();
+            mGetPhantomTokenModel = null;
+        }
+        mGetPhantomTokenModel = new GetPhantomTokenModel(requestCallback);
+        mGetPhantomTokenModel.getPhantomToken(authorizedCode);
     }
 
     /**
-     * 将Token保存
+     * 保存授权数据
      */
-    private void doSaveAuthorizedTokenToServer(String userId, SaveTokenEntity tokenEntity, final IRequestCallback requestCallback) {
-        new SaveTokenToServerModel(new IRequestCallback() {
-            @Override
-            public void responsedCallback(BaseEntity entity, int errorCode, Throwable error) {
-                if (!isStop4) {
-                    requestCallback.responsedCallback(entity, errorCode, error);
-                }
-            }
-        }).saveToken(userId, tokenEntity);
-    }
-
-    /**
-     * 获取保存的Phantom Token
-     */
-    public void getPhantomDevicesFromPhantom(String accessToken, final IRequestCallback requestCallback) {
-        isStop5 = false;
-        new GetDevicesFromPhantomModel(new IRequestCallback() {
-            @Override
-            public void responsedCallback(BaseEntity entity, int errorCode, Throwable error) {
-                if (!isStop5) {
-                    requestCallback.responsedCallback(entity, errorCode, error);
-                }
-            }
-        }).getPhantomDevices(accessToken);
-    }
-
-    /**
-     * 取消幻腾授权
-     */
-    public void cancelPhantomAuthorized(final AuthorizedCodeEntity authorizedEntity, final IRequestCallback requestCallback) {
-        isStop6 = false;
-        new CancelAuthorizedModel(new IRequestCallback() {
-            @Override
-            public void responsedCallback(BaseEntity entity, int errorCode, Throwable error) {
-                if (!isStop6) {
-                    requestCallback.responsedCallback(entity, errorCode, error);
-                }
-            }
-        }).cancelAuthorized(authorizedEntity.getUserId());
+    private void doSaveAuthDataToServer(SaveAuthDataEntity tokenEntity, final IRequestCallback requestCallback) {
+        if (mSaveTokenToServerModel != null) {
+            mSaveTokenToServerModel.cancel();
+            mSaveTokenToServerModel = null;
+        }
+        mSaveTokenToServerModel = new SaveTokenToServerModel(requestCallback);
+        mSaveTokenToServerModel.saveToken(tokenEntity);
     }
 
     /**
@@ -261,18 +241,20 @@ public class IOTAgent {
 //        });
     }
 
+
     /**
-     * 登录海尔账号
+     * 获取保存的Phantom Token
      */
-    public void doHELogin(String username, String password, final IRequestCallback requestCallback) {
-        isStop7 = false;
-        new HEModel(LingManager.getInstance().getAppContext()).doHELogin(username, password, new IRequestCallback() {
-            @Override
-            public void responsedCallback(BaseEntity entity, int errorCode, Throwable error) {
-                if (!isStop7) {
-                    requestCallback.responsedCallback(entity, errorCode, error);
-                }
-            }
-        });
+    public void getPhantomDevicesFromPhantom(String accessToken, final IRequestCallback requestCallback) {
+//        isStop5 = false;
+//        new GetDevicesFromPhantomModel(new IRequestCallback() {
+//            @Override
+//            public void responsedCallback(BaseEntity entity, int errorCode, Throwable error) {
+//                if (!isStop5) {
+//                    requestCallback.responsedCallback(entity, errorCode, error);
+//                }
+//            }
+//        }).getPhantomDevices(accessToken);
     }
+
 }

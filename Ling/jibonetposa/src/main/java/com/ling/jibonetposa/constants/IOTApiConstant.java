@@ -14,11 +14,12 @@ public class IOTApiConstant {
     public static final String API_PATH_PHANTON_GET_DEV_ALL = "/api/devices.json";   // 获取当前用户的所有设备
 
     // Ling服务ApiPath
-    // public static final String API_PATH_JIBO = "http://101.201.144.210:8082/";
     public static final String API_PATH_JIBO = "http://101.201.72.216:8082";
     public static final String API_PATH_JIBO_TOKEN_SAVE = "/jibo/token/save";
     public static final String API_PATH_JIBO_TOKEN_GET = "/jibo/token/get";
     public static final String API_PATH_JIBO_TOKEN_DELETE = "/jibo/token/delete";
+    public static final String API_PATH_JIBO_DEVICES = "/jibo/devices";
+    public static final String API_PATH_JIBO_BRANDS = "/jibo/devices/factory";
 
     // 幻腾授权相关参数
     public static final String PHANTON_APP_ID = "f871bd790d58a4b4cf6544ff0f97722136571390d4aaf4e8b17acc9d46d842c2";

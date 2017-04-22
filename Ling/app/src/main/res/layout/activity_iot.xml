@@ -21,6 +21,13 @@
             android:gravity="center_horizontal"
             android:orientation="vertical">
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp"
+                android:background="#7c7c7c"/>
+
             <Button
                 android:id="@+id/btn_getdev"
                 android:layout_width="match_parent"

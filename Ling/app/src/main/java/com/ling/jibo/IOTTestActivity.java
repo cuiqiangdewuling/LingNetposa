@@ -8,10 +8,12 @@ import android.view.View;
 import com.ling.jibonetposa.LingManager;
 import com.ling.jibonetposa.base.BaseEntity;
 import com.ling.jibonetposa.base.BaseRequestModel;
-import com.ling.jibonetposa.entities.AuthorizedCodeEntity;
-import com.ling.jibonetposa.entities.DevicesEntity;
+import com.ling.jibonetposa.constants.IOTDevConstant;
+import com.ling.jibonetposa.entities.BLAccountEntity;
 import com.ling.jibonetposa.entities.HaierAccountEntity;
 import com.ling.jibonetposa.entities.PhantomDevicesEntity;
+import com.ling.jibonetposa.entities.ResultGetBrandEntity;
+import com.ling.jibonetposa.entities.ResultGetDevicesEntity;
 import com.ling.jibonetposa.iretrofit.IRequestCallback;
 import com.ling.jibonetposa.models.iot.broadlink.BLLoginModel;
 
@@ -26,7 +28,7 @@ import static com.ling.jibonetposa.base.BaseRequestModel.RETROFIT_SUCCESS;
 
 public class IOTTestActivity extends Activity implements View.OnClickListener {
 
-    public static final String TAG = "Ling ";
+    public static final String TAG = IOTTestActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,24 +80,37 @@ public class IOTTestActivity extends Activity implements View.OnClickListener {
     }
 
     private void checkBrand() {
-        LingManager.getInstance().getIOTAgent().checkBrandStatus("123456", new IRequestCallback() {
+        LingManager.getInstance().getIOTAgent().checkBrandStatus("jibo", new IRequestCallback() {
             @Override
             public void responsedCallback(BaseEntity entity, int errorCode, Throwable error) {
-                DevicesEntity entity1 = (DevicesEntity) entity;
-                LingManager.getInstance().getLingLog().LOGD("checkBrandStatus: " + entity1.toString());
+                if (errorCode == RETROFIT_SUCCESS) {
+                    ResultGetBrandEntity brandEntity = (ResultGetBrandEntity) entity;
+                    if (brandEntity != null) {
+                        LingManager.getInstance().getLingLog().LOGD(TAG, "checkBrand: brandEntity" + brandEntity.toString());
+                    }
+                } else {
+                    LingManager.getInstance().getLingLog().LOGD(TAG, "checkBrand: error" + error.getMessage());
+                }
             }
         });
     }
 
     private void getDev() {
-        LingManager.getInstance().getIOTAgent().getAllDevices("123456", 0, new IRequestCallback() {
+        LingManager.getInstance().getIOTAgent().getAllDevices("jibo", 0, new IRequestCallback() {
             @Override
             public void responsedCallback(BaseEntity entity, int errorCode, Throwable error) {
-                DevicesEntity devicesEntity = (DevicesEntity) entity;
-                LingManager.getInstance().getLingLog().LOGD("getAllDevices: " + devicesEntity.toString());
+                if (errorCode == RETROFIT_SUCCESS) {
+                    ResultGetDevicesEntity brandEntity = (ResultGetDevicesEntity) entity;
+                    if (brandEntity != null) {
+                        LingManager.getInstance().getLingLog().LOGD(TAG, "getDev: brandEntity" + brandEntity.toString());
+                    }
+                } else {
+                    LingManager.getInstance().getLingLog().LOGD(TAG, "getDev: error" + error.getMessage());
+                }
             }
         });
     }
+
 
     private void doHELogin() {
         String name = "18600941987";
@@ -106,10 +121,10 @@ public class IOTTestActivity extends Activity implements View.OnClickListener {
                 if (errorCode == RETROFIT_SUCCESS) {
                     HaierAccountEntity accountEntity = (HaierAccountEntity) entity;
                     if (accountEntity != null) {
-                        LingManager.getInstance().getLingLog().LOGD("loginResult: accountEntity" + accountEntity.toString());
+                        LingManager.getInstance().getLingLog().LOGD(TAG, "doHELogin: accountEntity" + accountEntity.toString());
                     }
                 } else {
-                    LingManager.getInstance().getLingLog().LOGD("loginResult: error" + error.getMessage());
+                    LingManager.getInstance().getLingLog().LOGD(TAG, "doHELogin: error" + error.getMessage());
                 }
             }
         });
@@ -122,12 +137,12 @@ public class IOTTestActivity extends Activity implements View.OnClickListener {
             @Override
             public void responsedCallback(BaseEntity entity, int errorCode, Throwable error) {
                 if (errorCode == RETROFIT_SUCCESS) {
-                    HaierAccountEntity accountEntity = (HaierAccountEntity) entity;
+                    BLAccountEntity accountEntity = (BLAccountEntity) entity;
                     if (accountEntity != null) {
-                        LingManager.getInstance().getLingLog().LOGD("loginResult: accountEntity" + accountEntity.toString());
+                        LingManager.getInstance().getLingLog().LOGD(TAG, "doBLLogin: accountEntity" + accountEntity.toString());
                     }
                 } else {
-                    LingManager.getInstance().getLingLog().LOGD("loginResult: error" + error.getMessage());
+                    LingManager.getInstance().getLingLog().LOGD(TAG, "doBLLogin: error" + error.getMessage());
                 }
             }
         });
@@ -151,10 +166,7 @@ public class IOTTestActivity extends Activity implements View.OnClickListener {
 
     public void doHTGetAuthorized() {
         String code = "0f0003e906fa8a0fd49c62b8c819aad9c599ea580652eb305e8a28fabfbc6b20";
-        AuthorizedCodeEntity authorizedEntity = new AuthorizedCodeEntity();
-        authorizedEntity.setUserId("123456");
-        authorizedEntity.setAuthorizedCode(code);
-        LingManager.getInstance().getIOTAgent().getPhantomAuthorized(authorizedEntity, new IRequestCallback() {
+        LingManager.getInstance().getIOTAgent().getPhantomAuthorized(code, new IRequestCallback() {
             @Override
             public void responsedCallback(BaseEntity entity, int errorCode, Throwable error) {
                 if (errorCode == BaseRequestModel.RETROFIT_SUCCESS) {
@@ -168,9 +180,7 @@ public class IOTTestActivity extends Activity implements View.OnClickListener {
     }
 
     public void doHTCancelAuthorized() {
-        AuthorizedCodeEntity authorizedEntity = new AuthorizedCodeEntity();
-        authorizedEntity.setUserId("123456");
-        LingManager.getInstance().getIOTAgent().cancelPhantomAuthorized(authorizedEntity, new IRequestCallback() {
+        LingManager.getInstance().getIOTAgent().cancelAuthorized("123456", 1, new IRequestCallback() {
             @Override
             public void responsedCallback(BaseEntity entity, int errorCode, Throwable error) {
                 if (errorCode == BaseRequestModel.RETROFIT_SUCCESS) {
@@ -183,7 +193,7 @@ public class IOTTestActivity extends Activity implements View.OnClickListener {
     }
 
     public void doHTGetAccessToken() {
-        LingManager.getInstance().getIOTAgent().getPhantomTokenFromServer("123456", new IRequestCallback() {
+        LingManager.getInstance().getIOTAgent().getTokenFromServer("123456", IOTDevConstant.BRAND_TYPE_PHANTOM, new IRequestCallback() {
             @Override
             public void responsedCallback(BaseEntity entity, int errorCode, Throwable error) {
                 if (errorCode == BaseRequestModel.RETROFIT_SUCCESS) {

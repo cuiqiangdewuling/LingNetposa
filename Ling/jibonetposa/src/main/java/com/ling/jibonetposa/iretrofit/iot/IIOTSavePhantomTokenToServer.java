@@ -1,6 +1,6 @@
 package com.ling.jibonetposa.iretrofit.iot;
 
-import com.ling.jibonetposa.entities.LingResultEntity;
+import com.ling.jibonetposa.entities.ResultGetTokenEntity;
 
 import okhttp3.RequestBody;
 import retrofit2.Call;
@@ -18,5 +18,5 @@ public interface IIOTSavePhantomTokenToServer {
 
     @Headers({"Content-type:application/json;charset=UTF-8"})
     @POST(API_PATH_JIBO_TOKEN_SAVE)
-    Call<LingResultEntity> saveToken(@Body RequestBody route);
+    Call<ResultGetTokenEntity> saveToken(@Body RequestBody route);
 }

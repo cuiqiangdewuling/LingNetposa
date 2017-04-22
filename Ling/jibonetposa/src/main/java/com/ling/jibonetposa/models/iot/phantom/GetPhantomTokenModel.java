@@ -1,7 +1,7 @@
 package com.ling.jibonetposa.models.iot.phantom;
 
 import com.ling.jibonetposa.base.BaseRequestModel;
-import com.ling.jibonetposa.entities.SaveTokenEntity;
+import com.ling.jibonetposa.entities.PhantomTokenEntity;
 import com.ling.jibonetposa.iretrofit.IRequestCallback;
 import com.ling.jibonetposa.iretrofit.iot.IIOTGetPhantomTokenFromPhantom;
 
@@ -16,7 +16,7 @@ import static com.ling.jibonetposa.constants.IOTApiConstant.PHANTON_REDIRECT_URI
  * Created by mhz小志 on 2017/3/17.
  */
 
-public class GetPhantomTokenModel extends BaseRequestModel<SaveTokenEntity> {
+public class GetPhantomTokenModel extends BaseRequestModel<PhantomTokenEntity> {
 
     public GetPhantomTokenModel(IRequestCallback requestCallback) {
         super(requestCallback);
@@ -31,7 +31,7 @@ public class GetPhantomTokenModel extends BaseRequestModel<SaveTokenEntity> {
         mParams.put("code", authorizeCode);
 
         IIOTGetPhantomTokenFromPhantom iiotGetTokenFromPhantom = retrofit().create(IIOTGetPhantomTokenFromPhantom.class);
-        Call<SaveTokenEntity> token = iiotGetTokenFromPhantom.getToken(organizeParams());
+        Call<PhantomTokenEntity> token = iiotGetTokenFromPhantom.getToken(organizeParams());
         execute(token);
     }
 }

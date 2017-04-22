@@ -1,6 +1,6 @@
 package com.ling.jibonetposa.iretrofit.iot;
 
-import com.ling.jibonetposa.entities.LingResultEntity;
+import com.ling.jibonetposa.entities.ResultGetTokenEntity;
 
 import java.util.Map;
 
@@ -17,5 +17,5 @@ import static com.ling.jibonetposa.constants.IOTApiConstant.API_PATH_JIBO_TOKEN_
 public interface IIOTGetPhantomTokenFromServer {
 
     @GET(API_PATH_JIBO_TOKEN_GET)
-    Call<LingResultEntity> getToken(@QueryMap Map<String, Object> params);
+    Call<ResultGetTokenEntity> getToken(@QueryMap Map<String, Object> params);
 }

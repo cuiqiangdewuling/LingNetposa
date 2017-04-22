@@ -6,7 +6,7 @@ import com.ling.jibonetposa.base.BaseEntity;
  * Created by mhz小志 on 2017/3/18.
  */
 
-public class LingResultEntity extends BaseEntity {
+public class ResultSaveAuthDataEntity extends BaseEntity {
 
     private int errno;
     private String errmsg;
@@ -14,7 +14,7 @@ public class LingResultEntity extends BaseEntity {
 
     @Override
     public String toString() {
-        return "LingResultEntity{" +
+        return "ResultGetTokenEntity{" +
                 "errno=" + errno +
                 ", errmsg='" + errmsg + '\'' +
                 ", data=" + data +
@@ -23,21 +23,11 @@ public class LingResultEntity extends BaseEntity {
 
     public static class Data {
         private String msg;
-        private String access_token;
-
-        public String getAccess_token() {
-            return access_token;
-        }
-
-        public void setAccess_token(String access_token) {
-            this.access_token = access_token;
-        }
 
         @Override
         public String toString() {
             return "Data{" +
                     "msg='" + msg + '\'' +
-                    ", access_token='" + access_token + '\'' +
                     '}';
         }
 

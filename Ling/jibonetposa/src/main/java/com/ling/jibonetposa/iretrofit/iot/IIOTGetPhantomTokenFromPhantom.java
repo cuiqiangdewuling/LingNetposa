@@ -1,6 +1,6 @@
 package com.ling.jibonetposa.iretrofit.iot;
 
-import com.ling.jibonetposa.entities.SaveTokenEntity;
+import com.ling.jibonetposa.entities.PhantomTokenEntity;
 
 import java.util.Map;
 
@@ -19,5 +19,5 @@ public interface IIOTGetPhantomTokenFromPhantom {
 
     @FormUrlEncoded
     @POST(API_PATH_PHANTON_TOKEN)
-    Call<SaveTokenEntity> getToken(@FieldMap Map<String, Object> params);
+    Call<PhantomTokenEntity> getToken(@FieldMap Map<String, Object> params);
 }
