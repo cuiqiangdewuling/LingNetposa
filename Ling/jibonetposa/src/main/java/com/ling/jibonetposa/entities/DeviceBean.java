@@ -12,6 +12,9 @@ public class DeviceBean {
     private String device_on;
     private String device_type;
 
+    public DeviceBean() {
+    }
+
     public DeviceBean(String device_name) {
         this.device_name = device_name;
     }

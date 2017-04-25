@@ -10,10 +10,11 @@ import com.ling.jibonetposa.base.BaseEntity;
 import com.ling.jibonetposa.base.BaseRequestModel;
 import com.ling.jibonetposa.constants.IOTDevConstant;
 import com.ling.jibonetposa.entities.BLAccountEntity;
+import com.ling.jibonetposa.entities.BrandStatusEntity;
+import com.ling.jibonetposa.entities.DevicesEntity;
 import com.ling.jibonetposa.entities.HaierAccountEntity;
 import com.ling.jibonetposa.entities.PhantomDevicesEntity;
-import com.ling.jibonetposa.entities.ResultGetBrandEntity;
-import com.ling.jibonetposa.entities.ResultGetDevicesEntity;
+import com.ling.jibonetposa.entities.SaveAuthDataEntity;
 import com.ling.jibonetposa.iretrofit.IRequestCallback;
 import com.ling.jibonetposa.models.iot.broadlink.BLLoginModel;
 
@@ -21,6 +22,7 @@ import butterknife.ButterKnife;
 import cn.com.broadlink.sdk.result.account.BLLoginResult;
 
 import static com.ling.jibonetposa.base.BaseRequestModel.RETROFIT_SUCCESS;
+import static com.ling.jibonetposa.constants.IOTDevConstant.DEV_FLUSH_TYOE_AUTO;
 
 /**
  * Created by mhz小志 on 2017/4/13.
@@ -74,7 +76,8 @@ public class IOTTestActivity extends Activity implements View.OnClickListener {
                 doBLThirdLogin();
                 break;
             case R.id.btn_he_login:
-                doHELogin();
+//                doHELogin();
+                doSaveAuthToServer();
                 break;
         }
     }
@@ -84,9 +87,9 @@ public class IOTTestActivity extends Activity implements View.OnClickListener {
             @Override
             public void responsedCallback(BaseEntity entity, int errorCode, Throwable error) {
                 if (errorCode == RETROFIT_SUCCESS) {
-                    ResultGetBrandEntity brandEntity = (ResultGetBrandEntity) entity;
+                    BrandStatusEntity brandEntity = (BrandStatusEntity) entity;
                     if (brandEntity != null) {
-                        LingManager.getInstance().getLingLog().LOGD(TAG, "checkBrand: brandEntity" + brandEntity.toString());
+                        LingManager.getInstance().getLingLog().LOGD(TAG, "checkBrand: brandStatusEntity" + brandEntity.toString());
                     }
                 } else {
                     LingManager.getInstance().getLingLog().LOGD(TAG, "checkBrand: error" + error.getMessage());
@@ -96,13 +99,13 @@ public class IOTTestActivity extends Activity implements View.OnClickListener {
     }
 
     private void getDev() {
-        LingManager.getInstance().getIOTAgent().getAllDevices("jibo", 0, new IRequestCallback() {
+        LingManager.getInstance().getIOTAgent().getAllDevices("jibo", DEV_FLUSH_TYOE_AUTO, new IRequestCallback() {
             @Override
             public void responsedCallback(BaseEntity entity, int errorCode, Throwable error) {
                 if (errorCode == RETROFIT_SUCCESS) {
-                    ResultGetDevicesEntity brandEntity = (ResultGetDevicesEntity) entity;
-                    if (brandEntity != null) {
-                        LingManager.getInstance().getLingLog().LOGD(TAG, "getDev: brandEntity" + brandEntity.toString());
+                    DevicesEntity devicesEntity = (DevicesEntity) entity;
+                    if (devicesEntity != null) {
+                        LingManager.getInstance().getLingLog().LOGD(TAG, "getDev: devicesEntity" + devicesEntity.toString());
                     }
                 } else {
                     LingManager.getInstance().getLingLog().LOGD(TAG, "getDev: error" + error.getMessage());
@@ -180,7 +183,7 @@ public class IOTTestActivity extends Activity implements View.OnClickListener {
     }
 
     public void doHTCancelAuthorized() {
-        LingManager.getInstance().getIOTAgent().cancelAuthorized("123456", 1, new IRequestCallback() {
+        LingManager.getInstance().getIOTAgent().cancelAuthorized("123456", IOTDevConstant.BRAND_TYPE_PHANTOM, new IRequestCallback() {
             @Override
             public void responsedCallback(BaseEntity entity, int errorCode, Throwable error) {
                 if (errorCode == BaseRequestModel.RETROFIT_SUCCESS) {
@@ -220,4 +223,34 @@ public class IOTTestActivity extends Activity implements View.OnClickListener {
         });
     }
 
+    public void doSaveAuthToServer() {
+        SaveAuthDataEntity saveAuthDataEntity = new SaveAuthDataEntity();
+
+        saveAuthDataEntity.setUserid("123456");
+        saveAuthDataEntity.setType(IOTDevConstant.BRAND_TYPE_HAIER);
+        saveAuthDataEntity.setAccess_token("18600941987");
+        saveAuthDataEntity.setRefresh_token("yt19870301");
+        saveAuthDataEntity.setExpires_in(123);
+        saveAuthDataEntity.setScope("123123123");
+        saveAuthDataEntity.setCreated_at(123);
+        saveAuthDataEntity.setToken_type("qqwe");
+
+        LingManager.getInstance().getIOTAgent().doSaveAuthDataToServer(saveAuthDataEntity, new IRequestCallback() {
+            @Override
+            public void responsedCallback(BaseEntity baseEntity, int code, Throwable error) {
+                if (code == RETROFIT_SUCCESS) {
+//                    ResultSaveAuthDataEntity tokenEntity = (ResultSaveAuthDataEntity) baseEntity;
+//                    if (tokenEntity != null) {
+//                        if (tokenEntity.getErrmsg().equals("success")) {
+//                            LingManager.getInstance().getLingLog().LOGD(TAG, "success");
+//                            return;
+//                        }
+//                    }
+                    LingManager.getInstance().getLingLog().LOGD(TAG, "result null");
+                } else {
+                    LingManager.getInstance().getLingLog().LOGD(TAG, "error： " + error.toString());
+                }
+            }
+        });
+    }
 }

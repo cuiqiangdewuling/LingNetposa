@@ -1,7 +1,7 @@
 package com.ling.jibonetposa.models.iot;
 
 import com.ling.jibonetposa.base.BaseRequestModel;
-import com.ling.jibonetposa.entities.ResultGetTokenEntity;
+import com.ling.jibonetposa.entities.ResultSaveAuthDataEntity;
 import com.ling.jibonetposa.entities.SaveAuthDataEntity;
 import com.ling.jibonetposa.iretrofit.IRequestCallback;
 import com.ling.jibonetposa.iretrofit.iot.IIOTSavePhantomTokenToServer;
@@ -14,7 +14,7 @@ import static com.ling.jibonetposa.constants.IOTApiConstant.API_PATH_JIBO;
  * Created by mhz小志 on 2017/3/17.
  */
 
-public class SaveTokenToServerModel extends BaseRequestModel<ResultGetTokenEntity> {
+public class SaveTokenToServerModel extends BaseRequestModel<ResultSaveAuthDataEntity> {
 
     public SaveTokenToServerModel(IRequestCallback requestCallback) {
         super(requestCallback);
@@ -32,7 +32,7 @@ public class SaveTokenToServerModel extends BaseRequestModel<ResultGetTokenEntit
         mParams.put("created_at", tokenEntity.getCreated_at());
 
         IIOTSavePhantomTokenToServer iiotGetToken = retrofit().create(IIOTSavePhantomTokenToServer.class);
-        Call<ResultGetTokenEntity> token = iiotGetToken.saveToken(organizeJsonParams());
+        Call<ResultSaveAuthDataEntity> token = iiotGetToken.saveToken(organizeJsonParams());
         execute(token);
     }
 }

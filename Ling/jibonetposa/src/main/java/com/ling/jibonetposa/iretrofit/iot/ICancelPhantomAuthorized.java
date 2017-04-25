@@ -1,6 +1,6 @@
 package com.ling.jibonetposa.iretrofit.iot;
 
-import com.ling.jibonetposa.entities.ResultGetTokenEntity;
+import com.ling.jibonetposa.entities.ResultCancelAuthEntity;
 
 import okhttp3.RequestBody;
 import retrofit2.Call;
@@ -18,5 +18,5 @@ public interface ICancelPhantomAuthorized {
 
     @Headers({"Content-type:application/json;charset=UTF-8"})
     @POST(API_PATH_JIBO_TOKEN_DELETE)
-    Call<ResultGetTokenEntity> saveToken(@Body RequestBody route);
+    Call<ResultCancelAuthEntity> cancelAuth(@Body RequestBody route);
 }
