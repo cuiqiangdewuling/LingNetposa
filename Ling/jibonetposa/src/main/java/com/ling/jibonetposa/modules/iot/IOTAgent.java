@@ -91,18 +91,23 @@ public class IOTAgent {
      * @param userid 用户id
      * @param type   刷新的类别，（0：获取存储在Ling服务器的设备信息。1：获取所有第三方最新的设备信息）
      */
-    public void getAllDevices(final String userid, int type, final IRequestCallback requestCallback) {
+    public void getAllDevices( String userid, int type, final IRequestCallback requestCallback) {
         if (mGetDevicesFromServerModel != null) {
             mGetDevicesFromServerModel.cancel();
             mGetDevicesFromServerModel = null;
         }
+        if (useTestUserid){
+            userid = mJiboUserid;
+        }
+        final String finalUserid = userid;
+        LingManager.getInstance().getLingLog().LOGD("finalUserid: " + finalUserid);
         mGetDevicesFromServerModel = new GetDevicesFromServerModel(new IRequestCallback() {
             @Override
             public void responsedCallback(BaseEntity entity, int errorCode, Throwable error) {
                 if (errorCode == RETROFIT_SUCCESS) {
                     ResultGetDevicesEntity brandEntity = (ResultGetDevicesEntity) entity;
                     if (brandEntity != null) {
-                        DevicesEntity devicesEntity = LingManager.getInstance().getIOTAgent().getDevicesEntity(userid, brandEntity);
+                        DevicesEntity devicesEntity = LingManager.getInstance().getIOTAgent().getDevicesEntity(finalUserid, brandEntity);
                         requestCallback.responsedCallback(devicesEntity, errorCode, error);
                     }
                 } else {
@@ -119,11 +124,16 @@ public class IOTAgent {
      *
      * @param userid
      */
-    public void checkBrandStatus(final String userid, final IRequestCallback requestCallback) {
+    public void checkBrandStatus(String userid, final IRequestCallback requestCallback) {
         if (mCheckBrandsFromServerModel != null) {
             mCheckBrandsFromServerModel.cancel();
             mCheckBrandsFromServerModel = null;
         }
+        if (useTestUserid){
+            userid = mJiboUserid;
+        }
+        final String finalUserid = userid;
+        LingManager.getInstance().getLingLog().LOGD("finalUserid: " + finalUserid);
         mCheckBrandsFromServerModel = new CheckBrandsFromServerModel(new IRequestCallback() {
             @Override
             public void responsedCallback(BaseEntity entity, int errorCode, Throwable error) {
@@ -131,8 +141,10 @@ public class IOTAgent {
                     ResultGetBrandEntity brandEntity = (ResultGetBrandEntity) entity;
                     if (brandEntity != null) {
                         BrandStatusEntity brandStatusEntity = LingManager.getInstance().getIOTAgent().getBrandStatusEntity(brandEntity);
-                        brandStatusEntity.setUserid(userid);
+                        brandStatusEntity.setUserid(finalUserid);
                         requestCallback.responsedCallback(brandStatusEntity, errorCode, error);
+                    } else {
+                        requestCallback.responsedCallback(getDefaultBrandStatus(), errorCode, error);
                     }
                 } else {
                     requestCallback.responsedCallback(getDefaultBrandStatus(), errorCode, error);
@@ -150,6 +162,10 @@ public class IOTAgent {
             mCancelAuthorizedModel.cancel();
             mCancelAuthorizedModel = null;
         }
+        if (useTestUserid){
+            userid = mJiboUserid;
+        }
+        LingManager.getInstance().getLingLog().LOGD("finalUserid: " + userid);
         mCancelAuthorizedModel = new CancelAuthorizedModel(requestCallback);
         mCancelAuthorizedModel.cancelAuthorized(userid, brandType);
     }
@@ -157,13 +173,17 @@ public class IOTAgent {
     /**
      * 获取保存的Phantom Token
      */
-    public void getTokenFromServer(String userId, String brandType, final IRequestCallback requestCallback) {
+    public void getTokenFromServer(String userid, String brandType, final IRequestCallback requestCallback) {
         if (mGetTokenFromServerModel != null) {
             mGetTokenFromServerModel.cancel();
             mGetTokenFromServerModel = null;
         }
+        if (useTestUserid){
+            userid = mJiboUserid;
+        }
+        LingManager.getInstance().getLingLog().LOGD("finalUserid: " + userid);
         mGetTokenFromServerModel = new GetTokenFromServerModel(requestCallback);
-        mGetTokenFromServerModel.getPhantomToken(userId, brandType);
+        mGetTokenFromServerModel.getPhantomToken(userid, brandType);
     }
 
 
@@ -197,6 +217,10 @@ public class IOTAgent {
             mSaveTokenToServerModel.cancel();
             mSaveTokenToServerModel = null;
         }
+        if (useTestUserid){
+            tokenEntity.setUserid(mJiboUserid);
+        }
+        LingManager.getInstance().getLingLog().LOGD("finalUserid: " + tokenEntity.getUserid());
         mSaveTokenToServerModel = new SaveTokenToServerModel(requestCallback);
         mSaveTokenToServerModel.saveToken(tokenEntity);
     }
@@ -367,6 +391,12 @@ public class IOTAgent {
 //        brandList.add(brand6);
         statusEntity.setBrand_list(brandList);
         return statusEntity;
+    }
+    public String mJiboUserid = "jibo";
+    private boolean useTestUserid;
+    public void useTestUserid(boolean b,String testUserid) {
+        useTestUserid = b;
+        mJiboUserid = testUserid;
     }
 
 }

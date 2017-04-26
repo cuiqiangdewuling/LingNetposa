@@ -26,7 +26,4 @@ public class IOTApiConstant {
     public static final String PHANTON_APP_SECRET = "a031c82fb029b6e4b4d689a3641bc9543f63b8d9f10ee5c1260a9bdf86a66ae3";
     public static final String PHANTON_REDIRECT_URI = "urn:ietf:wg:oauth:2.0:oob";
     public static final String PHANTON_SCOPE = "read_user write_user monitor_user read_router writer_router monitor_router read_pixel_pro write_pixel_pro monitor_pixel_pro read_generic_module write_generic_module monitor_generic_module read_wall_switch write_wall_switch monitor_wall_switch read_door_sensor write_door_sensor monitor_door_sensor read_bulb write_bulb monitor_bulb read_switch write_switch monitor_switch apply_scenario write_scenario";
-    public static final String USER_ID_JIBO = "jibo";
-    public static final String USER_ID_TEST = "12345678";
-
 }
