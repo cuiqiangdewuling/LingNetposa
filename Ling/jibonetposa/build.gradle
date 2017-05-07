@@ -26,12 +26,11 @@ dependencies {
     })
     compile 'com.android.support:appcompat-v7:25.2.0'
     testCompile 'junit:junit:4.12'
-    compile files('libs/retrofit-2.2.0.jar')
+    compile project(':uSDK4.1.01_Phone_Android')
+    compile 'com.google.code.gson:gson:2.7'
+    compile 'com.squareup.okhttp3:okhttp:3.4.1'
+    compile 'com.squareup.okio:okio:1.9.0'
     compile files('libs/converter-gson-2.2.0.jar')
     compile files('libs/converter-scalars-2.2.0.jar')
-    compile files('libs/okhttp-3.6.0.jar')
-    compile files('libs/okio-1.11.0.jar')
-    compile files('libs/gson-2.7.jar')
-    compile files('libs/libLet.jar')
-    compile project(':uSDK4.1.01_Phone_Android')
+    compile files('libs/retrofit-2.2.0.jar')
 }

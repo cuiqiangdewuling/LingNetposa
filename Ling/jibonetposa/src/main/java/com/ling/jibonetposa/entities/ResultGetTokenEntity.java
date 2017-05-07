@@ -23,6 +23,23 @@ public class ResultGetTokenEntity extends BaseEntity {
 
     public static class Data {
         private String access_token;
+        private String refresh_token;
+
+        @Override
+        public String toString() {
+            return "Data{" +
+                    "access_token='" + access_token + '\'' +
+                    ", refresh_token='" + refresh_token + '\'' +
+                    '}';
+        }
+
+        public String getRefresh_token() {
+            return refresh_token;
+        }
+
+        public void setRefresh_token(String refresh_token) {
+            this.refresh_token = refresh_token;
+        }
 
         public String getAccess_token() {
             return access_token;
@@ -32,12 +49,6 @@ public class ResultGetTokenEntity extends BaseEntity {
             this.access_token = access_token;
         }
 
-        @Override
-        public String toString() {
-            return "Data{" +
-                    ", access_token='" + access_token + '\'' +
-                    '}';
-        }
     }
 
     public Data getData() {

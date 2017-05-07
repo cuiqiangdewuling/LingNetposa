@@ -18,6 +18,7 @@ import com.ling.jibonetposa.models.iot.broadlink.BLDevicesModel;
 import com.ling.jibonetposa.models.iot.broadlink.BLLoginModel;
 import com.ling.jibonetposa.models.iot.haier.HEModel;
 import com.ling.jibonetposa.models.iot.phantom.GetPhantomTokenModel;
+import com.ling.jibonetposa.models.iot.phantom.UpdatePhantomNameModel;
 import com.ling.jibonetposa.utils.NetWorkUtil;
 
 import java.util.ArrayList;
@@ -27,19 +28,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import cn.com.broadlink.sdk.interfaces.controller.BLDeviceScanListener;
-
 import static com.ling.jibonetposa.base.BaseRequestModel.RETROFIT_SUCCESS;
 import static com.ling.jibonetposa.constants.IOTApiConstant.API_PATH_PHANTON_AUTHORIZE;
+import static com.ling.jibonetposa.constants.IOTApiConstant.OAUTH_REDIRECT_URI;
 import static com.ling.jibonetposa.constants.IOTApiConstant.PHANTON_APP_ID;
-import static com.ling.jibonetposa.constants.IOTApiConstant.PHANTON_REDIRECT_URI;
 import static com.ling.jibonetposa.constants.IOTApiConstant.PHANTON_SCOPE;
-import static com.ling.jibonetposa.constants.IOTDevConstant.BRAND_NAME_BROADLINK;
-import static com.ling.jibonetposa.constants.IOTDevConstant.BRAND_NAME_HAIER;
-import static com.ling.jibonetposa.constants.IOTDevConstant.BRAND_NAME_PHANTOM;
-import static com.ling.jibonetposa.constants.IOTDevConstant.BRAND_TYPE_BROADLINK;
-import static com.ling.jibonetposa.constants.IOTDevConstant.BRAND_TYPE_HAIER;
-import static com.ling.jibonetposa.constants.IOTDevConstant.BRAND_TYPE_PHANTOM;
 
 /**
  * Created by mhz小志 on 2017/3/17.
@@ -50,6 +43,8 @@ public class IOTAgent {
     private BLDevicesModel mBLDevicesModel = new BLDevicesModel();
     private BLLoginModel mBLLoginModel = new BLLoginModel();
     private HEModel mHEModel;
+    public String mJiboUserid = "jibo";
+    private boolean useTestUserid;
 
     private GetDevicesFromServerModel mGetDevicesFromServerModel;
     private CheckBrandsFromServerModel mCheckBrandsFromServerModel;
@@ -57,6 +52,7 @@ public class IOTAgent {
     private GetTokenFromServerModel mGetTokenFromServerModel;
     private SaveTokenToServerModel mSaveTokenToServerModel;
     private GetPhantomTokenModel mGetPhantomTokenModel;
+    private UpdatePhantomNameModel mUpdatePhantomNameModel;
 
     public void shutdownResponsed() {
         if (mGetDevicesFromServerModel != null) {
@@ -91,12 +87,12 @@ public class IOTAgent {
      * @param userid 用户id
      * @param type   刷新的类别，（0：获取存储在Ling服务器的设备信息。1：获取所有第三方最新的设备信息）
      */
-    public void getAllDevices( String userid, int type, final IRequestCallback requestCallback) {
+    public void getAllDevices(String userid, int type, final IRequestCallback requestCallback) {
         if (mGetDevicesFromServerModel != null) {
             mGetDevicesFromServerModel.cancel();
             mGetDevicesFromServerModel = null;
         }
-        if (useTestUserid){
+        if (useTestUserid) {
             userid = mJiboUserid;
         }
         final String finalUserid = userid;
@@ -129,7 +125,7 @@ public class IOTAgent {
             mCheckBrandsFromServerModel.cancel();
             mCheckBrandsFromServerModel = null;
         }
-        if (useTestUserid){
+        if (useTestUserid) {
             userid = mJiboUserid;
         }
         final String finalUserid = userid;
@@ -140,14 +136,14 @@ public class IOTAgent {
                 if (errorCode == RETROFIT_SUCCESS) {
                     ResultGetBrandEntity brandEntity = (ResultGetBrandEntity) entity;
                     if (brandEntity != null) {
-                        BrandStatusEntity brandStatusEntity = LingManager.getInstance().getIOTAgent().getBrandStatusEntity(brandEntity);
+                        BrandStatusEntity brandStatusEntity = getBrandStatusEntity(brandEntity);
                         brandStatusEntity.setUserid(finalUserid);
                         requestCallback.responsedCallback(brandStatusEntity, errorCode, error);
                     } else {
-                        requestCallback.responsedCallback(getDefaultBrandStatus(), errorCode, error);
+                        requestCallback.responsedCallback(null, errorCode, error);
                     }
                 } else {
-                    requestCallback.responsedCallback(getDefaultBrandStatus(), errorCode, error);
+                    requestCallback.responsedCallback(null, errorCode, error);
                 }
             }
         });
@@ -162,7 +158,7 @@ public class IOTAgent {
             mCancelAuthorizedModel.cancel();
             mCancelAuthorizedModel = null;
         }
-        if (useTestUserid){
+        if (useTestUserid) {
             userid = mJiboUserid;
         }
         LingManager.getInstance().getLingLog().LOGD("finalUserid: " + userid);
@@ -178,7 +174,7 @@ public class IOTAgent {
             mGetTokenFromServerModel.cancel();
             mGetTokenFromServerModel = null;
         }
-        if (useTestUserid){
+        if (useTestUserid) {
             userid = mJiboUserid;
         }
         LingManager.getInstance().getLingLog().LOGD("finalUserid: " + userid);
@@ -186,6 +182,25 @@ public class IOTAgent {
         mGetTokenFromServerModel.getPhantomToken(userid, brandType);
     }
 
+    /**
+     * 更改幻腾设备名称
+     */
+    public void updatePhantomDevName(String accessToken, String identId, String newName, final IRequestCallback requestCallback) {
+        if (mUpdatePhantomNameModel != null) {
+            mUpdatePhantomNameModel.cancel();
+            mUpdatePhantomNameModel = null;
+        }
+        mUpdatePhantomNameModel = new UpdatePhantomNameModel(requestCallback);
+        mUpdatePhantomNameModel.updateName(accessToken, identId, newName);
+    }
+
+    /**
+     * 更改海尔设备名称
+     */
+    public void updateHaierDevName(String identId, String newName, final IRequestCallback requestCallback) {
+        mHEModel = new HEModel(LingManager.getInstance().getAppContext());
+        mHEModel.updateDeviceNickName(identId, newName, requestCallback);
+    }
 
     /**
      * 登录海尔账号  成功后将账号数据存到server
@@ -217,7 +232,7 @@ public class IOTAgent {
             mSaveTokenToServerModel.cancel();
             mSaveTokenToServerModel = null;
         }
-        if (useTestUserid){
+        if (useTestUserid) {
             tokenEntity.setUserid(mJiboUserid);
         }
         LingManager.getInstance().getLingLog().LOGD("finalUserid: " + tokenEntity.getUserid());
@@ -231,7 +246,7 @@ public class IOTAgent {
     public String getPhantomAuthorizedUrl() {
         Map<String, Object> mParams = new HashMap<String, Object>();
         mParams.put("client_id", PHANTON_APP_ID);
-        mParams.put("redirect_uri", PHANTON_REDIRECT_URI);
+        mParams.put("redirect_uri", OAUTH_REDIRECT_URI);
         mParams.put("response_type", "code");
         mParams.put("scope", PHANTON_SCOPE);//PHANTON_SCOPE
         return API_PATH_PHANTON_AUTHORIZE + NetWorkUtil.organizeParams(mParams);
@@ -252,63 +267,63 @@ public class IOTAgent {
 //        });
     }
 
-    /**
-     * 第三方授权登陆博联
-     *
-     * @param thirdId 第三方授权ID
-     */
-    public void doBLThirdAuth(String thirdId, BLLoginModel.BLTaskListener blTaskListener) {
-//        mBLLoginModel.doThirdAuth(thirdId, blTaskListener);
-    }
-
-    /**
-     * 注册博联账号
-     *
-     * @param countryCode 国家码“+86”
-     * @param phone       电话号码
-     * @param vCode       手机验证码
-     * @param password    密码
-     * @param nickName    名称
-     */
-    public void doBLRegist(String countryCode, String phone, String vCode, String password, String nickName, BLLoginModel.BLTaskListener blTaskListener) {
-//        mBLLoginModel.doRegist(countryCode, phone, vCode, password, nickName, blTaskListener);
-    }
-
-    /**
-     * 获取博联手机验证码
-     *
-     * @param countryCode 国家码“+86”
-     * @param phone       电话号码
-     */
-    public void doBLGetVCode(String countryCode, String phone, BLLoginModel.BLTaskListener blTaskListener) {
-//        mBLLoginModel.doGetVCode(countryCode, phone, blTaskListener);
-    }
-
-    /**
-     * 开始博联设备扫描
-     */
-    public void doBLStartProbe() {
-//        mBLDevicesModel.startProbe();
-    }
-
-    /**
-     * 停止博联设备扫描
-     */
-    public void doBLStopProbe() {
-//        mBLDevicesModel.stopProbe();
-    }
-
-    /**
-     * 设置博联设备监听
-     */
-    public void setBLOnDeviceScanListener(BLDeviceScanListener scanListener) {
-//        mBLDevicesModel.setOnDeviceScanListener(new BLDeviceScanListener() {
-//            @Override
-//            public void onDeviceUpdate(BLDNADevice bldnaDevice, boolean b) {
+//    /**
+//     * 第三方授权登陆博联
+//     *
+//     * @param thirdId 第三方授权ID
+//     */
+//    public void doBLThirdAuth(String thirdId, BLLoginModel.BLTaskListener blTaskListener) {
+////        mBLLoginModel.doThirdAuth(thirdId, blTaskListener);
+//    }
 //
-//            }
-//        });
-    }
+//    /**
+//     * 注册博联账号
+//     *
+//     * @param countryCode 国家码“+86”
+//     * @param phone       电话号码
+//     * @param vCode       手机验证码
+//     * @param password    密码
+//     * @param nickName    名称
+//     */
+//    public void doBLRegist(String countryCode, String phone, String vCode, String password, String nickName, BLLoginModel.BLTaskListener blTaskListener) {
+////        mBLLoginModel.doRegist(countryCode, phone, vCode, password, nickName, blTaskListener);
+//    }
+//
+//    /**
+//     * 获取博联手机验证码
+//     *
+//     * @param countryCode 国家码“+86”
+//     * @param phone       电话号码
+//     */
+//    public void doBLGetVCode(String countryCode, String phone, BLLoginModel.BLTaskListener blTaskListener) {
+////        mBLLoginModel.doGetVCode(countryCode, phone, blTaskListener);
+//    }
+//
+//    /**
+//     * 开始博联设备扫描
+//     */
+//    public void doBLStartProbe() {
+////        mBLDevicesModel.startProbe();
+//    }
+//
+//    /**
+//     * 停止博联设备扫描
+//     */
+//    public void doBLStopProbe() {
+////        mBLDevicesModel.stopProbe();
+//    }
+//
+//    /**
+//     * 设置博联设备监听
+//     */
+//    public void setBLOnDeviceScanListener(BLDeviceScanListener scanListener) {
+////        mBLDevicesModel.setOnDeviceScanListener(new BLDeviceScanListener() {
+////            @Override
+////            public void onDeviceUpdate(BLDNADevice bldnaDevice, boolean b) {
+////
+////            }
+////        });
+//    }
 
 
     /**
@@ -327,15 +342,13 @@ public class IOTAgent {
     }
 
     public BrandStatusEntity getBrandStatusEntity(ResultGetBrandEntity getBrandEntity) {
-        BrandStatusEntity defaultBrandStatus = getDefaultBrandStatus();
+        BrandStatusEntity brandStatusEntity = new BrandStatusEntity();
+        List<BrandStatusEntity.Brand> brand_list = new ArrayList<>();
         for (BrandBean brandBean : getBrandEntity.getData()) {
-            for (BrandStatusEntity.Brand brand : defaultBrandStatus.getBrand_list()) {
-                if (brandBean.getKey().equals(brand.getBrand_id())) {
-                    brand.setBrand_status(1);
-                }
-            }
+            brand_list.add(new BrandStatusEntity.Brand(brandBean.getKey(),brandBean.getName(),brandBean.getUsed()));
         }
-        return doSoreList(defaultBrandStatus);
+        brandStatusEntity.setBrand_list(brand_list);
+        return doSoreList(brandStatusEntity);
     }
 
     public DevicesEntity getDevicesEntity(String userid, ResultGetDevicesEntity getBrandEntity) {
@@ -369,32 +382,8 @@ public class IOTAgent {
     }
 
 
-    /**
-     * 获取在App上显示的品牌列表
-     */
-    public BrandStatusEntity getDefaultBrandStatus() {
-        BrandStatusEntity statusEntity = new BrandStatusEntity();
-        List<BrandStatusEntity.Brand> brandList = new ArrayList<>();
 
-        BrandStatusEntity.Brand brand1 = new BrandStatusEntity.Brand(BRAND_TYPE_PHANTOM, BRAND_NAME_PHANTOM, 0);
-        BrandStatusEntity.Brand brand2 = new BrandStatusEntity.Brand(BRAND_TYPE_HAIER, BRAND_NAME_HAIER, 0);
-        BrandStatusEntity.Brand brand3 = new BrandStatusEntity.Brand(BRAND_TYPE_BROADLINK, BRAND_NAME_BROADLINK, 0);
-//        BrandStatusEntity.Brand brand4 = new BrandStatusEntity.Brand(BRAND_TYPE_XIAOMI, BRAND_NAME_XIAOMI, 0);
-//        BrandStatusEntity.Brand brand5 = new BrandStatusEntity.Brand(BRAND_TYPE_MEIDI, BRAND_NAME_MEIDI, 0);
-//        BrandStatusEntity.Brand brand6 = new BrandStatusEntity.Brand(BRAND_TYPE_AUX, BRAND_NAME_AUX, 0);
-
-        brandList.add(brand1);
-        brandList.add(brand2);
-        brandList.add(brand3);
-//        brandList.add(brand4);
-//        brandList.add(brand5);
-//        brandList.add(brand6);
-        statusEntity.setBrand_list(brandList);
-        return statusEntity;
-    }
-    public String mJiboUserid = "jibo";
-    private boolean useTestUserid;
-    public void useTestUserid(boolean b,String testUserid) {
+    public void useTestUserid(boolean b, String testUserid) {
         useTestUserid = b;
         mJiboUserid = testUserid;
     }

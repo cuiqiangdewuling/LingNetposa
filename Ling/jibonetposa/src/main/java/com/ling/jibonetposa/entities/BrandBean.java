@@ -7,17 +7,28 @@ import java.util.List;
  */
 
 public class BrandBean {
+
     private String key;
     private String name;
+    private int used;
     private List<DeviceBean> val;
 
     @Override
     public String toString() {
-        return "Brand{" +
+        return "BrandBean{" +
                 "key='" + key + '\'' +
                 ", name='" + name + '\'' +
+                ", used=" + used +
                 ", val=" + val +
                 '}';
+    }
+
+    public int getUsed() {
+        return used;
+    }
+
+    public void setUsed(int used) {
+        this.used = used;
     }
 
     public String getKey() {

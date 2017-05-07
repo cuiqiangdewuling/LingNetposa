@@ -33,10 +33,11 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class BaseRequestModel<T extends BaseEntity> {
 
-    private static final String TAG = BaseRequestModel.class.getSimpleName();
+    public static final String TAG = BaseRequestModel.class.getSimpleName();
 
     public static final int RETROFIT_SUCCESS = 0;
     public static final int RETROFIT_ERROR = 1;
+    public static final int ERROR_PASS_MISTAKE = -2;//用户名或密码错误 --- 海尔错误码 B22109-22820：用户名密码错误
     public static final int RETROFIT_WRONG = -1;
 
     protected IRequestCallback mRequestCallback;

@@ -6,8 +6,6 @@ import com.haier.uhome.usdk.api.uSDKManager;
 import com.ling.jibonetposa.modules.iot.IOTAgent;
 import com.ling.jibonetposa.utils.LingLog;
 
-import cn.com.broadlink.sdk.BLLet;
-
 /**
  * Created by mhz小志 on 2017/4/16.
  */
@@ -68,8 +66,7 @@ public class LingManager {
     }
 
     private void initBroadLink() {
-        BLLet.init(mApplication);
-        BLLet.DebugLog.on();
+
     }
 
     public IOTAgent getIOTAgent() {
