@@ -1,4 +1,4 @@
-package com.ling.jibonetposa.modules.iot;
+package com.ling.jibonetposa.modules;
 
 import com.ling.jibonetposa.LingManager;
 import com.ling.jibonetposa.base.BaseEntity;
@@ -14,8 +14,7 @@ import com.ling.jibonetposa.models.iot.CheckBrandsFromServerModel;
 import com.ling.jibonetposa.models.iot.GetDevicesFromServerModel;
 import com.ling.jibonetposa.models.iot.GetTokenFromServerModel;
 import com.ling.jibonetposa.models.iot.SaveTokenToServerModel;
-import com.ling.jibonetposa.models.iot.broadlink.BLDevicesModel;
-import com.ling.jibonetposa.models.iot.broadlink.BLLoginModel;
+import com.ling.jibonetposa.models.iot.broadlink.GetBroadLinkTokenModel;
 import com.ling.jibonetposa.models.iot.haier.HEModel;
 import com.ling.jibonetposa.models.iot.phantom.GetPhantomTokenModel;
 import com.ling.jibonetposa.models.iot.phantom.UpdatePhantomNameModel;
@@ -30,6 +29,8 @@ import java.util.Map;
 
 import static com.ling.jibonetposa.base.BaseRequestModel.RETROFIT_SUCCESS;
 import static com.ling.jibonetposa.constants.IOTApiConstant.API_PATH_PHANTON_AUTHORIZE;
+import static com.ling.jibonetposa.constants.IOTApiConstant.BROADLINK_API_PATH;
+import static com.ling.jibonetposa.constants.IOTApiConstant.BROADLINK_CLIENT_ID;
 import static com.ling.jibonetposa.constants.IOTApiConstant.OAUTH_REDIRECT_URI;
 import static com.ling.jibonetposa.constants.IOTApiConstant.PHANTON_APP_ID;
 import static com.ling.jibonetposa.constants.IOTApiConstant.PHANTON_SCOPE;
@@ -40,8 +41,6 @@ import static com.ling.jibonetposa.constants.IOTApiConstant.PHANTON_SCOPE;
 
 public class IOTAgent {
 
-    private BLDevicesModel mBLDevicesModel = new BLDevicesModel();
-    private BLLoginModel mBLLoginModel = new BLLoginModel();
     private HEModel mHEModel;
     public String mJiboUserid = "jibo";
     private boolean useTestUserid;
@@ -52,6 +51,7 @@ public class IOTAgent {
     private GetTokenFromServerModel mGetTokenFromServerModel;
     private SaveTokenToServerModel mSaveTokenToServerModel;
     private GetPhantomTokenModel mGetPhantomTokenModel;
+    private GetBroadLinkTokenModel mGetBroadLinkTokenModel;
     private UpdatePhantomNameModel mUpdatePhantomNameModel;
 
     public void shutdownResponsed() {
@@ -78,6 +78,10 @@ public class IOTAgent {
         if (mGetPhantomTokenModel != null) {
             mGetPhantomTokenModel.cancel();
             mGetPhantomTokenModel = null;
+        }
+        if (mGetBroadLinkTokenModel != null) {
+            mGetBroadLinkTokenModel.cancel();
+            mGetBroadLinkTokenModel = null;
         }
     }
 
@@ -225,6 +229,20 @@ public class IOTAgent {
     }
 
     /**
+     * 获取BroadLink授权
+     * <p>
+     * 根据authorizedCode去获取BroadLink Token，然后将Token保存到服务器
+     */
+    public void getBroadLinkAuthorized(final String authorizedCode, final IRequestCallback requestCallback) {
+        if (mGetBroadLinkTokenModel != null) {
+            mGetBroadLinkTokenModel.cancel();
+            mGetBroadLinkTokenModel = null;
+        }
+        mGetBroadLinkTokenModel = new GetBroadLinkTokenModel(requestCallback);
+        mGetBroadLinkTokenModel.getBroadLinkToken(authorizedCode);
+    }
+
+    /**
      * 保存授权数据
      */
     public void doSaveAuthDataToServer(SaveAuthDataEntity tokenEntity, final IRequestCallback requestCallback) {
@@ -240,112 +258,11 @@ public class IOTAgent {
         mSaveTokenToServerModel.saveToken(tokenEntity);
     }
 
-    /**
-     * 合成授权页面的请求地址
-     */
-    public String getPhantomAuthorizedUrl() {
-        Map<String, Object> mParams = new HashMap<String, Object>();
-        mParams.put("client_id", PHANTON_APP_ID);
-        mParams.put("redirect_uri", OAUTH_REDIRECT_URI);
-        mParams.put("response_type", "code");
-        mParams.put("scope", PHANTON_SCOPE);//PHANTON_SCOPE
-        return API_PATH_PHANTON_AUTHORIZE + NetWorkUtil.organizeParams(mParams);
-    }
-
-    /**
-     * 登录博联账号
-     *
-     * @param userName 用户名
-     * @param password 密码
-     */
-    public void doBLLogin(String userName, String password, IRequestCallback requestCallback) {
-//        mBLLoginModel.doLogin(userName, password, new IRequestCallback() {
-//            @Override
-//            public void responsedCallback(BaseEntity entity, int errorCode, Throwable error) {
-//
-//            }
-//        });
-    }
-
-//    /**
-//     * 第三方授权登陆博联
-//     *
-//     * @param thirdId 第三方授权ID
-//     */
-//    public void doBLThirdAuth(String thirdId, BLLoginModel.BLTaskListener blTaskListener) {
-////        mBLLoginModel.doThirdAuth(thirdId, blTaskListener);
-//    }
-//
-//    /**
-//     * 注册博联账号
-//     *
-//     * @param countryCode 国家码“+86”
-//     * @param phone       电话号码
-//     * @param vCode       手机验证码
-//     * @param password    密码
-//     * @param nickName    名称
-//     */
-//    public void doBLRegist(String countryCode, String phone, String vCode, String password, String nickName, BLLoginModel.BLTaskListener blTaskListener) {
-////        mBLLoginModel.doRegist(countryCode, phone, vCode, password, nickName, blTaskListener);
-//    }
-//
-//    /**
-//     * 获取博联手机验证码
-//     *
-//     * @param countryCode 国家码“+86”
-//     * @param phone       电话号码
-//     */
-//    public void doBLGetVCode(String countryCode, String phone, BLLoginModel.BLTaskListener blTaskListener) {
-////        mBLLoginModel.doGetVCode(countryCode, phone, blTaskListener);
-//    }
-//
-//    /**
-//     * 开始博联设备扫描
-//     */
-//    public void doBLStartProbe() {
-////        mBLDevicesModel.startProbe();
-//    }
-//
-//    /**
-//     * 停止博联设备扫描
-//     */
-//    public void doBLStopProbe() {
-////        mBLDevicesModel.stopProbe();
-//    }
-//
-//    /**
-//     * 设置博联设备监听
-//     */
-//    public void setBLOnDeviceScanListener(BLDeviceScanListener scanListener) {
-////        mBLDevicesModel.setOnDeviceScanListener(new BLDeviceScanListener() {
-////            @Override
-////            public void onDeviceUpdate(BLDNADevice bldnaDevice, boolean b) {
-////
-////            }
-////        });
-//    }
-
-
-    /**
-     * 获取保存的Phantom Token
-     */
-    public void getPhantomDevicesFromPhantom(String accessToken, final IRequestCallback requestCallback) {
-//        isStop5 = false;
-//        new GetDevicesFromPhantomModel(new IRequestCallback() {
-//            @Override
-//            public void responsedCallback(BaseEntity entity, int errorCode, Throwable error) {
-//                if (!isStop5) {
-//                    requestCallback.responsedCallback(entity, errorCode, error);
-//                }
-//            }
-//        }).getPhantomDevices(accessToken);
-    }
-
     public BrandStatusEntity getBrandStatusEntity(ResultGetBrandEntity getBrandEntity) {
         BrandStatusEntity brandStatusEntity = new BrandStatusEntity();
         List<BrandStatusEntity.Brand> brand_list = new ArrayList<>();
         for (BrandBean brandBean : getBrandEntity.getData()) {
-            brand_list.add(new BrandStatusEntity.Brand(brandBean.getKey(),brandBean.getName(),brandBean.getUsed()));
+            brand_list.add(new BrandStatusEntity.Brand(brandBean.getKey(), brandBean.getName(), brandBean.getUsed()));
         }
         brandStatusEntity.setBrand_list(brand_list);
         return doSoreList(brandStatusEntity);
@@ -381,7 +298,28 @@ public class IOTAgent {
         return brandStatusEntity;
     }
 
+    /**
+     * 合成幻腾授权页面的请求地址
+     */
+    public String getPhantomAuthorizedUrl() {
+        Map<String, Object> mParams = new HashMap<String, Object>();
+        mParams.put("client_id", PHANTON_APP_ID);
+        mParams.put("redirect_uri", OAUTH_REDIRECT_URI);
+        mParams.put("response_type", "code");
+        mParams.put("scope", PHANTON_SCOPE);//PHANTON_SCOPE
+        return API_PATH_PHANTON_AUTHORIZE + NetWorkUtil.organizeParams(mParams);
+    }
 
+    /**
+     * 合成BroadLink授权页面的请求地址
+     */
+    public String getBroadLinkAuthorizedUrl() {
+        Map<String, Object> mParams = new HashMap<String, Object>();
+        mParams.put("client_id", BROADLINK_CLIENT_ID);
+        mParams.put("redirect_uri", OAUTH_REDIRECT_URI);
+        mParams.put("response_type", "code");
+        return BROADLINK_API_PATH + NetWorkUtil.organizeParams(mParams);
+    }
 
     public void useTestUserid(boolean b, String testUserid) {
         useTestUserid = b;

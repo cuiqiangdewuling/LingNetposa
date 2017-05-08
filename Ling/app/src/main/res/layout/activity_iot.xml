@@ -97,13 +97,7 @@
                 android:id="@+id/btn_bl_login"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="博联—登录"/>
-
-            <Button
-                android:id="@+id/btn_bl_3login"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="博联—third登录"/>
+                android:text="博联—获取AccessToken"/>
 
             <View
                 android:layout_width="match_parent"

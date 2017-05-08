@@ -3,7 +3,7 @@ package com.ling.jibonetposa;
 import android.content.Context;
 
 import com.haier.uhome.usdk.api.uSDKManager;
-import com.ling.jibonetposa.modules.iot.IOTAgent;
+import com.ling.jibonetposa.modules.IOTAgent;
 import com.ling.jibonetposa.utils.LingLog;
 
 /**
@@ -36,7 +36,6 @@ public class LingManager {
     public void init(Context context) {
         isInit = true;
         mApplication = context;
-        initIOTAgent();
     }
 
     private void initDebug() {
@@ -57,7 +56,6 @@ public class LingManager {
 
     private void initIOTAgent() {
         mIOTAgent = new IOTAgent();
-//        initBroadLink();
         initHaier();
     }
 
@@ -65,11 +63,9 @@ public class LingManager {
         uSDKManager.getSingleInstance().init(mApplication);
     }
 
-    private void initBroadLink() {
-
-    }
-
     public IOTAgent getIOTAgent() {
+        if (mIOTAgent == null)
+            initIOTAgent();
         return mIOTAgent;
     }
 

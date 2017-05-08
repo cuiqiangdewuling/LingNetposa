@@ -9,11 +9,9 @@ import com.ling.jibonetposa.LingManager;
 import com.ling.jibonetposa.base.BaseEntity;
 import com.ling.jibonetposa.base.BaseRequestModel;
 import com.ling.jibonetposa.constants.IOTDevConstant;
-import com.ling.jibonetposa.entities.BLAccountEntity;
 import com.ling.jibonetposa.entities.BrandStatusEntity;
 import com.ling.jibonetposa.entities.DevicesEntity;
 import com.ling.jibonetposa.entities.HaierAccountEntity;
-import com.ling.jibonetposa.entities.PhantomDevicesEntity;
 import com.ling.jibonetposa.entities.SaveAuthDataEntity;
 import com.ling.jibonetposa.iretrofit.IRequestCallback;
 
@@ -47,7 +45,6 @@ public class IOTTestActivity extends Activity implements View.OnClickListener {
         findViewById(R.id.btn_ht_getAuthorized).setOnClickListener(this);
         findViewById(R.id.btn_ht_updatename).setOnClickListener(this);
         findViewById(R.id.btn_bl_login).setOnClickListener(this);
-        findViewById(R.id.btn_bl_3login).setOnClickListener(this);
         findViewById(R.id.btn_he_login).setOnClickListener(this);
         findViewById(R.id.btn_he_updatename).setOnClickListener(this);
     }
@@ -68,16 +65,13 @@ public class IOTTestActivity extends Activity implements View.OnClickListener {
                 doHTGetAuthorized();
                 break;
             case R.id.btn_ht_getAccessToken:
-                doGetAccessToken();
+                doHTGetAccessToken();
                 break;
             case R.id.btn_ht_updatename:
                 doHTUpdateDate();
                 break;
             case R.id.btn_bl_login:
-                doBLLogin();
-                break;
-            case R.id.btn_bl_3login:
-                doBLThirdLogin();
+                doBLGetAccessToken();
                 break;
             case R.id.btn_he_login:
                 doHELogin();
@@ -86,6 +80,21 @@ public class IOTTestActivity extends Activity implements View.OnClickListener {
                 doHEUpdateDate();
                 break;
         }
+    }
+
+    private void doBLGetAccessToken() {
+        String code = "Lr8x6igfTaanruUdx4xGQg";
+        LingManager.getInstance().getIOTAgent().getBroadLinkAuthorized(code, new IRequestCallback() {
+            @Override
+            public void responsedCallback(BaseEntity entity, int errorCode, Throwable error) {
+                if (errorCode == BaseRequestModel.RETROFIT_SUCCESS) {
+                    Log.d(TAG, "entity  " + entity.toString());
+                } else {
+                    Log.d(TAG, "errorCode  " + errorCode);
+                    if (error != null) error.printStackTrace();
+                }
+            }
+        });
     }
 
     private void checkBrand() {
@@ -157,41 +166,6 @@ public class IOTTestActivity extends Activity implements View.OnClickListener {
         });
     }
 
-    //    88C25542458201000004
-    private void doBLLogin() {
-        String name = "15643407227";
-        String pass = "Mahuaizhi123";
-        LingManager.getInstance().getIOTAgent().doBLLogin(name, pass, new IRequestCallback() {
-            @Override
-            public void responsedCallback(BaseEntity entity, int errorCode, Throwable error) {
-                if (errorCode == RETROFIT_SUCCESS) {
-                    BLAccountEntity accountEntity = (BLAccountEntity) entity;
-                    if (accountEntity != null) {
-                        LingManager.getInstance().getLingLog().LOGD(TAG, "doBLLogin: accountEntity" + accountEntity.toString());
-                    }
-                } else {
-                    LingManager.getInstance().getLingLog().LOGD(TAG, "doBLLogin: error" + error.getMessage());
-                }
-            }
-        });
-    }
-
-    private void doBLThirdLogin() {
-//        String name = "20";
-//        LingManager.getInstance().getIOTAgent().doBLThirdAuth(name, new BLLoginModel.BLTaskListener() {
-//            @Override
-//            public void onPreExecute() {
-//
-//            }
-//
-//            @Override
-//            public void onPostExecute(Object result) {
-//                BLLoginResult loginResult = (BLLoginResult) result;
-//                LingManager.getInstance().getLingLog().LOGD("doBLThirdLogin " + loginResult.getMsg());
-//            }
-//        });
-    }
-
     public void doHTGetAuthorized() {
         String code = "0f0003e906fa8a0fd49c62b8c819aad9c599ea580652eb305e8a28fabfbc6b20";
         LingManager.getInstance().getIOTAgent().getPhantomAuthorized(code, new IRequestCallback() {
@@ -220,7 +194,7 @@ public class IOTTestActivity extends Activity implements View.OnClickListener {
         });
     }
 
-    public void doGetAccessToken() {
+    public void doHTGetAccessToken() {
         LingManager.getInstance().getIOTAgent().getTokenFromServer("jibo", IOTDevConstant.BRAND_TYPE_PHANTOM, new IRequestCallback() {
             @Override
             public void responsedCallback(BaseEntity entity, int errorCode, Throwable error) {
@@ -228,21 +202,6 @@ public class IOTTestActivity extends Activity implements View.OnClickListener {
                     Log.d(TAG, "entity  " + entity.toString());
                 } else {
                     Log.d(TAG, "errorCode  " + errorCode);
-                }
-            }
-        });
-    }
-
-    public void doHTGetDevice() {
-        String access_token = "d715bea1d64bd4c19693cdaeb4b1b3aecbbca5f0f84fadd0e852de7763e4d8b9";
-        LingManager.getInstance().getIOTAgent().getPhantomDevicesFromPhantom(access_token, new IRequestCallback() {
-            @Override
-            public void responsedCallback(BaseEntity entity, int errorCode, Throwable error) {
-                if (errorCode == BaseRequestModel.RETROFIT_SUCCESS) {
-                    PhantomDevicesEntity devicesEntity = (PhantomDevicesEntity) entity;
-                    Log.d(TAG, "entity  " + devicesEntity.toString());
-                } else {
-                    Log.d(TAG, "errorCode  " + errorCode + "    /   " + error.getMessage());
                 }
             }
         });
