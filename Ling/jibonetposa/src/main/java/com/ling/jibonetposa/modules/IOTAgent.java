@@ -42,8 +42,7 @@ import static com.ling.jibonetposa.constants.IOTApiConstant.PHANTON_SCOPE;
 public class IOTAgent {
 
     private HEModel mHEModel;
-    public String mJiboUserid = "jibo";
-    private boolean useTestUserid;
+
 
     private GetDevicesFromServerModel mGetDevicesFromServerModel;
     private CheckBrandsFromServerModel mCheckBrandsFromServerModel;
@@ -55,34 +54,38 @@ public class IOTAgent {
     private UpdatePhantomNameModel mUpdatePhantomNameModel;
 
     public void shutdownResponsed() {
-        if (mGetDevicesFromServerModel != null) {
-            mGetDevicesFromServerModel.cancel();
-            mGetDevicesFromServerModel = null;
-        }
-        if (mCheckBrandsFromServerModel != null) {
-            mCheckBrandsFromServerModel.cancel();
-            mCheckBrandsFromServerModel = null;
-        }
-        if (mCancelAuthorizedModel != null) {
-            mCancelAuthorizedModel.cancel();
-            mCancelAuthorizedModel = null;
-        }
-        if (mGetTokenFromServerModel != null) {
-            mGetTokenFromServerModel.cancel();
-            mGetTokenFromServerModel = null;
-        }
-        if (mSaveTokenToServerModel != null) {
-            mSaveTokenToServerModel.cancel();
-            mSaveTokenToServerModel = null;
-        }
-        if (mGetPhantomTokenModel != null) {
-            mGetPhantomTokenModel.cancel();
-            mGetPhantomTokenModel = null;
-        }
-        if (mGetBroadLinkTokenModel != null) {
-            mGetBroadLinkTokenModel.cancel();
-            mGetBroadLinkTokenModel = null;
-        }
+//        if (mGetDevicesFromServerModel != null) {
+//            mGetDevicesFromServerModel.cancel();
+//            mGetDevicesFromServerModel = null;
+//        }
+//        if (mCheckBrandsFromServerModel != null) {
+//            mCheckBrandsFromServerModel.cancel();
+//            mCheckBrandsFromServerModel = null;
+//        }
+//        if (mUpdatePhantomNameModel != null) {
+//            mUpdatePhantomNameModel.cancel();
+//            mUpdatePhantomNameModel = null;
+//        }
+//        if (mCancelAuthorizedModel != null) {
+//            mCancelAuthorizedModel.cancel();
+//            mCancelAuthorizedModel = null;
+//        }
+//        if (mGetTokenFromServerModel != null) {
+//            mGetTokenFromServerModel.cancel();
+//            mGetTokenFromServerModel = null;
+//        }
+//        if (mSaveTokenToServerModel != null) {
+//            mSaveTokenToServerModel.cancel();
+//            mSaveTokenToServerModel = null;
+//        }
+//        if (mGetPhantomTokenModel != null) {
+//            mGetPhantomTokenModel.cancel();
+//            mGetPhantomTokenModel = null;
+//        }
+//        if (mGetBroadLinkTokenModel != null) {
+//            mGetBroadLinkTokenModel.cancel();
+//            mGetBroadLinkTokenModel = null;
+//        }
     }
 
     /**
@@ -92,12 +95,12 @@ public class IOTAgent {
      * @param type   刷新的类别，（0：获取存储在Ling服务器的设备信息。1：获取所有第三方最新的设备信息）
      */
     public void getAllDevices(String userid, int type, final IRequestCallback requestCallback) {
-        if (mGetDevicesFromServerModel != null) {
-            mGetDevicesFromServerModel.cancel();
-            mGetDevicesFromServerModel = null;
-        }
-        if (useTestUserid) {
-            userid = mJiboUserid;
+//        if (mGetDevicesFromServerModel != null) {
+//            mGetDevicesFromServerModel.cancel();
+//            mGetDevicesFromServerModel = null;
+//        }
+        if (LingManager.getInstance().useTestUserid()) {
+            userid = LingManager.getInstance().getTestUserId();
         }
         final String finalUserid = userid;
         LingManager.getInstance().getLingLog().LOGD("finalUserid: " + finalUserid);
@@ -125,12 +128,12 @@ public class IOTAgent {
      * @param userid
      */
     public void checkBrandStatus(String userid, final IRequestCallback requestCallback) {
-        if (mCheckBrandsFromServerModel != null) {
-            mCheckBrandsFromServerModel.cancel();
-            mCheckBrandsFromServerModel = null;
-        }
-        if (useTestUserid) {
-            userid = mJiboUserid;
+//        if (mCheckBrandsFromServerModel != null) {
+//            mCheckBrandsFromServerModel.cancel();
+//            mCheckBrandsFromServerModel = null;
+//        }
+        if (LingManager.getInstance().useTestUserid()) {
+            userid = LingManager.getInstance().getTestUserId();
         }
         final String finalUserid = userid;
         LingManager.getInstance().getLingLog().LOGD("finalUserid: " + finalUserid);
@@ -158,12 +161,12 @@ public class IOTAgent {
      * 取消用户授权
      */
     public void cancelAuthorized(String userid, String brandType, final IRequestCallback requestCallback) {
-        if (mCancelAuthorizedModel != null) {
-            mCancelAuthorizedModel.cancel();
-            mCancelAuthorizedModel = null;
-        }
-        if (useTestUserid) {
-            userid = mJiboUserid;
+//        if (mCancelAuthorizedModel != null) {
+//            mCancelAuthorizedModel.cancel();
+//            mCancelAuthorizedModel = null;
+//        }
+        if (LingManager.getInstance().useTestUserid()) {
+            userid = LingManager.getInstance().getTestUserId();
         }
         LingManager.getInstance().getLingLog().LOGD("finalUserid: " + userid);
         mCancelAuthorizedModel = new CancelAuthorizedModel(requestCallback);
@@ -174,12 +177,12 @@ public class IOTAgent {
      * 获取保存的Phantom Token
      */
     public void getTokenFromServer(String userid, String brandType, final IRequestCallback requestCallback) {
-        if (mGetTokenFromServerModel != null) {
-            mGetTokenFromServerModel.cancel();
-            mGetTokenFromServerModel = null;
-        }
-        if (useTestUserid) {
-            userid = mJiboUserid;
+//        if (mGetTokenFromServerModel != null) {
+//            mGetTokenFromServerModel.cancel();
+//            mGetTokenFromServerModel = null;
+//        }
+        if (LingManager.getInstance().useTestUserid()) {
+            userid = LingManager.getInstance().getTestUserId();
         }
         LingManager.getInstance().getLingLog().LOGD("finalUserid: " + userid);
         mGetTokenFromServerModel = new GetTokenFromServerModel(requestCallback);
@@ -190,10 +193,10 @@ public class IOTAgent {
      * 更改幻腾设备名称
      */
     public void updatePhantomDevName(String accessToken, String identId, String newName, final IRequestCallback requestCallback) {
-        if (mUpdatePhantomNameModel != null) {
-            mUpdatePhantomNameModel.cancel();
-            mUpdatePhantomNameModel = null;
-        }
+//        if (mUpdatePhantomNameModel != null) {
+//            mUpdatePhantomNameModel.cancel();
+//            mUpdatePhantomNameModel = null;
+//        }
         mUpdatePhantomNameModel = new UpdatePhantomNameModel(requestCallback);
         mUpdatePhantomNameModel.updateName(accessToken, identId, newName);
     }
@@ -220,10 +223,10 @@ public class IOTAgent {
      * 根据authorizedCode去获取幻腾Token，然后将Token保存到服务器
      */
     public void getPhantomAuthorized(final String authorizedCode, final IRequestCallback requestCallback) {
-        if (mGetPhantomTokenModel != null) {
-            mGetPhantomTokenModel.cancel();
-            mGetPhantomTokenModel = null;
-        }
+//        if (mGetPhantomTokenModel != null) {
+//            mGetPhantomTokenModel.cancel();
+//            mGetPhantomTokenModel = null;
+//        }
         mGetPhantomTokenModel = new GetPhantomTokenModel(requestCallback);
         mGetPhantomTokenModel.getPhantomToken(authorizedCode);
     }
@@ -234,10 +237,10 @@ public class IOTAgent {
      * 根据authorizedCode去获取BroadLink Token，然后将Token保存到服务器
      */
     public void getBroadLinkAuthorized(final String authorizedCode, final IRequestCallback requestCallback) {
-        if (mGetBroadLinkTokenModel != null) {
-            mGetBroadLinkTokenModel.cancel();
-            mGetBroadLinkTokenModel = null;
-        }
+//        if (mGetBroadLinkTokenModel != null) {
+//            mGetBroadLinkTokenModel.cancel();
+//            mGetBroadLinkTokenModel = null;
+//        }
         mGetBroadLinkTokenModel = new GetBroadLinkTokenModel(requestCallback);
         mGetBroadLinkTokenModel.getBroadLinkToken(authorizedCode);
     }
@@ -246,12 +249,12 @@ public class IOTAgent {
      * 保存授权数据
      */
     public void doSaveAuthDataToServer(SaveAuthDataEntity tokenEntity, final IRequestCallback requestCallback) {
-        if (mSaveTokenToServerModel != null) {
-            mSaveTokenToServerModel.cancel();
-            mSaveTokenToServerModel = null;
-        }
-        if (useTestUserid) {
-            tokenEntity.setUserid(mJiboUserid);
+//        if (mSaveTokenToServerModel != null) {
+//            mSaveTokenToServerModel.cancel();
+//            mSaveTokenToServerModel = null;
+//        }
+        if (LingManager.getInstance().useTestUserid()) {
+            tokenEntity.setUserid(LingManager.getInstance().getTestUserId());
         }
         LingManager.getInstance().getLingLog().LOGD("finalUserid: " + tokenEntity.getUserid());
         mSaveTokenToServerModel = new SaveTokenToServerModel(requestCallback);
@@ -320,10 +323,4 @@ public class IOTAgent {
         mParams.put("response_type", "code");
         return BROADLINK_API_PATH + NetWorkUtil.organizeParams(mParams);
     }
-
-    public void useTestUserid(boolean b, String testUserid) {
-        useTestUserid = b;
-        mJiboUserid = testUserid;
-    }
-
 }

@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.haier.uhome.usdk.api.uSDKManager;
 import com.ling.jibonetposa.modules.IOTAgent;
+import com.ling.jibonetposa.modules.LocationAgent;
 import com.ling.jibonetposa.utils.LingLog;
 
 /**
@@ -16,7 +17,10 @@ public class LingManager {
     public static LingManager INSTANCE;
     public Context mApplication;
     public IOTAgent mIOTAgent;
+    public LocationAgent mLocationAgent;
     public LingLog mLingLog;
+    public String mJiboUserid = "jibo";
+    private boolean useTestUserid;
 
     private LingManager() {
         initDebug();
@@ -54,13 +58,13 @@ public class LingManager {
         return mLingLog;
     }
 
+    private void initHaier() {
+        uSDKManager.getSingleInstance().init(mApplication);
+    }
+
     private void initIOTAgent() {
         mIOTAgent = new IOTAgent();
         initHaier();
-    }
-
-    private void initHaier() {
-        uSDKManager.getSingleInstance().init(mApplication);
     }
 
     public IOTAgent getIOTAgent() {
@@ -69,8 +73,30 @@ public class LingManager {
         return mIOTAgent;
     }
 
+    private void initLocationAgent() {
+        mLocationAgent = new LocationAgent(mApplication);
+    }
+
+    public LocationAgent getLocationAgent() {
+        if (mLocationAgent == null)
+            initLocationAgent();
+        return mLocationAgent;
+    }
+
     public Context getAppContext() {
         return mApplication;
     }
 
+    public void useTestUserid(boolean b, String testUserid) {
+        useTestUserid = b;
+        mJiboUserid = testUserid;
+    }
+
+    public boolean useTestUserid() {
+        return useTestUserid;
+    }
+
+    public String getTestUserId() {
+        return mJiboUserid;
+    }
 }

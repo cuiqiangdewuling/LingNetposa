@@ -10,17 +10,19 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
-import android.util.Log;
-import android.widget.Toast;
 
+import com.ling.jibonetposa.LingManager;
+import com.ling.jibonetposa.entities.SaveLocationEntity;
 import com.ling.jibonetposa.iretrofit.IRequestCallback;
+import com.ling.jibonetposa.models.location.GetCityDataModel;
+import com.ling.jibonetposa.models.location.GetLocationModel;
+import com.ling.jibonetposa.models.location.SaveLocationModel;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
-
-import static com.ling.jibonetposa.base.BaseRequestModel.TAG;
 
 /**
  * Created by mhz小志 on 2017/5/8.
@@ -28,31 +30,62 @@ import static com.ling.jibonetposa.base.BaseRequestModel.TAG;
 
 public class LocationAgent {
 
+    public static final String TAG = "LocationAgent";
+
     private Context mContext;
     private ILocationLisenter mILocationLisenter;
+    private LocationManager locationManager;
+
+    public LocationAgent(Context context) {
+        this.mContext = context;
+    }
+
+    public void saveLocationToServer(String userid, String province, String city, double latitude, double longitude, IRequestCallback iRequestCallback) {
+        if (LingManager.getInstance().useTestUserid()) {
+            userid = LingManager.getInstance().getTestUserId();
+        }
+        final String finalUserid = userid;
+        LingManager.getInstance().getLingLog().LOGD("finalUserid: " + finalUserid);
+        SaveLocationModel saveLocationModel = new SaveLocationModel(iRequestCallback);
+        saveLocationModel.saveLocation(new SaveLocationEntity(finalUserid, province, city, latitude + "", longitude + ""));
+    }
+
+    public void getLocationFromServer(String userid, IRequestCallback iRequestCallback) {
+        if (LingManager.getInstance().useTestUserid()) {
+            userid = LingManager.getInstance().getTestUserId();
+        }
+        final String finalUserid = userid;
+        LingManager.getInstance().getLingLog().LOGD("finalUserid: " + finalUserid);
+        GetLocationModel getLocationModel = new GetLocationModel(iRequestCallback);
+        getLocationModel.getLocation(finalUserid);
+    }
+
+    public void getCityDataFromServer(IRequestCallback iRequestCallback) {
+        GetCityDataModel cityDataModel = new GetCityDataModel(iRequestCallback);
+        cityDataModel.getCityData();
+    }
 
     /**
      * 获取当前地理位置，返回经纬度与所在城市名称
      */
-    public void getLocation(Context context, ILocationLisenter locationLisenter) {
+    public void getAppLocation(ILocationLisenter locationLisenter) {
         this.mILocationLisenter = locationLisenter;
-        this.mContext = context;
-        this.testShowLocation();
+        this.showLocation();
     }
+
+    public void setTimeout(long timeout) {
+        this.mTimeout = timeout;
+    }
+
 
     public interface ILocationLisenter {
 
-        void onSuccess(double latitude, double longitude, String city);
+        void onSuccess(double latitude, double longitude, String province, String city);
 
-        void onFailure(int code);
+        void onFailure();
     }
 
-    public void saveJiboLocation(String userid, double latitude, double longitude, String city, IRequestCallback iRequestCallback) {
-
-    }
-
-    private void testShowLocation() {
-        LocationManager locationManager;
+    private void showLocation() {
         locationManager = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
         // 查找到服务信息
         Criteria criteria = new Criteria();
@@ -61,53 +94,86 @@ public class LocationAgent {
         criteria.setBearingRequired(false);
         criteria.setCostAllowed(true);
         criteria.setPowerRequirement(Criteria.POWER_LOW); // 低功耗
-        String provider = locationManager.getBestProvider(criteria, true); // 获取GPS信息
+        mProvider = locationManager.getBestProvider(criteria, true); // 获取GPS信息
+        requestLocation();
+    }
+
+    private void requestLocation() {
+        mHandler.postDelayed(mTimeoutRunnable, mTimeout);
         if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
+            if (mILocationLisenter != null) mILocationLisenter.onFailure();
             return;
         }
         // 设置监听器，自动更新的最小时间为间隔N秒(1秒为1*1000，这样写主要为了方便)或最小位移变化超过N米
-        locationManager.requestLocationUpdates(provider, 3 * 1000, 500, mLocationListener);
+        locationManager.requestLocationUpdates(mProvider, 3 * 1000, 0, mLocationListener);
     }
 
-    /**
-     * 判断是否有可用的内容提供器
-     *
-     * @return 不存在返回null
-     */
-    private String judgeProvider(LocationManager locationManager) {
-        List<String> prodiverlist = locationManager.getProviders(true);
-        if (prodiverlist.contains(LocationManager.NETWORK_PROVIDER)) {
-            return LocationManager.NETWORK_PROVIDER;
-        } else if (prodiverlist.contains(LocationManager.GPS_PROVIDER)) {
-            return LocationManager.GPS_PROVIDER;
-        } else {
-            Toast.makeText(mContext, "没有可用的位置提供器", Toast.LENGTH_SHORT).show();
+    private String mProvider;
+    private long mTimeout = 10000;
+
+    Handler mHandler = new Handler();
+
+    Runnable mTimeoutRunnable = new Runnable() {
+        @Override
+        public void run() {
+            mHandler.removeCallbacks(mTimeoutRunnable);
+            locationManager.removeUpdates(mLocationListener);
+            LingManager.getInstance().getLingLog().LOGD(TAG, "获取位置超时，当前 Provider：" + mProvider);
+            List<String> prodiverlist = locationManager.getProviders(true);
+            if (mProvider.equals(LocationManager.GPS_PROVIDER) && prodiverlist.contains(LocationManager.NETWORK_PROVIDER)) {
+                mProvider = LocationManager.NETWORK_PROVIDER;
+                if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    if (mILocationLisenter != null) mILocationLisenter.onFailure();
+                    return;
+                }
+                LingManager.getInstance().getLingLog().LOGD(TAG, "更换位置提供器，Provider：" + mProvider);
+                requestLocation();
+            } else {
+                LingManager.getInstance().getLingLog().LOGD(TAG, "获取位置超时，当前 Provider：" + mProvider);
+                if (mILocationLisenter != null) mILocationLisenter.onFailure();
+            }
         }
-        return null;
-    }
+    };
 
-    LocationListener mLocationListener = new LocationListener() {
+    private LocationListener mLocationListener = new LocationListener() {
         @Override
         public void onLocationChanged(Location location) {
             if (location != null && location.getLatitude() != 0 && location.getLongitude() != 0) {
                 double latitude = location.getLatitude();
                 double longitude = location.getLongitude();
-                Toast.makeText(mContext, latitude + "　／　" + longitude, Toast.LENGTH_SHORT).show();
-                getLocatonDesc(latitude, longitude);
+                if (latitude == 0 && longitude == 0) {
+                    if (mILocationLisenter != null) {
+                        LingManager.getInstance().getLingLog().LOGD(TAG, "latitude,longitude： 0");
+                        if (mILocationLisenter != null) mILocationLisenter.onFailure();
+                    }
+                } else {
+                    mHandler.removeCallbacks(mTimeoutRunnable);
+                    if (mILocationLisenter != null)
+                        getLocatonDesc(latitude, longitude);
+                }
+                if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    if (mILocationLisenter != null) mILocationLisenter.onFailure();
+                    locationManager.removeUpdates(this);
+                    return;
+                }
+                locationManager.removeUpdates(this);
             }
+            LingManager.getInstance().getLingLog().LOGD(TAG, "onLocationChanged");
         }
 
         @Override
         public void onStatusChanged(String provider, int status, Bundle extras) {
+            LingManager.getInstance().getLingLog().LOGD(TAG, "onStatusChanged");
         }
 
         @Override
         public void onProviderEnabled(String provider) {
+            LingManager.getInstance().getLingLog().LOGD(TAG, "onProviderEnabled");
         }
 
         @Override
         public void onProviderDisabled(String provider) {
+            LingManager.getInstance().getLingLog().LOGD(TAG, "onProviderDisabled");
         }
     };
 
@@ -117,17 +183,20 @@ public class LocationAgent {
         try {
             locationList = gc.getFromLocation(latitude, longitude, 1);
         } catch (IOException e) {
+            if (mILocationLisenter != null) mILocationLisenter.onFailure();
             e.printStackTrace();
         }
         Address address = locationList.get(0);//得到Address实例
-        //Log.i(TAG, "address =" + address);
-        String countryName = address.getCountryName();//得到国家名称，比如：中国
-        Log.i(TAG, "countryName = " + countryName);
+
+        String adminArea = address.getAdminArea();
+        LingManager.getInstance().getLingLog().LOGD(TAG, "province = " + adminArea);
         String locality = address.getLocality();//得到城市名称，比如：北京市
-        Log.i(TAG, "locality = " + locality);
+        LingManager.getInstance().getLingLog().LOGD(TAG, "city = " + locality);
+
         for (int i = 0; address.getAddressLine(i) != null; i++) {
             String addressLine = address.getAddressLine(i);//得到周边信息，包括街道等，i=0，得到街道名称
-            Log.i(TAG, "addressLine = " + addressLine);
+            LingManager.getInstance().getLingLog().LOGD(TAG, "addressLine = " + addressLine);
         }
+        mILocationLisenter.onSuccess(latitude, longitude, adminArea, locality);
     }
 }

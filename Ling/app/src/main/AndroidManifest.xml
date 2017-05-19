@@ -7,6 +7,10 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <uses-permission android:name="android.permission.WRITE_SECURE_SETTINGS"/>
+    <uses-permission android:name="android.provider.Settings.Secure.LOCATION_MODE_OFF"/>
+    <uses-permission android:name="android.provider.Settings.Secure.LOCATION_MODE_HIGH_ACCURACY"/>
 
     <application
         android:name=".MyApplication"
@@ -23,7 +27,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".IOTTestActivity"/>
-        <activity android:name=".test.ShowLocation"/>
+        <activity android:name=".ShowLocation"/>
+        <activity android:name=".LocationActivity"/>
     </application>
 
 </manifest>

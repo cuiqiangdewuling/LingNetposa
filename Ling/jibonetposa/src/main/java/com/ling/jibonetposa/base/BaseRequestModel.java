@@ -17,6 +17,7 @@ import java.util.concurrent.TimeUnit;
 import okhttp3.Cache;
 import okhttp3.CacheControl;
 import okhttp3.Interceptor;
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -87,6 +88,14 @@ public class BaseRequestModel<T extends BaseEntity> {
     }
 
     /**
+     * 如果请求是带Json格式的请求，执行此方法将参数转换成Json
+     */
+    protected RequestBody organizeJsonParams(BaseEntity baseEntity) {
+        String json = new Gson().toJson(baseEntity);
+        return RequestBody.create(MediaType.parse("application/json;charset=UTF-8"), json);
+    }
+
+    /**
      * 如果请求是带普通参数的请求，执行此方法返回mParams，
      * <p>
      * 以后如果有需求的话，可以在这里对Params做数据处理
@@ -106,17 +115,17 @@ public class BaseRequestModel<T extends BaseEntity> {
             @Override
             public void onResponse(Call<T> call, Response<T> response) {
                 if (response.isSuccessful()) {
-                    LingManager.getInstance().getLingLog().LOGD(TAG, "executeSuccess " + response.toString());
+                    LingManager.getInstance().getLingLog().LOGD(TAG, "executeSuccess: " + response.toString() + " / " + response.body().toString());
                     BaseRequestModel.this.mRequestCallback.responsedCallback(response.body(), RETROFIT_SUCCESS, (Throwable) null);
                 } else {
-                    LingManager.getInstance().getLingLog().LOGD(TAG, "executeError" + response.toString());
+                    LingManager.getInstance().getLingLog().LOGD(TAG, "executeError: " + response.toString());
                     BaseRequestModel.this.mRequestCallback.responsedCallback(null, RETROFIT_WRONG, new RetrofitException(response.toString()));
                 }
             }
 
             @Override
             public void onFailure(Call<T> call, Throwable throwable) {
-                LingManager.getInstance().getLingLog().LOGD(TAG, "throwable1" + throwable.toString());
+                LingManager.getInstance().getLingLog().LOGD(TAG, "throwable: " + throwable.toString());
                 BaseRequestModel.this.mRequestCallback.responsedCallback(null, RETROFIT_ERROR, throwable);
 //                if (call.isCanceled()) {
 //                    LingManager.getInstance().getLingLog().LOGD(TAG, "request is canceled");

@@ -5,20 +5,41 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:orientation="vertical"
-              tools:context=".test.ShowLocation">
+              tools:context="com.ling.jibo.IOTTestActivity">
 
-
-    <TextView
-        android:id="@+id/tv_location_show"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent">
 
-        android:text="地理位置"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
 
-    <Button
-        android:id="@+id/btn_show_location"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="获取位置"/>
+            <Button
+                android:id="@+id/btn_savelocation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="保存地址"/>
 
+            <Button
+                android:id="@+id/btn_getlocation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="获取地址（server）"/>
+            <Button
+                android:id="@+id/btn_getAppLocation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="获取地址（app）"/>
+
+            <Button
+                android:id="@+id/btn_getcitylist"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="获取城市列表"/>
+
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>

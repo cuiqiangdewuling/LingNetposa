@@ -14,8 +14,8 @@ public class SaveAuthDataEntity extends BaseEntity {
     private String token_type;
     private String refresh_token;
     private String scope;
-    private int expires_in;
-    private int created_at;
+    private long expires_in;
+    private long created_at;
 
     @Override
     public String toString() {
@@ -63,11 +63,11 @@ public class SaveAuthDataEntity extends BaseEntity {
         this.token_type = token_type;
     }
 
-    public int getExpires_in() {
+    public long getExpires_in() {
         return expires_in;
     }
 
-    public void setExpires_in(int expires_in) {
+    public void setExpires_in(long expires_in) {
         this.expires_in = expires_in;
     }
 
@@ -87,11 +87,11 @@ public class SaveAuthDataEntity extends BaseEntity {
         this.scope = scope;
     }
 
-    public int getCreated_at() {
+    public long getCreated_at() {
         return created_at;
     }
 
-    public void setCreated_at(int created_at) {
+    public void setCreated_at(long created_at) {
         this.created_at = created_at;
     }
 

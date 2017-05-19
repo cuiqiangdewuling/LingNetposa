@@ -3,9 +3,8 @@ apply plugin: 'com.android.library'
 android {
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
-
     defaultConfig {
-        minSdkVersion 15
+        minSdkVersion 19
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
@@ -28,8 +27,8 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile project(':uSDK4.1.01_Phone_Android')
     compile 'com.google.code.gson:gson:2.7'
-    compile 'com.squareup.okhttp3:okhttp:3.4.1'
-    compile 'com.squareup.okio:okio:1.9.0'
+    compile 'com.squareup.okhttp3:okhttp:3.6.0'
+    compile 'com.squareup.okio:okio:1.11.0'
     compile files('libs/converter-gson-2.2.0.jar')
     compile files('libs/converter-scalars-2.2.0.jar')
     compile files('libs/retrofit-2.2.0.jar')

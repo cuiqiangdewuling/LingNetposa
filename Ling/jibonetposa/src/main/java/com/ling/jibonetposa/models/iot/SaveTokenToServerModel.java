@@ -30,6 +30,7 @@ public class SaveTokenToServerModel extends BaseRequestModel<ResultSaveAuthDataE
         mParams.put("token_type", tokenEntity.getToken_type());
         mParams.put("expires_in", tokenEntity.getExpires_in());
         mParams.put("created_at", tokenEntity.getCreated_at());
+        mParams.put("scope", tokenEntity.getScope());
 
         IIOTSavePhantomTokenToServer iiotGetToken = retrofit().create(IIOTSavePhantomTokenToServer.class);
         Call<ResultSaveAuthDataEntity> token = iiotGetToken.saveToken(organizeJsonParams());

@@ -13,6 +13,11 @@ public class IOTApiConstant {
     public static final String API_PATH_JIBO_TOKEN_DELETE = "/jibo/token/delete";
     public static final String API_PATH_JIBO_DEVICES = "/jibo/devices";
     public static final String API_PATH_JIBO_BRANDS = "/jibo/devices/factory";
+    //Location Api
+    public static final String API_PATH_JIBO_LOCATION = "/jibo/geo";
+    public static final String API_PATH_JIBO_CITY = "/jibo/area";
+    public static final String API_PATH_JIBO_CITY_DATA = "/jibo/devices/factory";
+
 
     public static final String OAUTH_REDIRECT_URI = "http://101.201.72.216:8082/test/code";
 

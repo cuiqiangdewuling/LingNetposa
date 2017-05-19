@@ -16,4 +16,9 @@ public class MyApplication extends Application {
         LingManager.getInstance().init(this);
         LingManager.getInstance().debugOn();
     }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+    }
 }

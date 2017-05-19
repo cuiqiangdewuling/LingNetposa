@@ -1,4 +1,4 @@
-package com.ling.jibo.test;
+package com.ling.jibo;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
@@ -10,8 +10,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.ling.jibo.R;
 
 import java.util.List;
 
@@ -29,7 +27,7 @@ public class ShowLocation extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_location);
+        setContentView(R.layout.activity_location_test);
         init();//关联控件
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);//获得位置服务
         provider = judgeProvider(locationManager);
