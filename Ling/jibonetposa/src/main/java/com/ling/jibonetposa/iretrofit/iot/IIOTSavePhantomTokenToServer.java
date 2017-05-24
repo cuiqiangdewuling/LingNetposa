@@ -18,5 +18,5 @@ public interface IIOTSavePhantomTokenToServer {
 
     @Headers({"Content-type:application/json;charset=UTF-8"})
     @POST(API_PATH_JIBO_TOKEN_SAVE)
-    Call<ResultSaveAuthDataEntity> saveToken(@Body RequestBody route);
+    Call<ResultSaveAuthDataEntity> execute(@Body RequestBody route);
 }

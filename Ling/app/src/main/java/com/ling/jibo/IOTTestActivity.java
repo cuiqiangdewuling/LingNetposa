@@ -48,6 +48,7 @@ public class IOTTestActivity extends Activity implements View.OnClickListener {
         findViewById(R.id.btn_bl_login).setOnClickListener(this);
         findViewById(R.id.btn_he_login).setOnClickListener(this);
         findViewById(R.id.btn_he_updatename).setOnClickListener(this);
+        findViewById(R.id.btn_bl_accesskey).setOnClickListener(this);
     }
 
     @Override
@@ -80,6 +81,9 @@ public class IOTTestActivity extends Activity implements View.OnClickListener {
                 break;
             case R.id.btn_he_updatename:
                 doHEUpdateDate();
+                break;
+            case R.id.btn_bl_accesskey:
+                queryKey();
                 break;
         }
     }
@@ -161,9 +165,9 @@ public class IOTTestActivity extends Activity implements View.OnClickListener {
             @Override
             public void responsedCallback(BaseEntity entity, int errorCode, Throwable error) {
                 if (errorCode == RETROFIT_SUCCESS) {
-                    LingManager.getInstance().getLingLog().LOGD(TAG, "updateName: SUCCESS");
+                    LingManager.getInstance().getLingLog().LOGD(TAG, "execute: SUCCESS");
                 } else {
-                    LingManager.getInstance().getLingLog().LOGD(TAG, "updateName: error" + error.getMessage());
+                    LingManager.getInstance().getLingLog().LOGD(TAG, "execute: error" + error.getMessage());
                 }
             }
         });
@@ -256,5 +260,17 @@ public class IOTTestActivity extends Activity implements View.OnClickListener {
         });
     }
 
+    private void queryKey(){
+        LingManager.getInstance().getIOTAgent().queryKey(new IRequestCallback() {
+            @Override
+            public void responsedCallback(BaseEntity entity, int errorCode, Throwable error) {
+                if (errorCode == BaseRequestModel.RETROFIT_SUCCESS) {
+                    Log.d(TAG, "entity  " + entity.toString());
+                } else {
+                    Log.d(TAG, "errorCode  " + errorCode + "    /   " + error.getMessage());
+                }
+            }
+        });
+    }
 
 }

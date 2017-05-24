@@ -14,10 +14,8 @@ import retrofit2.http.Url;
 
 public interface IIOTUpdatePhantomName {
 
-    //    @PUT(API_PATH_PHANTON_UPDATE_NAME)
-//    Call<Object> updateName(@Header("Authorization") String accessToken, @Url String identifier, @Field("name") String name);
     @FormUrlEncoded
     @Headers({"Accept:application/json"})
     @PUT
-    Call<Object> updateName(@Url String url, @Header("Authorization") String accessToken, @Field("name") String name);
+    Call<Object> execute(@Url String url, @Header("Authorization") String accessToken, @Field("name") String name);
 }

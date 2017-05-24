@@ -22,7 +22,7 @@ public class CheckBrandsFromServerModel extends BaseRequestModel<ResultGetBrandE
     public void getBrands(String userId) {
         mParams.put("userid", userId);
         IIOTGetBrands iiotGetToken = retrofit().create(IIOTGetBrands.class);
-        Call<ResultGetBrandEntity> call = iiotGetToken.getBrands(organizeParams());
+        Call<ResultGetBrandEntity> call = iiotGetToken.execute(organizeParams());
         execute(call);
     }
 }

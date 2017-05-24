@@ -17,5 +17,5 @@ import static com.ling.jibonetposa.constants.IOTApiConstant.API_PATH_JIBO_TOKEN_
 public interface IIOTGetPhantomTokenFromServer {
 
     @GET(API_PATH_JIBO_TOKEN_GET)
-    Call<ResultGetTokenEntity> getToken(@QueryMap Map<String, Object> params);
+    Call<ResultGetTokenEntity> execute(@QueryMap Map<String, Object> params);
 }

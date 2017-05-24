@@ -15,5 +15,5 @@ public interface IIOTGetPhantomDevicrsFromPhantom {
 
     @Headers({"Accept:application/json"})
     @GET(API_PATH_PHANTON_GET_DEV_ALL)
-    Call<Object> getDevices(@Header("Authorization") String accessToken);
+    Call<Object> execute(@Header("Authorization") String accessToken);
 }

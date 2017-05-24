@@ -18,5 +18,5 @@ public interface ICancelPhantomAuthorized {
 
     @Headers({"Content-type:application/json;charset=UTF-8"})
     @POST(API_PATH_JIBO_TOKEN_DELETE)
-    Call<ResultCancelAuthEntity> cancelAuth(@Body RequestBody route);
+    Call<ResultCancelAuthEntity> execute(@Body RequestBody route);
 }

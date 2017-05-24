@@ -19,5 +19,5 @@ public interface IIOTGetBroadLinkTokenFromBroadLink {
 
     @FormUrlEncoded
     @POST(BROADLINK_API_PATH_TOKEN)
-    Call<BroadLinkTokenEntity> getToken(@FieldMap Map<String, Object> params);
+    Call<BroadLinkTokenEntity> execute(@FieldMap Map<String, Object> params);
 }

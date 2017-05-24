@@ -24,7 +24,7 @@ public class CancelAuthorizedModel extends BaseRequestModel<ResultCancelAuthEnti
         mParams.put("userid", userId);
         mParams.put("type", type);
         ICancelPhantomAuthorized iiotGetToken = retrofit().create(ICancelPhantomAuthorized.class);
-        Call<ResultCancelAuthEntity> call = iiotGetToken.cancelAuth(organizeJsonParams());
+        Call<ResultCancelAuthEntity> call = iiotGetToken.execute(organizeJsonParams());
         execute(call);
     }
 }

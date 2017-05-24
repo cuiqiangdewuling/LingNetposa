@@ -19,5 +19,5 @@ public interface IIOTGetPhantomTokenFromPhantom {
 
     @FormUrlEncoded
     @POST(API_PATH_PHANTON_TOKEN)
-    Call<PhantomTokenEntity> getToken(@FieldMap Map<String, Object> params);
+    Call<PhantomTokenEntity> execute(@FieldMap Map<String, Object> params);
 }

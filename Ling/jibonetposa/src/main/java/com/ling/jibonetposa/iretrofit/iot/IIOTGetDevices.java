@@ -17,5 +17,5 @@ import static com.ling.jibonetposa.constants.IOTApiConstant.API_PATH_JIBO_DEVICE
 public interface IIOTGetDevices {
 
     @GET(API_PATH_JIBO_DEVICES)
-    Call<ResultGetDevicesEntity> getDevices(@QueryMap Map<String, Object> params);
+    Call<ResultGetDevicesEntity> execute(@QueryMap Map<String, Object> params);
 }

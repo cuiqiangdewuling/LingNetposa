@@ -23,7 +23,7 @@ public class GetDevicesFromServerModel extends BaseRequestModel<ResultGetDevices
         mParams.put("userid", userId);
         mParams.put("flush", flushType);
         IIOTGetDevices iiotGetToken = retrofit().create(IIOTGetDevices.class);
-        Call<ResultGetDevicesEntity> call = iiotGetToken.getDevices(organizeParams());
+        Call<ResultGetDevicesEntity> call = iiotGetToken.execute(organizeParams());
         execute(call);
     }
 }

@@ -25,7 +25,7 @@ public class UpdatePhantomNameModel extends BaseRequestModel {
 
     public void updateName(String accessToken, String identifier, String newName) {
         IIOTUpdatePhantomName iiotGetToken = retrofit().create(IIOTUpdatePhantomName.class);
-        mCall = iiotGetToken.updateName(API_PATH_PHANTON_UPDATE_NAME + identifier + ".json", "bearer " + accessToken, newName);
+        mCall = iiotGetToken.execute(API_PATH_PHANTON_UPDATE_NAME + identifier + ".json", "bearer " + accessToken, newName);
         mCall.enqueue(new Callback<Object>() {
             @Override
             public void onResponse(Call<Object> call, Response<Object> response) {

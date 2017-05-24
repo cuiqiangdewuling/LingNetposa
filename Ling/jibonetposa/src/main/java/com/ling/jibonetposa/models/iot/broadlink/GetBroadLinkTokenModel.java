@@ -29,7 +29,7 @@ public class GetBroadLinkTokenModel extends BaseRequestModel<BroadLinkTokenEntit
         mParams.put("code", authorizeCode);
 
         IIOTGetBroadLinkTokenFromBroadLink iiotGetTokenFromPhantom = retrofit().create(IIOTGetBroadLinkTokenFromBroadLink.class);
-        Call<BroadLinkTokenEntity> token = iiotGetTokenFromPhantom.getToken(organizeParams());
+        Call<BroadLinkTokenEntity> token = iiotGetTokenFromPhantom.execute(organizeParams());
         execute(token);
     }
 }

@@ -24,7 +24,7 @@ public class GetTokenFromServerModel extends BaseRequestModel<ResultGetTokenEnti
         mParams.put("userid", userid);
         mParams.put("type", type);
         IIOTGetPhantomTokenFromServer iiotGetToken = retrofit().create(IIOTGetPhantomTokenFromServer.class);
-        Call<ResultGetTokenEntity> token = iiotGetToken.getToken(organizeParams());
+        Call<ResultGetTokenEntity> token = iiotGetToken.execute(organizeParams());
         execute(token);
     }
 }

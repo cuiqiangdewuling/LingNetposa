@@ -17,5 +17,5 @@ import static com.ling.jibonetposa.constants.IOTApiConstant.API_PATH_JIBO_BRANDS
 public interface IIOTGetBrands {
 
     @GET(API_PATH_JIBO_BRANDS)
-    Call<ResultGetBrandEntity> getBrands(@QueryMap Map<String, Object> params);
+    Call<ResultGetBrandEntity> execute(@QueryMap Map<String, Object> params);
 }

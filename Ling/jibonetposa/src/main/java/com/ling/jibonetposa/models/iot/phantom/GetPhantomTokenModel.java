@@ -31,7 +31,7 @@ public class GetPhantomTokenModel extends BaseRequestModel<PhantomTokenEntity> {
         mParams.put("code", authorizeCode);
 
         IIOTGetPhantomTokenFromPhantom iiotGetTokenFromPhantom = retrofit().create(IIOTGetPhantomTokenFromPhantom.class);
-        Call<PhantomTokenEntity> token = iiotGetTokenFromPhantom.getToken(organizeParams());
+        Call<PhantomTokenEntity> token = iiotGetTokenFromPhantom.execute(organizeParams());
         execute(token);
     }
 }

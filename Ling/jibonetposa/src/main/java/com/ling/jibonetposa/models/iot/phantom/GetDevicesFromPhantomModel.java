@@ -32,7 +32,7 @@ public class GetDevicesFromPhantomModel extends BaseRequestModel<PhantomDevicesE
 
     public void getPhantomDevices(String accessToken) {
         IIOTGetPhantomDevicrsFromPhantom iiotGetToken = retrofit().create(IIOTGetPhantomDevicrsFromPhantom.class);
-        Call<Object> token = iiotGetToken.getDevices("bearer " + accessToken);
+        Call<Object> token = iiotGetToken.execute("bearer " + accessToken);
         token.enqueue(new Callback<Object>() {
             @Override
             public void onResponse(Call<Object> call, Response<Object> response) {
