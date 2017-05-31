@@ -1,6 +1,6 @@
 package com.ling.jibonetposa.iretrofit.location;
 
-import com.ling.jibonetposa.entities.ResultLocationEntity;
+import com.ling.jibonetposa.entities.locaiton.ResultLocationEntity;
 
 import java.util.Map;
 
@@ -17,5 +17,5 @@ import static com.ling.jibonetposa.constants.IOTApiConstant.API_PATH_JIBO_LOCATI
 public interface IGetLocationFromServer {
 
     @GET(API_PATH_JIBO_LOCATION)
-    Call<ResultLocationEntity> getLocation(@QueryMap Map<String, Object> params);
+    Call<ResultLocationEntity> execute(@QueryMap Map<String, Object> params);
 }

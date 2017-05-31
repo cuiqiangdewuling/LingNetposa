@@ -1,4 +1,4 @@
-package com.ling.jibonetposa.entities;
+package com.ling.jibonetposa.entities.bean;
 
 /**
  * Created by mhz小志 on 2017/5/10.

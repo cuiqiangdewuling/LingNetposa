@@ -1,18 +1,18 @@
-package com.ling.jibonetposa.entities;
+package com.ling.jibonetposa.entities.iot;
 
 import com.ling.jibonetposa.base.BaseEntity;
+import com.ling.jibonetposa.entities.bean.BrandBean;
 
 import java.util.List;
 
 /**
  * Created by mhz小志 on 2017/4/17.
  */
-public class ResultGetDevicesEntity extends BaseEntity {
+public class ResultGetBrandEntity extends BaseEntity {
 
     private int errno;
     private String errmsg;
     private List<BrandBean> data;
-
 
     @Override
     public String toString() {

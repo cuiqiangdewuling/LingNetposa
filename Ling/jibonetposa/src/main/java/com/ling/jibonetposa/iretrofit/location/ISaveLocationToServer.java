@@ -1,6 +1,6 @@
 package com.ling.jibonetposa.iretrofit.location;
 
-import com.ling.jibonetposa.entities.ResultLocationEntity;
+import com.ling.jibonetposa.entities.locaiton.ResultLocationEntity;
 
 import okhttp3.RequestBody;
 import retrofit2.Call;
@@ -18,5 +18,5 @@ public interface ISaveLocationToServer {
 
     @Headers({"Content-type:application/json"})
     @POST(API_PATH_JIBO_LOCATION)
-    Call<ResultLocationEntity> saveLocation(@Body RequestBody route);
+    Call<ResultLocationEntity> execute(@Body RequestBody route);
 }

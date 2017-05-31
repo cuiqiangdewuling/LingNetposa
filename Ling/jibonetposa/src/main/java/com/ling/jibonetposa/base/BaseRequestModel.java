@@ -92,6 +92,7 @@ public class BaseRequestModel<T extends BaseEntity> {
      */
     protected RequestBody organizeJsonParams(BaseEntity baseEntity) {
         String json = new Gson().toJson(baseEntity);
+        LingManager.getInstance().getLingLog().LOGD("Body:   " + json);
         return RequestBody.create(MediaType.parse("application/json;charset=UTF-8"), json);
     }
 

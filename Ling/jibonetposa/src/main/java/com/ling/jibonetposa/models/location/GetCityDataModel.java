@@ -1,7 +1,7 @@
 package com.ling.jibonetposa.models.location;
 
 import com.ling.jibonetposa.base.BaseRequestModel;
-import com.ling.jibonetposa.entities.ResultCityDataEntity;
+import com.ling.jibonetposa.entities.locaiton.ResultCityDataEntity;
 import com.ling.jibonetposa.iretrofit.IRequestCallback;
 import com.ling.jibonetposa.iretrofit.location.IGetCityDataFromServer;
 
@@ -22,7 +22,7 @@ public class GetCityDataModel extends BaseRequestModel<ResultCityDataEntity> {
 
     public void getCityData() {
         IGetCityDataFromServer iiotGetToken = retrofit().create(IGetCityDataFromServer.class);
-        Call<ResultCityDataEntity> call = iiotGetToken.getCityData(organizeParams());
+        Call<ResultCityDataEntity> call = iiotGetToken.execute(organizeParams());
         execute(call);
     }
 }

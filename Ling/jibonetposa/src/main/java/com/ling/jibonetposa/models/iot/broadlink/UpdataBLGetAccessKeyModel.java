@@ -3,7 +3,7 @@ package com.ling.jibonetposa.models.iot.broadlink;
 import com.google.gson.Gson;
 import com.ling.jibonetposa.LingManager;
 import com.ling.jibonetposa.base.BaseRequestModel;
-import com.ling.jibonetposa.entities.ResultBLUpdataName;
+import com.ling.jibonetposa.entities.iot.ResultBLUpdataName;
 import com.ling.jibonetposa.iretrofit.IRequestCallback;
 import com.ling.jibonetposa.iretrofit.iot.IIOTBroadLinkDevice;
 
@@ -46,7 +46,7 @@ public class UpdataBLGetAccessKeyModel extends BaseRequestModel<ResultBLUpdataNa
     }
 
     public void queryKey() {
-        mParams.put("act", "queryKey");
+        mParams.put("act", "queryBLKey");
         mParams.put("license", BROADLINK_LICENSE);
         IIOTBroadLinkDevice iiotGetToken = retrofit().create(IIOTBroadLinkDevice.class);
         Call<ResultBLUpdataName> call = iiotGetToken.execute(getHeaders(), organizeJsonParams());

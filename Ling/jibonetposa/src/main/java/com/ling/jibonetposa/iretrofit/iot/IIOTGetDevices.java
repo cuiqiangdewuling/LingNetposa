@@ -1,6 +1,6 @@
 package com.ling.jibonetposa.iretrofit.iot;
 
-import com.ling.jibonetposa.entities.ResultGetDevicesEntity;
+import com.ling.jibonetposa.entities.iot.ResultGetDevicesEntity;
 
 import java.util.Map;
 

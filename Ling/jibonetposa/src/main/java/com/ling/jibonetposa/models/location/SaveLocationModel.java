@@ -1,8 +1,8 @@
 package com.ling.jibonetposa.models.location;
 
 import com.ling.jibonetposa.base.BaseRequestModel;
-import com.ling.jibonetposa.entities.ResultLocationEntity;
-import com.ling.jibonetposa.entities.SaveLocationEntity;
+import com.ling.jibonetposa.entities.locaiton.ResultLocationEntity;
+import com.ling.jibonetposa.entities.locaiton.SaveLocationEntity;
 import com.ling.jibonetposa.iretrofit.IRequestCallback;
 import com.ling.jibonetposa.iretrofit.location.ISaveLocationToServer;
 
@@ -23,7 +23,7 @@ public class SaveLocationModel extends BaseRequestModel<ResultLocationEntity> {
 
     public void saveLocation(SaveLocationEntity resultLocationEntity) {
         ISaveLocationToServer iiotGetToken = retrofit().create(ISaveLocationToServer.class);
-        Call<ResultLocationEntity> call = iiotGetToken.saveLocation(organizeJsonParams(resultLocationEntity));
+        Call<ResultLocationEntity> call = iiotGetToken.execute(organizeJsonParams(resultLocationEntity));
         execute(call);
     }
 }

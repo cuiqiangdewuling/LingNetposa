@@ -1,6 +1,7 @@
-package com.ling.jibonetposa.entities;
+package com.ling.jibonetposa.entities.locaiton;
 
 import com.ling.jibonetposa.base.BaseEntity;
+import com.ling.jibonetposa.entities.bean.LocationBean;
 
 /**
  * Created by mhz小志 on 2017/3/18.

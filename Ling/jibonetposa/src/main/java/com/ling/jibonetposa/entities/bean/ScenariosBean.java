@@ -1,4 +1,4 @@
-package com.ling.jibonetposa.entities;
+package com.ling.jibonetposa.entities.bean;
 
 import java.util.List;
 
@@ -6,11 +6,11 @@ import java.util.List;
  * Created by mhz小志 on 2017/4/22.
  */
 
-public class BrandBean {
+public class ScenariosBean {
 
     private String key;
     private String name;
-    private int used;
+    private int code;
     private List<DeviceBean> val;
 
     @Override
@@ -18,17 +18,17 @@ public class BrandBean {
         return "BrandBean{" +
                 "key='" + key + '\'' +
                 ", name='" + name + '\'' +
-                ", used=" + used +
+                ", code=" + code +
                 ", val=" + val +
                 '}';
     }
 
-    public int getUsed() {
-        return used;
+    public int getCode() {
+        return code;
     }
 
-    public void setUsed(int used) {
-        this.used = used;
+    public void setCode(int used) {
+        this.code = used;
     }
 
     public String getKey() {

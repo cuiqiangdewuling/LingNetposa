@@ -1,6 +1,6 @@
 package com.ling.jibonetposa.iretrofit.iot;
 
-import com.ling.jibonetposa.entities.PhantomTokenEntity;
+import com.ling.jibonetposa.entities.iot.PhantomTokenEntity;
 
 import java.util.Map;
 

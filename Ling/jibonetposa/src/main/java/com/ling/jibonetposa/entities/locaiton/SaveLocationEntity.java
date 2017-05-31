@@ -1,4 +1,4 @@
-package com.ling.jibonetposa.entities;
+package com.ling.jibonetposa.entities.locaiton;
 
 import com.ling.jibonetposa.base.BaseEntity;
 

@@ -5,8 +5,8 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.ling.jibonetposa.base.BaseRequestModel;
 import com.ling.jibonetposa.base.RetrofitException;
-import com.ling.jibonetposa.entities.PhantomDevicesEntity;
-import com.ling.jibonetposa.entities.PhantomDevicesEntity.PhantomDevice;
+import com.ling.jibonetposa.entities.iot.PhantomDevicesEntity;
+import com.ling.jibonetposa.entities.iot.PhantomDevicesEntity.PhantomDevice;
 import com.ling.jibonetposa.iretrofit.IRequestCallback;
 import com.ling.jibonetposa.iretrofit.iot.IIOTGetPhantomDevicrsFromPhantom;
 

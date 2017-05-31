@@ -1,17 +1,16 @@
-package com.ling.jibonetposa.entities;
+package com.ling.jibonetposa.entities.iot;
 
 import com.ling.jibonetposa.base.BaseEntity;
 
-import java.util.List;
-
 /**
- * Created by mhz小志 on 2017/4/17.
+ * Created by mhz小志 on 2017/3/18.
  */
-public class ResultGetBrandEntity extends BaseEntity {
+
+public class ResultCancelAuthEntity extends BaseEntity {
 
     private int errno;
     private String errmsg;
-    private List<BrandBean> data;
+    private Data data;
 
     @Override
     public String toString() {
@@ -22,11 +21,30 @@ public class ResultGetBrandEntity extends BaseEntity {
                 '}';
     }
 
-    public List<BrandBean> getData() {
+    public static class Data {
+        private String msg;
+
+        @Override
+        public String toString() {
+            return "Data{" +
+                    "msg='" + msg + '\'' +
+                    '}';
+        }
+
+        public String getMsg() {
+            return msg;
+        }
+
+        public void setMsg(String msg) {
+            this.msg = msg;
+        }
+    }
+
+    public Data getData() {
         return data;
     }
 
-    public void setData(List<BrandBean> data) {
+    public void setData(Data data) {
         this.data = data;
     }
 
@@ -45,5 +63,4 @@ public class ResultGetBrandEntity extends BaseEntity {
     public void setErrno(int errno) {
         this.errno = errno;
     }
-
 }

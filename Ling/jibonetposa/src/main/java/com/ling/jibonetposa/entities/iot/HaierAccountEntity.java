@@ -1,4 +1,4 @@
-package com.ling.jibonetposa.entities;
+package com.ling.jibonetposa.entities.iot;
 
 import com.haier.uhome.account.model.UacDevice;
 import com.haier.uhome.usdk.api.uSDKDevice;

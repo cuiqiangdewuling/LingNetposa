@@ -1,4 +1,4 @@
-package com.ling.jibonetposa.entities;
+package com.ling.jibonetposa.entities.bean;
 
 /**
  * Created by mhz小志 on 2017/4/22.
@@ -12,13 +12,6 @@ public class DeviceBean {
     private String device_on;
     private String device_type;
 
-    public DeviceBean() {
-    }
-
-    public DeviceBean(String device_name) {
-        this.device_name = device_name;
-    }
-
     @Override
     public String toString() {
         return "DeviceBean{" +
@@ -28,6 +21,29 @@ public class DeviceBean {
                 ", device_on='" + device_on + '\'' +
                 ", device_type='" + device_type + '\'' +
                 '}';
+    }
+
+    public DeviceBean() {
+    }
+
+    public DeviceBean(String device_name) {
+        this.device_name = device_name;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        DeviceBean that = (DeviceBean) o;
+
+        return device_name.equals(that.device_name);
+
+    }
+
+    @Override
+    public int hashCode() {
+        return device_name.hashCode();
     }
 
     public String getDevice_id() {

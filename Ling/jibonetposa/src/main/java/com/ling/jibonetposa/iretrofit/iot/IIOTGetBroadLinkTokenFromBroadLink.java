@@ -1,6 +1,6 @@
 package com.ling.jibonetposa.iretrofit.iot;
 
-import com.ling.jibonetposa.entities.BroadLinkTokenEntity;
+import com.ling.jibonetposa.entities.iot.BroadLinkTokenEntity;
 
 import java.util.Map;
 

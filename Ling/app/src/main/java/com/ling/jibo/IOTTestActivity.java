@@ -9,12 +9,16 @@ import com.ling.jibonetposa.LingManager;
 import com.ling.jibonetposa.base.BaseEntity;
 import com.ling.jibonetposa.base.BaseRequestModel;
 import com.ling.jibonetposa.constants.IOTDevConstant;
-import com.ling.jibonetposa.entities.BrandStatusEntity;
-import com.ling.jibonetposa.entities.DevicesEntity;
-import com.ling.jibonetposa.entities.HaierAccountEntity;
-import com.ling.jibonetposa.entities.ResultSaveAuthDataEntity;
-import com.ling.jibonetposa.entities.SaveAuthDataEntity;
+import com.ling.jibonetposa.entities.iot.BrandStatusEntity;
+import com.ling.jibonetposa.entities.iot.DevicesEntity;
+import com.ling.jibonetposa.entities.iot.HaierAccountEntity;
+import com.ling.jibonetposa.entities.iot.PutUpdateDevNameEntity;
+import com.ling.jibonetposa.entities.iot.ResultSaveAuthDataEntity;
+import com.ling.jibonetposa.entities.iot.SaveAuthDataEntity;
 import com.ling.jibonetposa.iretrofit.IRequestCallback;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.ButterKnife;
 
@@ -49,6 +53,9 @@ public class IOTTestActivity extends Activity implements View.OnClickListener {
         findViewById(R.id.btn_he_login).setOnClickListener(this);
         findViewById(R.id.btn_he_updatename).setOnClickListener(this);
         findViewById(R.id.btn_bl_accesskey).setOnClickListener(this);
+        findViewById(R.id.btn_getbrandconfigure).setOnClickListener(this);
+        findViewById(R.id.btn_updatedevname).setOnClickListener(this);
+        findViewById(R.id.btn_getscenarios).setOnClickListener(this);
     }
 
     @Override
@@ -59,6 +66,12 @@ public class IOTTestActivity extends Activity implements View.OnClickListener {
                 break;
             case R.id.btn_checkbrand:
                 checkBrand();
+                break;
+            case R.id.btn_updatedevname:
+                updateDevName();
+                break;
+            case R.id.btn_getscenarios:
+                getScenarios();
                 break;
             case R.id.btn_ht_cancelAuthorized:
                 doHTCancelAuthorized();
@@ -85,7 +98,42 @@ public class IOTTestActivity extends Activity implements View.OnClickListener {
             case R.id.btn_bl_accesskey:
                 queryKey();
                 break;
+            case R.id.btn_getbrandconfigure:
+                getBrandConfigure();
+                break;
         }
+    }
+
+    private void getScenarios() {
+        LingManager.getInstance().getIOTAgent().getScenariosFromServer("jibo", new IRequestCallback() {
+            @Override
+            public void responsedCallback(BaseEntity entity, int errorCode, Throwable error) {
+                if (errorCode == BaseRequestModel.RETROFIT_SUCCESS) {
+                    Log.d(TAG, "entity  " + entity.toString());
+                } else {
+                    Log.d(TAG, "errorCode  " + errorCode);
+                    if (error != null) error.printStackTrace();
+                }
+            }
+        });
+    }
+
+    private void updateDevName() {
+        List<PutUpdateDevNameEntity.Item> devices = new ArrayList<>();
+        devices.add(new PutUpdateDevNameEntity.Item("13341", "测试灯1"));
+        devices.add(new PutUpdateDevNameEntity.Item("13341", "测试灯2"));
+        PutUpdateDevNameEntity putUpdateDevNameEntity = new PutUpdateDevNameEntity("jibo", devices);
+        LingManager.getInstance().getIOTAgent().updateDevName(putUpdateDevNameEntity, new IRequestCallback() {
+            @Override
+            public void responsedCallback(BaseEntity entity, int errorCode, Throwable error) {
+                if (errorCode == BaseRequestModel.RETROFIT_SUCCESS) {
+                    Log.d(TAG, "entity  " + entity.toString());
+                } else {
+                    Log.d(TAG, "errorCode  " + errorCode);
+                    if (error != null) error.printStackTrace();
+                }
+            }
+        });
     }
 
     private void doBLGetAccessToken() {
@@ -127,6 +175,7 @@ public class IOTTestActivity extends Activity implements View.OnClickListener {
                 if (errorCode == RETROFIT_SUCCESS) {
                     DevicesEntity devicesEntity = (DevicesEntity) entity;
                     if (devicesEntity != null) {
+                        LingManager.getInstance().getIOTAgent().checkDevicesName(devicesEntity);
                         LingManager.getInstance().getLingLog().LOGD(TAG, "getDev: devicesEntity" + devicesEntity.toString());
                     }
                 } else {
@@ -260,8 +309,8 @@ public class IOTTestActivity extends Activity implements View.OnClickListener {
         });
     }
 
-    private void queryKey(){
-        LingManager.getInstance().getIOTAgent().queryKey(new IRequestCallback() {
+    private void queryKey() {
+        LingManager.getInstance().getIOTAgent().queryBLKey(new IRequestCallback() {
             @Override
             public void responsedCallback(BaseEntity entity, int errorCode, Throwable error) {
                 if (errorCode == BaseRequestModel.RETROFIT_SUCCESS) {
@@ -272,5 +321,23 @@ public class IOTTestActivity extends Activity implements View.OnClickListener {
             }
         });
     }
+
+
+    private void nameChecking() {
+    }
+
+    private void getBrandConfigure() {
+        LingManager.getInstance().getIOTAgent().getBrandConfigureModel(new IRequestCallback() {
+            @Override
+            public void responsedCallback(BaseEntity entity, int errorCode, Throwable error) {
+                if (errorCode == BaseRequestModel.RETROFIT_SUCCESS) {
+                    Log.d(TAG, "entity  " + entity.toString());
+                } else {
+                    Log.d(TAG, "errorCode  " + errorCode + "    /   " + error.getMessage());
+                }
+            }
+        });
+    }
+
 
 }

@@ -1,6 +1,8 @@
-package com.ling.jibonetposa.entities;
+package com.ling.jibonetposa.entities.iot;
 
 import com.ling.jibonetposa.base.BaseEntity;
+import com.ling.jibonetposa.entities.bean.BrandBean;
+import com.ling.jibonetposa.entities.bean.DeviceBean;
 
 import java.util.List;
 
@@ -11,6 +13,7 @@ public class DevicesEntity extends BaseEntity {
 
     private String userid;
     private List<BrandBean> brand_list;
+    private List<DeviceBean> repeatDev;// 重名的设备
 
     public String getUserid() {
         return userid;
@@ -35,5 +38,6 @@ public class DevicesEntity extends BaseEntity {
                 ", brand_list=" + brand_list +
                 '}';
     }
+
 
 }

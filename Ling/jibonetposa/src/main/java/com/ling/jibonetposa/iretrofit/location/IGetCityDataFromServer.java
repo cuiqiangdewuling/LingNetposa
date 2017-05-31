@@ -1,6 +1,6 @@
 package com.ling.jibonetposa.iretrofit.location;
 
-import com.ling.jibonetposa.entities.ResultCityDataEntity;
+import com.ling.jibonetposa.entities.locaiton.ResultCityDataEntity;
 
 import java.util.Map;
 
@@ -17,5 +17,5 @@ import static com.ling.jibonetposa.constants.IOTApiConstant.API_PATH_JIBO_CITY;
 public interface IGetCityDataFromServer {
 
     @GET(API_PATH_JIBO_CITY)
-    Call<ResultCityDataEntity> getCityData(@QueryMap Map<String, Object> params);
+    Call<ResultCityDataEntity> execute(@QueryMap Map<String, Object> params);
 }

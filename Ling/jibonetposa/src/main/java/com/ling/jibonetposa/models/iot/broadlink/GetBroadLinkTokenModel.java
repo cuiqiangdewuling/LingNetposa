@@ -1,7 +1,7 @@
 package com.ling.jibonetposa.models.iot.broadlink;
 
 import com.ling.jibonetposa.base.BaseRequestModel;
-import com.ling.jibonetposa.entities.BroadLinkTokenEntity;
+import com.ling.jibonetposa.entities.iot.BroadLinkTokenEntity;
 import com.ling.jibonetposa.iretrofit.IRequestCallback;
 import com.ling.jibonetposa.iretrofit.iot.IIOTGetBroadLinkTokenFromBroadLink;
 

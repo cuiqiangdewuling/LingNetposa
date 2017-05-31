@@ -1,6 +1,6 @@
 package com.ling.jibonetposa.iretrofit.iot;
 
-import com.ling.jibonetposa.entities.ResultSaveAuthDataEntity;
+import com.ling.jibonetposa.entities.iot.ResultSaveAuthDataEntity;
 
 import okhttp3.RequestBody;
 import retrofit2.Call;

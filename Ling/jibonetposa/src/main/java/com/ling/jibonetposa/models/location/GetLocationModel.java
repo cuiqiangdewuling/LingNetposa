@@ -1,7 +1,7 @@
 package com.ling.jibonetposa.models.location;
 
 import com.ling.jibonetposa.base.BaseRequestModel;
-import com.ling.jibonetposa.entities.ResultLocationEntity;
+import com.ling.jibonetposa.entities.locaiton.ResultLocationEntity;
 import com.ling.jibonetposa.iretrofit.IRequestCallback;
 import com.ling.jibonetposa.iretrofit.location.IGetLocationFromServer;
 
@@ -23,7 +23,7 @@ public class GetLocationModel extends BaseRequestModel<ResultLocationEntity> {
     public void getLocation(String userId) {
         mParams.put("userid", userId);
         IGetLocationFromServer iiotGetToken = retrofit().create(IGetLocationFromServer.class);
-        Call<ResultLocationEntity> call = iiotGetToken.getLocation(organizeParams());
+        Call<ResultLocationEntity> call = iiotGetToken.execute(organizeParams());
         execute(call);
     }
 }

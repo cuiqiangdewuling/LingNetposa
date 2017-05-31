@@ -2,18 +2,23 @@ package com.ling.jibonetposa.modules;
 
 import com.ling.jibonetposa.LingManager;
 import com.ling.jibonetposa.base.BaseEntity;
-import com.ling.jibonetposa.entities.BrandBean;
-import com.ling.jibonetposa.entities.BrandStatusEntity;
-import com.ling.jibonetposa.entities.DevicesEntity;
-import com.ling.jibonetposa.entities.ResultGetBrandEntity;
-import com.ling.jibonetposa.entities.ResultGetDevicesEntity;
-import com.ling.jibonetposa.entities.SaveAuthDataEntity;
+import com.ling.jibonetposa.entities.bean.BrandBean;
+import com.ling.jibonetposa.entities.bean.DeviceBean;
+import com.ling.jibonetposa.entities.iot.BrandStatusEntity;
+import com.ling.jibonetposa.entities.iot.DevicesEntity;
+import com.ling.jibonetposa.entities.iot.PutUpdateDevNameEntity;
+import com.ling.jibonetposa.entities.iot.ResultGetBrandEntity;
+import com.ling.jibonetposa.entities.iot.ResultGetDevicesEntity;
+import com.ling.jibonetposa.entities.iot.SaveAuthDataEntity;
 import com.ling.jibonetposa.iretrofit.IRequestCallback;
 import com.ling.jibonetposa.models.iot.CancelAuthorizedModel;
 import com.ling.jibonetposa.models.iot.CheckBrandsFromServerModel;
+import com.ling.jibonetposa.models.iot.GetBrandConfigureModel;
 import com.ling.jibonetposa.models.iot.GetDevicesFromServerModel;
+import com.ling.jibonetposa.models.iot.GetScenariosFromServerModel;
 import com.ling.jibonetposa.models.iot.GetTokenFromServerModel;
 import com.ling.jibonetposa.models.iot.SaveTokenToServerModel;
+import com.ling.jibonetposa.models.iot.UpdateDevNameModel;
 import com.ling.jibonetposa.models.iot.broadlink.GetBroadLinkTokenModel;
 import com.ling.jibonetposa.models.iot.broadlink.UpdataBLGetAccessKeyModel;
 import com.ling.jibonetposa.models.iot.haier.HEModel;
@@ -42,11 +47,6 @@ import static com.ling.jibonetposa.constants.IOTApiConstant.PHANTON_SCOPE;
 
 public class IOTAgent {
 
-    private HEModel mHEModel;
-
-    public void shutdownResponsed() {
-    }
-
     /**
      * 获取所有设备
      *
@@ -59,13 +59,14 @@ public class IOTAgent {
         }
         final String finalUserid = userid;
         LingManager.getInstance().getLingLog().LOGD("finalUserid: " + finalUserid);
-        GetDevicesFromServerModel mGetDevicesFromServerModel = new GetDevicesFromServerModel(new IRequestCallback() {
+        new GetDevicesFromServerModel(new IRequestCallback() {
             @Override
             public void responsedCallback(BaseEntity entity, int errorCode, Throwable error) {
                 if (errorCode == RETROFIT_SUCCESS) {
                     ResultGetDevicesEntity brandEntity = (ResultGetDevicesEntity) entity;
                     if (brandEntity != null) {
-                        DevicesEntity devicesEntity = LingManager.getInstance().getIOTAgent().getDevicesEntity(finalUserid, brandEntity);
+                        DevicesEntity devicesEntity = getDevicesEntity(finalUserid, brandEntity);
+                        checkDevicesName(devicesEntity);
                         requestCallback.responsedCallback(devicesEntity, errorCode, error);
                     }
                 } else {
@@ -73,8 +74,7 @@ public class IOTAgent {
                 }
 
             }
-        });
-        mGetDevicesFromServerModel.getDevices(userid, type);
+        }).getDevices(userid, type);
     }
 
     /**
@@ -88,7 +88,7 @@ public class IOTAgent {
         }
         final String finalUserid = userid;
         LingManager.getInstance().getLingLog().LOGD("finalUserid: " + finalUserid);
-        CheckBrandsFromServerModel mCheckBrandsFromServerModel = new CheckBrandsFromServerModel(new IRequestCallback() {
+        new CheckBrandsFromServerModel(new IRequestCallback() {
             @Override
             public void responsedCallback(BaseEntity entity, int errorCode, Throwable error) {
                 if (errorCode == RETROFIT_SUCCESS) {
@@ -104,8 +104,7 @@ public class IOTAgent {
                     requestCallback.responsedCallback(null, errorCode, error);
                 }
             }
-        });
-        mCheckBrandsFromServerModel.getBrands(userid);
+        }).getBrands(userid);
     }
 
     /**
@@ -116,8 +115,7 @@ public class IOTAgent {
             userid = LingManager.getInstance().getTestUserId();
         }
         LingManager.getInstance().getLingLog().LOGD("finalUserid: " + userid);
-        CancelAuthorizedModel mCancelAuthorizedModel = new CancelAuthorizedModel(requestCallback);
-        mCancelAuthorizedModel.cancelAuthorized(userid, brandType);
+        new CancelAuthorizedModel(requestCallback).cancelAuthorized(userid, brandType);
     }
 
     /**
@@ -128,32 +126,28 @@ public class IOTAgent {
             userid = LingManager.getInstance().getTestUserId();
         }
         LingManager.getInstance().getLingLog().LOGD("finalUserid: " + userid);
-        GetTokenFromServerModel mGetTokenFromServerModel = new GetTokenFromServerModel(requestCallback);
-        mGetTokenFromServerModel.getPhantomToken(userid, brandType);
+        new GetTokenFromServerModel(requestCallback).getPhantomToken(userid, brandType);
     }
 
     /**
      * 更改幻腾设备名称
      */
     public void updatePhantomDevName(String accessToken, String identId, String newName, final IRequestCallback requestCallback) {
-        UpdatePhantomNameModel mUpdatePhantomNameModel = new UpdatePhantomNameModel(requestCallback);
-        mUpdatePhantomNameModel.updateName(accessToken, identId, newName);
+        new UpdatePhantomNameModel(requestCallback).updateName(accessToken, identId, newName);
     }
 
     /**
      * 更改海尔设备名称
      */
     public void updateHaierDevName(String identId, String newName, final IRequestCallback requestCallback) {
-        mHEModel = new HEModel(LingManager.getInstance().getAppContext());
-        mHEModel.updateDeviceNickName(identId, newName, requestCallback);
+        new HEModel(LingManager.getInstance().getAppContext()).updateDeviceNickName(identId, newName, requestCallback);
     }
 
     /**
      * 登录海尔账号  成功后将账号数据存到server
      */
     public void doHELogin(String username, String password, final IRequestCallback requestCallback) {
-        mHEModel = new HEModel(LingManager.getInstance().getAppContext());
-        mHEModel.doHELogin(username, password, requestCallback);
+        new HEModel(LingManager.getInstance().getAppContext()).doHELogin(username, password, requestCallback);
     }
 
     /**
@@ -162,8 +156,7 @@ public class IOTAgent {
      * 根据authorizedCode去获取幻腾Token，然后将Token保存到服务器
      */
     public void getPhantomAuthorized(final String authorizedCode, final IRequestCallback requestCallback) {
-        GetPhantomTokenModel mGetPhantomTokenModel = new GetPhantomTokenModel(requestCallback);
-        mGetPhantomTokenModel.getPhantomToken(authorizedCode);
+        new GetPhantomTokenModel(requestCallback).getPhantomToken(authorizedCode);
     }
 
     /**
@@ -172,8 +165,7 @@ public class IOTAgent {
      * 根据authorizedCode去获取BroadLink Token，然后将Token保存到服务器
      */
     public void getBroadLinkAuthorized(final String authorizedCode, final IRequestCallback requestCallback) {
-        GetBroadLinkTokenModel mGetBroadLinkTokenModel = new GetBroadLinkTokenModel(requestCallback);
-        mGetBroadLinkTokenModel.getBroadLinkToken(authorizedCode);
+        new GetBroadLinkTokenModel(requestCallback).getBroadLinkToken(authorizedCode);
     }
 
     /**
@@ -184,15 +176,37 @@ public class IOTAgent {
             tokenEntity.setUserid(LingManager.getInstance().getTestUserId());
         }
         LingManager.getInstance().getLingLog().LOGD("finalUserid: " + tokenEntity.getUserid());
-        SaveTokenToServerModel mSaveTokenToServerModel = new SaveTokenToServerModel(requestCallback);
-        mSaveTokenToServerModel.saveToken(tokenEntity);
+        new SaveTokenToServerModel(requestCallback).saveToken(tokenEntity);
+    }
+
+
+    /**
+     * 获取场景列表
+     */
+    public void getScenariosFromServer(String userid, IRequestCallback requestCallback) {
+        if (LingManager.getInstance().useTestUserid()) {
+            userid = LingManager.getInstance().getTestUserId();
+        }
+        LingManager.getInstance().getLingLog().LOGD("finalUserid: " + userid);
+        new GetScenariosFromServerModel(requestCallback).execute(userid);
+    }
+
+    /**
+     *
+     */
+    public void updateDevName(PutUpdateDevNameEntity putUpdateNameEntity, IRequestCallback requestCallback) {
+        if (LingManager.getInstance().useTestUserid()) {
+            putUpdateNameEntity.getData().getAttributes().setUserid(LingManager.getInstance().getTestUserId());
+        }
+        LingManager.getInstance().getLingLog().LOGD("finalUserid: " + putUpdateNameEntity.getData().getAttributes().getUserid());
+        new UpdateDevNameModel(requestCallback).execute(putUpdateNameEntity);
     }
 
     public BrandStatusEntity getBrandStatusEntity(ResultGetBrandEntity getBrandEntity) {
         BrandStatusEntity brandStatusEntity = new BrandStatusEntity();
         List<BrandStatusEntity.Brand> brand_list = new ArrayList<>();
         for (BrandBean brandBean : getBrandEntity.getData()) {
-            brand_list.add(new BrandStatusEntity.Brand(brandBean.getKey(), brandBean.getName(), brandBean.getUsed()));
+            brand_list.add(new BrandStatusEntity.Brand(brandBean.getKey(), brandBean.getName(), brandBean.getCode()));
         }
         brandStatusEntity.setBrand_list(brand_list);
         return doSoreList(brandStatusEntity);
@@ -251,9 +265,48 @@ public class IOTAgent {
         return BROADLINK_API_PATH + NetWorkUtil.organizeParams(mParams);
     }
 
-    public void queryKey(final IRequestCallback requestCallback){
-        UpdataBLGetAccessKeyModel accessKeyModel = new UpdataBLGetAccessKeyModel(requestCallback);
-        accessKeyModel.queryKey();
+    public void queryBLKey(IRequestCallback requestCallback) {
+        new UpdataBLGetAccessKeyModel(requestCallback).queryKey();
+    }
+
+    public void getBrandConfigureModel(IRequestCallback requestCallback) {
+        new GetBrandConfigureModel(requestCallback).getBrandConfigure();
+    }
+
+    public void checkDevicesName(DevicesEntity devicesEntity) {
+//        if (devicesEntity == null || devicesEntity.getBrand_list() == null || !(devicesEntity.getBrand_list().size() > 0))
+//            return;
+//        List<DeviceBean> chongfuList = new ArrayList<>();
+//        List<DeviceBean> deviceList = new ArrayList<>();
+//        for (BrandBean brandBean : devicesEntity.getBrand_list()) {
+//            if (brandBean.getVal() != null && brandBean.getVal().size() > 0) {
+//                for (DeviceBean deviceBean : brandBean.getVal()) {
+//
+//                    if (deviceList.contains(deviceBean)) {
+//                        devicesEntity.getBrand_list().
+//                    } else {
+//                        deviceList.add(deviceBean);
+//                    }
+//                    chongfuList.add(deviceBean);
+//                }
+//            }
+//        }
+
+    }
+
+    public boolean hasSameName(String devName, DevicesEntity devicesEntity) {
+        if (devicesEntity == null || devicesEntity.getBrand_list() == null || !(devicesEntity.getBrand_list().size() > 0))
+            return false;
+        for (BrandBean brandBean : devicesEntity.getBrand_list()) {
+            if (brandBean.getVal() != null && brandBean.getVal().size() > 0) {
+                for (DeviceBean deviceBean : brandBean.getVal()) {
+                    if (devName.equals(deviceBean.getDevice_name())) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 
 }

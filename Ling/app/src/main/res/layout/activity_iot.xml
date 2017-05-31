@@ -35,6 +35,21 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="获取绑定状态"/>
+            <Button
+                android:id="@+id/btn_getbrandconfigure"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="获取品牌参数"/>
+            <Button
+                android:id="@+id/btn_getscenarios"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="获取场景列表"/>
+            <Button
+                android:id="@+id/btn_updatedevname"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="修改设备名称"/>
 
             <View
                 android:layout_width="match_parent"

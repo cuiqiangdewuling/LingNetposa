@@ -1,7 +1,7 @@
 package com.ling.jibonetposa.models.iot;
 
 import com.ling.jibonetposa.base.BaseRequestModel;
-import com.ling.jibonetposa.entities.ResultGetTokenEntity;
+import com.ling.jibonetposa.entities.iot.ResultGetTokenEntity;
 import com.ling.jibonetposa.iretrofit.IRequestCallback;
 import com.ling.jibonetposa.iretrofit.iot.IIOTGetPhantomTokenFromServer;
 

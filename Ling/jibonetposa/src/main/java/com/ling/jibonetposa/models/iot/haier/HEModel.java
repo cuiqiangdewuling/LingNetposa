@@ -8,7 +8,7 @@ import com.haier.uhome.account.model.RespCommonModel;
 import com.haier.uhome.account.model.UacDevice;
 import com.ling.jibonetposa.LingManager;
 import com.ling.jibonetposa.base.RetrofitException;
-import com.ling.jibonetposa.entities.HaierAccountEntity;
+import com.ling.jibonetposa.entities.iot.HaierAccountEntity;
 import com.ling.jibonetposa.iretrofit.IRequestCallback;
 
 import static com.ling.jibonetposa.base.BaseRequestModel.ERROR_PASS_MISTAKE;

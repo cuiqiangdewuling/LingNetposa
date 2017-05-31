@@ -14,7 +14,7 @@ import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 
 import com.ling.jibonetposa.LingManager;
-import com.ling.jibonetposa.entities.SaveLocationEntity;
+import com.ling.jibonetposa.entities.locaiton.SaveLocationEntity;
 import com.ling.jibonetposa.iretrofit.IRequestCallback;
 import com.ling.jibonetposa.models.location.GetCityDataModel;
 import com.ling.jibonetposa.models.location.GetLocationModel;
@@ -46,6 +46,7 @@ public class LocationAgent {
         }
         final String finalUserid = userid;
         LingManager.getInstance().getLingLog().LOGD("finalUserid: " + finalUserid);
+        LingManager.getInstance().getLingLog().LOGD("city: " + finalUserid + "    province: " + province);
         SaveLocationModel saveLocationModel = new SaveLocationModel(iRequestCallback);
         saveLocationModel.saveLocation(new SaveLocationEntity(finalUserid, province, city, latitude + "", longitude + ""));
     }
@@ -56,13 +57,11 @@ public class LocationAgent {
         }
         final String finalUserid = userid;
         LingManager.getInstance().getLingLog().LOGD("finalUserid: " + finalUserid);
-        GetLocationModel getLocationModel = new GetLocationModel(iRequestCallback);
-        getLocationModel.getLocation(finalUserid);
+        new GetLocationModel(iRequestCallback).getLocation(finalUserid);
     }
 
     public void getCityDataFromServer(IRequestCallback iRequestCallback) {
-        GetCityDataModel cityDataModel = new GetCityDataModel(iRequestCallback);
-        cityDataModel.getCityData();
+        new GetCityDataModel(iRequestCallback).getCityData();
     }
 
     /**

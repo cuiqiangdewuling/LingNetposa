@@ -1,4 +1,4 @@
-package com.ling.jibonetposa.entities;
+package com.ling.jibonetposa.entities.locaiton;
 
 import android.os.Parcel;
 import android.os.Parcelable;

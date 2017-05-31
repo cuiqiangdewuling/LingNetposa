@@ -1,4 +1,4 @@
-package com.ling.jibonetposa.entities;
+package com.ling.jibonetposa.entities.iot;
 
 import com.ling.jibonetposa.base.BaseEntity;
 
@@ -6,7 +6,7 @@ import com.ling.jibonetposa.base.BaseEntity;
  * Created by mhz小志 on 2017/3/18.
  */
 
-public class ResultGetTokenEntity extends BaseEntity {
+public class ResultSaveAuthDataEntity extends BaseEntity {
 
     private int errno;
     private String errmsg;
@@ -22,33 +22,22 @@ public class ResultGetTokenEntity extends BaseEntity {
     }
 
     public static class Data {
-        private String access_token;
-        private String refresh_token;
+        private String msg;
 
         @Override
         public String toString() {
             return "Data{" +
-                    "access_token='" + access_token + '\'' +
-                    ", refresh_token='" + refresh_token + '\'' +
+                    "msg='" + msg + '\'' +
                     '}';
         }
 
-        public String getRefresh_token() {
-            return refresh_token;
+        public String getMsg() {
+            return msg;
         }
 
-        public void setRefresh_token(String refresh_token) {
-            this.refresh_token = refresh_token;
+        public void setMsg(String msg) {
+            this.msg = msg;
         }
-
-        public String getAccess_token() {
-            return access_token;
-        }
-
-        public void setAccess_token(String access_token) {
-            this.access_token = access_token;
-        }
-
     }
 
     public Data getData() {

@@ -8,11 +8,17 @@ public class IOTApiConstant {
 
     // Ling服务ApiPath
     public static final String API_PATH_JIBO = "http://101.201.72.216:8082";
+    public static final String API_PATH_JIBO_TEST = "http://101.201.72.216:8056";
     public static final String API_PATH_JIBO_TOKEN_SAVE = "/jibo/token/save";
     public static final String API_PATH_JIBO_TOKEN_GET = "/jibo/token/get";
     public static final String API_PATH_JIBO_TOKEN_DELETE = "/jibo/token/delete";
     public static final String API_PATH_JIBO_DEVICES = "/jibo/devices";
     public static final String API_PATH_JIBO_BRANDS = "/jibo/devices/factory";
+    public static final String API_PATH_JIBO_BRANDS_CONFIGURE = "/jibo/app/configure";
+    public static final String API_PATH_JIBO_SCENARIOS = "/jibo/scenarios";
+
+
+
     //Location Api
     public static final String API_PATH_JIBO_LOCATION = "/jibo/geo";
     public static final String API_PATH_JIBO_CITY = "/jibo/area";
