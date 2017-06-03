@@ -41,7 +41,7 @@ public class LocationAgent {
     }
 
     public void saveLocationToServer(String userid, String province, String city, double latitude, double longitude, IRequestCallback iRequestCallback) {
-        if (LingManager.getInstance().useTestUserid()) {
+        if (LingManager.getInstance().isUseTestUserid()) {
             userid = LingManager.getInstance().getTestUserId();
         }
         final String finalUserid = userid;
@@ -52,7 +52,7 @@ public class LocationAgent {
     }
 
     public void getLocationFromServer(String userid, IRequestCallback iRequestCallback) {
-        if (LingManager.getInstance().useTestUserid()) {
+        if (LingManager.getInstance().isUseTestUserid()) {
             userid = LingManager.getInstance().getTestUserId();
         }
         final String finalUserid = userid;

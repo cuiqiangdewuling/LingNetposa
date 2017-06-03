@@ -15,6 +15,23 @@ public class DevicesEntity extends BaseEntity {
     private List<BrandBean> brand_list;
     private List<DeviceBean> repeatDev;// 重名的设备
 
+    @Override
+    public String toString() {
+        return "DevicesEntity{" +
+                "userid='" + userid + '\'' +
+                ", brand_list=" + brand_list +
+                ", repeatDev=" + repeatDev +
+                '}';
+    }
+
+    public List<DeviceBean> getRepeatDev() {
+        return repeatDev;
+    }
+
+    public void setRepeatDev(List<DeviceBean> repeatDev) {
+        this.repeatDev = repeatDev;
+    }
+
     public String getUserid() {
         return userid;
     }
@@ -29,14 +46,6 @@ public class DevicesEntity extends BaseEntity {
 
     public void setBrand_list(List<BrandBean> brand_list) {
         this.brand_list = brand_list;
-    }
-
-    @Override
-    public String toString() {
-        return "DevicesEntity{" +
-                "userid='" + userid + '\'' +
-                ", brand_list=" + brand_list +
-                '}';
     }
 
 

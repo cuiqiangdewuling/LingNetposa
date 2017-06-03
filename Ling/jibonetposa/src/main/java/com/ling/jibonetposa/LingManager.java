@@ -5,7 +5,10 @@ import android.content.Context;
 import com.haier.uhome.usdk.api.uSDKManager;
 import com.ling.jibonetposa.modules.IOTAgent;
 import com.ling.jibonetposa.modules.LocationAgent;
+import com.ling.jibonetposa.modules.PushAgent;
 import com.ling.jibonetposa.utils.LingLog;
+
+import cn.jpush.android.api.JPushInterface;
 
 /**
  * Created by mhz小志 on 2017/4/16.
@@ -14,16 +17,17 @@ import com.ling.jibonetposa.utils.LingLog;
 public class LingManager {
 
     private boolean isInit;
+
     public static LingManager INSTANCE;
-    public Context mApplication;
+    public Context mApplicationContext;
     public IOTAgent mIOTAgent;
     public LocationAgent mLocationAgent;
+    public PushAgent mPushAgent;
     public LingLog mLingLog;
     public String mJiboUserid = "jibo";
     private boolean useTestUserid;
 
     private LingManager() {
-        initDebug();
     }
 
     public static LingManager getInstance() {
@@ -39,11 +43,60 @@ public class LingManager {
 
     public void init(Context context) {
         isInit = true;
-        mApplication = context;
+        mApplicationContext = context;
+        initDebug();
+        initPush();
     }
 
     private void initDebug() {
         mLingLog = new LingLog();
+    }
+
+    private void initPush() {
+        JPushInterface.setDebugMode(true);    // 设置开启日志,发布时请关闭日志
+        JPushInterface.init(mApplicationContext);            // 初始化 JPush
+    }
+
+    private void initHaier() {
+        uSDKManager.getSingleInstance().init(mApplicationContext);
+    }
+
+    private void initIOTAgent() {
+        mIOTAgent = new IOTAgent();
+        initHaier();
+    }
+
+    private void initPushAgent() {
+        mPushAgent = new PushAgent(mApplicationContext);
+        initHaier();
+    }
+
+    private void initLocationAgent() {
+        mLocationAgent = new LocationAgent(mApplicationContext);
+    }
+
+    public IOTAgent getIOTAgent() {
+        if (mIOTAgent == null)
+            initIOTAgent();
+        return mIOTAgent;
+    }
+
+
+    public PushAgent getPushAgent() {
+        if (mPushAgent == null)
+            initPushAgent();
+        return mPushAgent;
+    }
+
+
+    public LocationAgent getLocationAgent() {
+        if (mLocationAgent == null)
+            initLocationAgent();
+        return mLocationAgent;
+    }
+
+    public Context getAppContext() {
+        return mApplicationContext;
     }
 
     public void debugOn() {
@@ -58,41 +111,12 @@ public class LingManager {
         return mLingLog;
     }
 
-    private void initHaier() {
-        uSDKManager.getSingleInstance().init(mApplication);
-    }
-
-    private void initIOTAgent() {
-        mIOTAgent = new IOTAgent();
-        initHaier();
-    }
-
-    public IOTAgent getIOTAgent() {
-        if (mIOTAgent == null)
-            initIOTAgent();
-        return mIOTAgent;
-    }
-
-    private void initLocationAgent() {
-        mLocationAgent = new LocationAgent(mApplication);
-    }
-
-    public LocationAgent getLocationAgent() {
-        if (mLocationAgent == null)
-            initLocationAgent();
-        return mLocationAgent;
-    }
-
-    public Context getAppContext() {
-        return mApplication;
-    }
-
     public void useTestUserid(boolean b, String testUserid) {
         useTestUserid = b;
         mJiboUserid = testUserid;
     }
 
-    public boolean useTestUserid() {
+    public boolean isUseTestUserid() {
         return useTestUserid;
     }
 

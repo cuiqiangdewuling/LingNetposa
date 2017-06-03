@@ -54,7 +54,7 @@ public class IOTAgent {
      * @param type   刷新的类别，（0：获取存储在Ling服务器的设备信息。1：获取所有第三方最新的设备信息）
      */
     public void getAllDevices(String userid, int type, final IRequestCallback requestCallback) {
-        if (LingManager.getInstance().useTestUserid()) {
+        if (LingManager.getInstance().isUseTestUserid()) {
             userid = LingManager.getInstance().getTestUserId();
         }
         final String finalUserid = userid;
@@ -83,7 +83,7 @@ public class IOTAgent {
      * @param userid
      */
     public void checkBrandStatus(String userid, final IRequestCallback requestCallback) {
-        if (LingManager.getInstance().useTestUserid()) {
+        if (LingManager.getInstance().isUseTestUserid()) {
             userid = LingManager.getInstance().getTestUserId();
         }
         final String finalUserid = userid;
@@ -111,7 +111,7 @@ public class IOTAgent {
      * 取消用户授权
      */
     public void cancelAuthorized(String userid, String brandType, final IRequestCallback requestCallback) {
-        if (LingManager.getInstance().useTestUserid()) {
+        if (LingManager.getInstance().isUseTestUserid()) {
             userid = LingManager.getInstance().getTestUserId();
         }
         LingManager.getInstance().getLingLog().LOGD("finalUserid: " + userid);
@@ -122,7 +122,7 @@ public class IOTAgent {
      * 获取保存的Phantom Token
      */
     public void getTokenFromServer(String userid, String brandType, final IRequestCallback requestCallback) {
-        if (LingManager.getInstance().useTestUserid()) {
+        if (LingManager.getInstance().isUseTestUserid()) {
             userid = LingManager.getInstance().getTestUserId();
         }
         LingManager.getInstance().getLingLog().LOGD("finalUserid: " + userid);
@@ -172,7 +172,7 @@ public class IOTAgent {
      * 保存授权数据
      */
     public void doSaveAuthDataToServer(SaveAuthDataEntity tokenEntity, final IRequestCallback requestCallback) {
-        if (LingManager.getInstance().useTestUserid()) {
+        if (LingManager.getInstance().isUseTestUserid()) {
             tokenEntity.setUserid(LingManager.getInstance().getTestUserId());
         }
         LingManager.getInstance().getLingLog().LOGD("finalUserid: " + tokenEntity.getUserid());
@@ -184,7 +184,7 @@ public class IOTAgent {
      * 获取场景列表
      */
     public void getScenariosFromServer(String userid, IRequestCallback requestCallback) {
-        if (LingManager.getInstance().useTestUserid()) {
+        if (LingManager.getInstance().isUseTestUserid()) {
             userid = LingManager.getInstance().getTestUserId();
         }
         LingManager.getInstance().getLingLog().LOGD("finalUserid: " + userid);
@@ -195,7 +195,7 @@ public class IOTAgent {
      *
      */
     public void updateDevName(PutUpdateDevNameEntity putUpdateNameEntity, IRequestCallback requestCallback) {
-        if (LingManager.getInstance().useTestUserid()) {
+        if (LingManager.getInstance().isUseTestUserid()) {
             putUpdateNameEntity.getData().getAttributes().setUserid(LingManager.getInstance().getTestUserId());
         }
         LingManager.getInstance().getLingLog().LOGD("finalUserid: " + putUpdateNameEntity.getData().getAttributes().getUserid());
@@ -209,7 +209,7 @@ public class IOTAgent {
             brand_list.add(new BrandStatusEntity.Brand(brandBean.getKey(), brandBean.getName(), brandBean.getCode()));
         }
         brandStatusEntity.setBrand_list(brand_list);
-        return doSoreList(brandStatusEntity);
+        return doSoreBrandList(brandStatusEntity);
     }
 
     public DevicesEntity getDevicesEntity(String userid, ResultGetDevicesEntity getBrandEntity) {
@@ -222,12 +222,17 @@ public class IOTAgent {
     /**
      * 对品牌列表排序，将已绑定的品牌放在集合最前面
      */
-    public BrandStatusEntity doSoreList(BrandStatusEntity brandStatusEntity) {
+    public BrandStatusEntity doSoreBrandList(BrandStatusEntity brandStatusEntity) {
         Comparator<BrandStatusEntity.Brand> comparator = new Comparator<BrandStatusEntity.Brand>() {
             @Override
             public int compare(BrandStatusEntity.Brand brand1, BrandStatusEntity.Brand brand2) {
+                // 以品牌的绑定状态排序，已绑定的品牌在List前面
                 if (brand1.getBrand_status() != brand2.getBrand_status()) {
-                    // 以品牌的绑定状态排序，已绑定的品牌在List前面
+//                    if (brand1.getBrand_status() == 0 || brand1.getBrand_status() == 2) {
+//                        return -1;
+//                    } else if (brand2.getBrand_status() == 0 || brand2.getBrand_status() == 2) {
+//                        return 1;
+//                    }
                     return brand2.getBrand_status() - brand1.getBrand_status();
                 } else if (!brand1.getBrand_id().equals(brand2.getBrand_id())) {
                     // 以品牌的名称排序
@@ -274,24 +279,28 @@ public class IOTAgent {
     }
 
     public void checkDevicesName(DevicesEntity devicesEntity) {
-//        if (devicesEntity == null || devicesEntity.getBrand_list() == null || !(devicesEntity.getBrand_list().size() > 0))
-//            return;
-//        List<DeviceBean> chongfuList = new ArrayList<>();
-//        List<DeviceBean> deviceList = new ArrayList<>();
-//        for (BrandBean brandBean : devicesEntity.getBrand_list()) {
-//            if (brandBean.getVal() != null && brandBean.getVal().size() > 0) {
-//                for (DeviceBean deviceBean : brandBean.getVal()) {
-//
-//                    if (deviceList.contains(deviceBean)) {
-//                        devicesEntity.getBrand_list().
-//                    } else {
-//                        deviceList.add(deviceBean);
-//                    }
-//                    chongfuList.add(deviceBean);
-//                }
-//            }
-//        }
+        if (devicesEntity == null || devicesEntity.getBrand_list() == null || !(devicesEntity.getBrand_list().size() > 0))
+            return;
+        List<DeviceBean> repeatDev = new ArrayList<>();
 
+        List<DeviceBean> allDev = new ArrayList<>();
+
+        for (BrandBean brandBean : devicesEntity.getBrand_list()) {
+            if (brandBean.getVal() != null && brandBean.getVal().size() > 0) {
+                allDev.addAll(brandBean.getVal());
+            }
+        }
+        for (int i = 0; i < allDev.size(); i++) {
+            for (int j = 0; j < allDev.size(); j++) {
+                if (i != j) {
+                    boolean equals = allDev.get(i).getDevice_name().equals(allDev.get(j).getDevice_name());
+                    if (equals) {
+                        repeatDev.add(allDev.get(i));
+                    }
+                }
+            }
+        }
+        devicesEntity.setRepeatDev(repeatDev);
     }
 
     public boolean hasSameName(String devName, DevicesEntity devicesEntity) {
@@ -308,5 +317,31 @@ public class IOTAgent {
         }
         return false;
     }
+
+    public boolean hasSameName(String devName, List<String> names) {
+        if (names == null || !(names.size() > 0))
+            return false;
+        for (String name : names) {
+            if (devName.equals(name)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+    public List<String> getRandomName(List<String> strings, DevicesEntity devicesEntity) {
+        int flag = 1;
+        List<String> names = new ArrayList<>();
+        for (int i = 0; i < strings.size(); i++) {
+            String name = names.get(i) + flag++;
+            while (hasSameName(name, devicesEntity)) {
+                name += flag++;
+            }
+            names.add(name);
+        }
+        return names;
+    }
+
 
 }
