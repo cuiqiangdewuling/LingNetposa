@@ -32,7 +32,11 @@ public class LocationAgent {
 
     public static final String TAG = "LocationAgent";
 
+    private long mTimeout = 10000;// 默认超时时间
+
     private Context mContext;
+    private String mProvider;// 位置提供方式  GPS   WIFI
+    private Handler mHandler = new Handler();
     private ILocationLisenter mILocationLisenter;
     private LocationManager locationManager;
 
@@ -40,6 +44,16 @@ public class LocationAgent {
         this.mContext = context;
     }
 
+    /**
+     * 将Location数据保存到Server
+     *
+     * @param userid           UserId
+     * @param province         省
+     * @param city             市
+     * @param latitude         经度
+     * @param longitude        纬度
+     * @param iRequestCallback 回调
+     */
     public void saveLocationToServer(String userid, String province, String city, double latitude, double longitude, IRequestCallback iRequestCallback) {
         if (LingManager.getInstance().isUseTestUserid()) {
             userid = LingManager.getInstance().getTestUserId();
@@ -51,6 +65,9 @@ public class LocationAgent {
         saveLocationModel.saveLocation(new SaveLocationEntity(finalUserid, province, city, latitude + "", longitude + ""));
     }
 
+    /**
+     * 获取保存到Server的Location位置
+     */
     public void getLocationFromServer(String userid, IRequestCallback iRequestCallback) {
         if (LingManager.getInstance().isUseTestUserid()) {
             userid = LingManager.getInstance().getTestUserId();
@@ -60,6 +77,11 @@ public class LocationAgent {
         new GetLocationModel(iRequestCallback).getLocation(finalUserid);
     }
 
+    /**
+     * 获取城市列表
+     *
+     * @param iRequestCallback
+     */
     public void getCityDataFromServer(IRequestCallback iRequestCallback) {
         new GetCityDataModel(iRequestCallback).getCityData();
     }
@@ -72,10 +94,12 @@ public class LocationAgent {
         this.showLocation();
     }
 
+    /**
+     * 设置获取手机地理位置的超时限制
+     */
     public void setTimeout(long timeout) {
         this.mTimeout = timeout;
     }
-
 
     public interface ILocationLisenter {
 
@@ -84,6 +108,10 @@ public class LocationAgent {
         void onFailure();
     }
 
+
+    /**
+     * 获取到LocationManager，设置好位置提供器，开始请求精确位置
+     */
     private void showLocation() {
         locationManager = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
         // 查找到服务信息
@@ -97,6 +125,9 @@ public class LocationAgent {
         requestLocation();
     }
 
+    /**
+     * 请求获取精确位置
+     */
     private void requestLocation() {
         mHandler.postDelayed(mTimeoutRunnable, mTimeout);
         if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -107,12 +138,7 @@ public class LocationAgent {
         locationManager.requestLocationUpdates(mProvider, 3 * 1000, 0, mLocationListener);
     }
 
-    private String mProvider;
-    private long mTimeout = 10000;
-
-    Handler mHandler = new Handler();
-
-    Runnable mTimeoutRunnable = new Runnable() {
+    private Runnable mTimeoutRunnable = new Runnable() {
         @Override
         public void run() {
             mHandler.removeCallbacks(mTimeoutRunnable);
@@ -176,6 +202,12 @@ public class LocationAgent {
         }
     };
 
+    /**
+     * 获取到当前位置周边信息
+     *
+     * @param latitude
+     * @param longitude
+     */
     private void getLocatonDesc(double latitude, double longitude) {
         Geocoder gc = new Geocoder(mContext, Locale.getDefault());
         List<Address> locationList = null;

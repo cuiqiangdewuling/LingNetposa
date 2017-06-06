@@ -35,21 +35,30 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="获取绑定状态"/>
+
             <Button
                 android:id="@+id/btn_getbrandconfigure"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="获取品牌参数"/>
+
             <Button
                 android:id="@+id/btn_getscenarios"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="获取场景列表"/>
+
             <Button
                 android:id="@+id/btn_updatedevname"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="修改设备名称"/>
+
+            <Button
+                android:id="@+id/btn_getiottips"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="获取提示信息"/>
 
             <View
                 android:layout_width="match_parent"
@@ -113,6 +122,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="博联—获取AccessToken"/>
+
             <Button
                 android:id="@+id/btn_bl_accesskey"
                 android:layout_width="match_parent"

@@ -117,17 +117,20 @@ public class BaseRequestModel<T extends BaseEntity> {
             public void onResponse(Call<T> call, Response<T> response) {
                 if (response.isSuccessful()) {
                     LingManager.getInstance().getLingLog().LOGD(TAG, "executeSuccess: " + response.toString() + " / " + response.body().toString());
-                    BaseRequestModel.this.mRequestCallback.responsedCallback(response.body(), RETROFIT_SUCCESS, (Throwable) null);
+                    if (BaseRequestModel.this.mRequestCallback != null)
+                        BaseRequestModel.this.mRequestCallback.responsedCallback(response.body(), RETROFIT_SUCCESS, (Throwable) null);
                 } else {
                     LingManager.getInstance().getLingLog().LOGD(TAG, "executeError: " + response.toString());
-                    BaseRequestModel.this.mRequestCallback.responsedCallback(null, RETROFIT_WRONG, new RetrofitException(response.toString()));
+                    if (BaseRequestModel.this.mRequestCallback != null)
+                        BaseRequestModel.this.mRequestCallback.responsedCallback(null, RETROFIT_WRONG, new RetrofitException(response.toString()));
                 }
             }
 
             @Override
             public void onFailure(Call<T> call, Throwable throwable) {
                 LingManager.getInstance().getLingLog().LOGD(TAG, "throwable: " + throwable.toString());
-                BaseRequestModel.this.mRequestCallback.responsedCallback(null, RETROFIT_ERROR, throwable);
+                if (BaseRequestModel.this.mRequestCallback != null)
+                    BaseRequestModel.this.mRequestCallback.responsedCallback(null, RETROFIT_ERROR, throwable);
 //                if (call.isCanceled()) {
 //                    LingManager.getInstance().getLingLog().LOGD(TAG, "request is canceled");
 //                } else {

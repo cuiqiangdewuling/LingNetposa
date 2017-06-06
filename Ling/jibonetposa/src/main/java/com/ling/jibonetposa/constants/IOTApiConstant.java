@@ -16,6 +16,7 @@ public class IOTApiConstant {
     public static final String API_PATH_JIBO_BRANDS = "/jibo/devices/factory";
     public static final String API_PATH_JIBO_BRANDS_CONFIGURE = "/jibo/app/configure";
     public static final String API_PATH_JIBO_SCENARIOS = "/jibo/scenarios";
+    public static final String API_PATH_JIBO_INFORMATION = " /jibo/information";
 
 
 

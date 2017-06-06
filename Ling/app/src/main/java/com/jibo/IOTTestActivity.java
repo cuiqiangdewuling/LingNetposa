@@ -56,6 +56,7 @@ public class IOTTestActivity extends Activity implements View.OnClickListener {
         findViewById(R.id.btn_getbrandconfigure).setOnClickListener(this);
         findViewById(R.id.btn_updatedevname).setOnClickListener(this);
         findViewById(R.id.btn_getscenarios).setOnClickListener(this);
+        findViewById(R.id.btn_getiottips).setOnClickListener(this);
     }
 
     @Override
@@ -69,6 +70,9 @@ public class IOTTestActivity extends Activity implements View.OnClickListener {
                 break;
             case R.id.btn_updatedevname:
                 updateDevName();
+                break;
+            case R.id.btn_getiottips:
+                getIOTTips();
                 break;
             case R.id.btn_getscenarios:
                 getScenarios();
@@ -120,10 +124,22 @@ public class IOTTestActivity extends Activity implements View.OnClickListener {
 
     private void updateDevName() {
         List<PutUpdateDevNameEntity.Item> devices = new ArrayList<>();
-        devices.add(new PutUpdateDevNameEntity.Item("13341", "测试灯1"));
-        devices.add(new PutUpdateDevNameEntity.Item("13342", "测试灯2"));
+        devices.add(new PutUpdateDevNameEntity.Item("13341", "测试灯1111"));
         PutUpdateDevNameEntity putUpdateDevNameEntity = new PutUpdateDevNameEntity("jibo", devices);
         LingManager.getInstance().getIOTAgent().updateDevName(putUpdateDevNameEntity, new IRequestCallback() {
+            @Override
+            public void responsedCallback(BaseEntity entity, int errorCode, Throwable error) {
+                if (errorCode == BaseRequestModel.RETROFIT_SUCCESS) {
+                    Log.d(TAG, "entity  " + entity.toString());
+                } else {
+                    Log.d(TAG, "errorCode  " + errorCode);
+                    if (error != null) error.printStackTrace();
+                }
+            }
+        });
+    }
+    private void getIOTTips() {
+        LingManager.getInstance().getIOTAgent().getIOTTips( new IRequestCallback() {
             @Override
             public void responsedCallback(BaseEntity entity, int errorCode, Throwable error) {
                 if (errorCode == BaseRequestModel.RETROFIT_SUCCESS) {
@@ -171,11 +187,9 @@ public class IOTTestActivity extends Activity implements View.OnClickListener {
         LingManager.getInstance().getIOTAgent().getAllDevices("jibo", DEV_FLUSH_TYOE_AUTO, new IRequestCallback() {
             @Override
             public void responsedCallback(BaseEntity entity, int errorCode, Throwable error) {
-                LingManager.getInstance().getLingLog().LOGD(TAG, "getDev" + entity.toString());
                 if (errorCode == RETROFIT_SUCCESS) {
                     DevicesEntity devicesEntity = (DevicesEntity) entity;
                     if (devicesEntity != null) {
-                        LingManager.getInstance().getIOTAgent().checkDevicesName(devicesEntity);
                         LingManager.getInstance().getLingLog().LOGD(TAG, "getDev: devicesEntity" + devicesEntity.toString());
                     }
                 } else {
@@ -327,7 +341,7 @@ public class IOTTestActivity extends Activity implements View.OnClickListener {
     }
 
     private void getBrandConfigure() {
-        LingManager.getInstance().getIOTAgent().getBrandConfigureModel(new IRequestCallback() {
+        LingManager.getInstance().getIOTAgent().getBrandConfigure(new IRequestCallback() {
             @Override
             public void responsedCallback(BaseEntity entity, int errorCode, Throwable error) {
                 if (errorCode == BaseRequestModel.RETROFIT_SUCCESS) {

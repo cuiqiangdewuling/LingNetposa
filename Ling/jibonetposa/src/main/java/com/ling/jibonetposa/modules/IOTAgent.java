@@ -11,6 +11,7 @@ import com.ling.jibonetposa.entities.iot.ResultGetBrandEntity;
 import com.ling.jibonetposa.entities.iot.ResultGetDevicesEntity;
 import com.ling.jibonetposa.entities.iot.SaveAuthDataEntity;
 import com.ling.jibonetposa.iretrofit.IRequestCallback;
+import com.ling.jibonetposa.models.GetTipsModel;
 import com.ling.jibonetposa.models.iot.CancelAuthorizedModel;
 import com.ling.jibonetposa.models.iot.CheckBrandsFromServerModel;
 import com.ling.jibonetposa.models.iot.GetBrandConfigureModel;
@@ -119,7 +120,7 @@ public class IOTAgent {
     }
 
     /**
-     * 获取保存的Phantom Token
+     * 获取保存的Token
      */
     public void getTokenFromServer(String userid, String brandType, final IRequestCallback requestCallback) {
         if (LingManager.getInstance().isUseTestUserid()) {
@@ -127,20 +128,6 @@ public class IOTAgent {
         }
         LingManager.getInstance().getLingLog().LOGD("finalUserid: " + userid);
         new GetTokenFromServerModel(requestCallback).getPhantomToken(userid, brandType);
-    }
-
-    /**
-     * 更改幻腾设备名称
-     */
-    public void updatePhantomDevName(String accessToken, String identId, String newName, final IRequestCallback requestCallback) {
-        new UpdatePhantomNameModel(requestCallback).updateName(accessToken, identId, newName);
-    }
-
-    /**
-     * 更改海尔设备名称
-     */
-    public void updateHaierDevName(String identId, String newName, final IRequestCallback requestCallback) {
-        new HEModel(LingManager.getInstance().getAppContext()).updateDeviceNickName(identId, newName, requestCallback);
     }
 
     /**
@@ -192,7 +179,7 @@ public class IOTAgent {
     }
 
     /**
-     *
+     * 修改设备名称列表
      */
     public void updateDevName(PutUpdateDevNameEntity putUpdateNameEntity, IRequestCallback requestCallback) {
         if (LingManager.getInstance().isUseTestUserid()) {
@@ -202,6 +189,16 @@ public class IOTAgent {
         new UpdateDevNameModel(requestCallback).execute(putUpdateNameEntity);
     }
 
+    /**
+     * 获取到IOT的TipList
+     */
+    public void getIOTTips(IRequestCallback requestCallback) {
+        new GetTipsModel(requestCallback).getIOTTip(1);
+    }
+
+    /**
+     * 根据网络请求回来的数据，整理成我们需要的数据
+     */
     public BrandStatusEntity getBrandStatusEntity(ResultGetBrandEntity getBrandEntity) {
         BrandStatusEntity brandStatusEntity = new BrandStatusEntity();
         List<BrandStatusEntity.Brand> brand_list = new ArrayList<>();
@@ -212,6 +209,9 @@ public class IOTAgent {
         return doSoreBrandList(brandStatusEntity);
     }
 
+    /**
+     * 根据网络请求回来的数据，整理成我们需要的数据
+     */
     public DevicesEntity getDevicesEntity(String userid, ResultGetDevicesEntity getBrandEntity) {
         DevicesEntity devicesEntity = new DevicesEntity();
         devicesEntity.setUserid(userid);
@@ -228,12 +228,7 @@ public class IOTAgent {
             public int compare(BrandStatusEntity.Brand brand1, BrandStatusEntity.Brand brand2) {
                 // 以品牌的绑定状态排序，已绑定的品牌在List前面
                 if (brand1.getBrand_status() != brand2.getBrand_status()) {
-//                    if (brand1.getBrand_status() == 0 || brand1.getBrand_status() == 2) {
-//                        return -1;
-//                    } else if (brand2.getBrand_status() == 0 || brand2.getBrand_status() == 2) {
-//                        return 1;
-//                    }
-                    return brand2.getBrand_status() - brand1.getBrand_status();
+                    return brand1.getBrand_status() - brand2.getBrand_status();
                 } else if (!brand1.getBrand_id().equals(brand2.getBrand_id())) {
                     // 以品牌的名称排序
                     return brand1.getBrand_name().compareTo(brand2.getBrand_name());
@@ -270,14 +265,18 @@ public class IOTAgent {
         return BROADLINK_API_PATH + NetWorkUtil.organizeParams(mParams);
     }
 
-    public void queryBLKey(IRequestCallback requestCallback) {
-        new UpdataBLGetAccessKeyModel(requestCallback).queryKey();
-    }
-
-    public void getBrandConfigureModel(IRequestCallback requestCallback) {
+    /**
+     * 获取各品牌授权所需的数据、基本参数
+     */
+    public void getBrandConfigure(IRequestCallback requestCallback) {
         new GetBrandConfigureModel(requestCallback).getBrandConfigure();
     }
 
+    /**
+     * 检查设备是否重名，并返回重名的设备列表
+     *
+     * @param devicesEntity
+     */
     public void checkDevicesName(DevicesEntity devicesEntity) {
         if (devicesEntity == null || devicesEntity.getBrand_list() == null || !(devicesEntity.getBrand_list().size() > 0))
             return;
@@ -287,15 +286,21 @@ public class IOTAgent {
 
         for (BrandBean brandBean : devicesEntity.getBrand_list()) {
             if (brandBean.getVal() != null && brandBean.getVal().size() > 0) {
-                allDev.addAll(brandBean.getVal());
+                for (DeviceBean deviceBean : brandBean.getVal()) {
+                    deviceBean.setBrand_status(brandBean.getCode());
+                    allDev.add(deviceBean);
+                }
             }
         }
+        a:
         for (int i = 0; i < allDev.size(); i++) {
+            b:
             for (int j = 0; j < allDev.size(); j++) {
                 if (i != j) {
                     boolean equals = allDev.get(i).getDevice_name().equals(allDev.get(j).getDevice_name());
                     if (equals) {
                         repeatDev.add(allDev.get(i));
+                        break b;
                     }
                 }
             }
@@ -303,45 +308,78 @@ public class IOTAgent {
         devicesEntity.setRepeatDev(repeatDev);
     }
 
+    /**
+     * 针对重名的设备，生成一个随机的不重名的设备（原名字+数字）
+     */
+    public List<PutUpdateDevNameEntity.Item> getRenameList(DevicesEntity devicesEntity) {
+        List<PutUpdateDevNameEntity.Item> items = new ArrayList<>();
+        List<DeviceBean> repeatDev = devicesEntity.getRepeatDev();
+
+        for (int i = 0; i < repeatDev.size(); i++) {
+            int flag = 1;
+            if (repeatDev.get(i).getBrand_status() == 0) {
+                String name = repeatDev.get(i).getDevice_name() + flag++;
+                while (hasSameName(name, devicesEntity) || hasSameName(name, items)) {
+                    name = repeatDev.get(i).getDevice_name() + flag++;
+                }
+                PutUpdateDevNameEntity.Item item = new PutUpdateDevNameEntity.Item(repeatDev.get(i).getDevice_id(), name);
+                items.add(item);
+            }
+        }
+        return items;
+    }
+
+    /**
+     * 判断批量改名接口传入的数据是否有重名
+     */
+    public boolean hasSameName(String devName, List<PutUpdateDevNameEntity.Item> items) {
+        if (items != null && (items.size() > 0))
+            for (PutUpdateDevNameEntity.Item item : items) {
+                if (devName.equals(item.getDevice_name())) {
+                    return true;
+                }
+            }
+        return false;
+    }
+
+    /**
+     * 判断所有的设备列表中，是否有重名
+     */
     public boolean hasSameName(String devName, DevicesEntity devicesEntity) {
-        if (devicesEntity == null || devicesEntity.getBrand_list() == null || !(devicesEntity.getBrand_list().size() > 0))
-            return false;
-        for (BrandBean brandBean : devicesEntity.getBrand_list()) {
-            if (brandBean.getVal() != null && brandBean.getVal().size() > 0) {
-                for (DeviceBean deviceBean : brandBean.getVal()) {
-                    if (devName.equals(deviceBean.getDevice_name())) {
-                        return true;
+        if (devicesEntity != null && devicesEntity.getBrand_list() != null && (devicesEntity.getBrand_list().size() > 0))
+            for (BrandBean brandBean : devicesEntity.getBrand_list()) {
+                if (brandBean.getVal() != null && brandBean.getVal().size() > 0) {
+                    for (DeviceBean deviceBean : brandBean.getVal()) {
+                        if (devName.equals(deviceBean.getDevice_name())) {
+                            return true;
+                        }
                     }
                 }
             }
-        }
         return false;
     }
 
-    public boolean hasSameName(String devName, List<String> names) {
-        if (names == null || !(names.size() > 0))
-            return false;
-        for (String name : names) {
-            if (devName.equals(name)) {
-                return true;
-            }
-        }
-        return false;
+    // ============ 暂时未用到的方法
+
+    /**
+     * 更改幻腾设备名称
+     */
+    public void updatePhantomDevName(String accessToken, String identId, String newName, final IRequestCallback requestCallback) {
+        new UpdatePhantomNameModel(requestCallback).updateName(accessToken, identId, newName);
     }
 
-
-    public List<String> getRandomName(List<String> strings, DevicesEntity devicesEntity) {
-        int flag = 1;
-        List<String> names = new ArrayList<>();
-        for (int i = 0; i < strings.size(); i++) {
-            String name = names.get(i) + flag++;
-            while (hasSameName(name, devicesEntity)) {
-                name += flag++;
-            }
-            names.add(name);
-        }
-        return names;
+    /**
+     * 更改海尔设备名称
+     */
+    public void updateHaierDevName(String identId, String newName, final IRequestCallback requestCallback) {
+        new HEModel(LingManager.getInstance().getAppContext()).updateDeviceNickName(identId, newName, requestCallback);
     }
 
+    /**
+     * 获取BroadLink网络请求时的accessKey.
+     */
+    public void queryBLKey(IRequestCallback requestCallback) {
+        new UpdataBLGetAccessKeyModel(requestCallback).queryKey();
+    }
 
 }

@@ -11,6 +11,10 @@ public class DeviceBean {
     private String device_name;
     private String device_on;
     private String device_type;
+    private String image_type;
+    private int device_code;
+    private int brand_status;
+    private String brand_id;
 
     @Override
     public String toString() {
@@ -20,7 +24,44 @@ public class DeviceBean {
                 ", device_name='" + device_name + '\'' +
                 ", device_on='" + device_on + '\'' +
                 ", device_type='" + device_type + '\'' +
+                ", image_type='" + image_type + '\'' +
+                ", device_code='" + device_code + '\'' +
+                ", brand_status=" + brand_status +
+                ", brand_id='" + brand_id + '\'' +
                 '}';
+    }
+
+    public String getBrand_id() {
+        return brand_id;
+    }
+
+    public void setBrand_id(String brand_id) {
+        this.brand_id = brand_id;
+    }
+
+    public int getDevice_code() {
+        return device_code;
+    }
+
+    public void setDevice_code(int device_code) {
+        this.device_code = device_code;
+    }
+
+    public String getImage_type() {
+        return image_type;
+    }
+
+    public void setImage_type(String image_type) {
+        this.image_type = image_type;
+    }
+
+
+    public int getBrand_status() {
+        return brand_status;
+    }
+
+    public void setBrand_status(int brand_status) {
+        this.brand_status = brand_status;
     }
 
     public DeviceBean() {

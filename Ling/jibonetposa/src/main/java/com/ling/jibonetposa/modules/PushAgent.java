@@ -9,7 +9,6 @@ import android.widget.Toast;
 import com.ling.jibonetposa.LingManager;
 import com.ling.jibonetposa.R;
 import com.ling.jibonetposa.third.push.ExampleUtil;
-import com.ling.jibonetposa.third.push.OnPushLisenter;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -33,18 +32,8 @@ public class PushAgent {
     private static final int MSG_SET_ALIAS = 1001;
     private static final int MSG_SET_TAGS = 1002;
 
-    private OnPushLisenter mPushLisenter;
-
     public PushAgent(Context context) {
         mContext = context;
-    }
-
-    public OnPushLisenter getPushLisenter() {
-        return mPushLisenter;
-    }
-
-    public void setOnPushLisenter(OnPushLisenter pushLisenter) {
-        mPushLisenter = pushLisenter;
     }
 
     public void initPush() {
