@@ -5,7 +5,7 @@ import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Headers;
 
-import static com.ling.jibonetposa.constants.IOTApiConstant.API_PATH_PHANTON_GET_DEV_ALL;
+import static com.ling.jibonetposa.constants.APIConstant.API_PATH_PHANTON_GET_DEV_ALL;
 
 /**
  * Created by mhz小志 on 2017/3/17.

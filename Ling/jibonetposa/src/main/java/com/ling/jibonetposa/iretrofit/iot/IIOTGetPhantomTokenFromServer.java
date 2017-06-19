@@ -8,7 +8,7 @@ import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.QueryMap;
 
-import static com.ling.jibonetposa.constants.IOTApiConstant.API_PATH_JIBO_TOKEN_GET;
+import static com.ling.jibonetposa.constants.APIConstant.API_PATH_JIBO_TOKEN_GET;
 
 /**
  * Created by mhz小志 on 2017/4/13.

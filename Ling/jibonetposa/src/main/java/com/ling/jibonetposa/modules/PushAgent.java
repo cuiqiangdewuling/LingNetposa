@@ -2,7 +2,9 @@ package com.ling.jibonetposa.modules;
 
 import android.app.Notification;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Handler;
+import android.os.Looper;
 import android.text.TextUtils;
 import android.widget.Toast;
 
@@ -230,7 +232,8 @@ public class PushAgent {
         Toast.makeText(mContext, "AddActions Builder - 10", Toast.LENGTH_SHORT).show();
     }
 
-
+    public static final String PREF_PUSH_SERVICE_TOKEN = "PREF_PUSH_SERVICE_TOKEN";
+    public static final String PREF_INSTANCE_ID = "PREF_INSTANCE_ID";
     /**
      * callback
      * 在 TagAliasCallback 的 gotResult 方法，返回对应的参数 alias, tags。并返回对应的状态码：0为成功，其他返回码请参考错误码定义。
@@ -244,10 +247,15 @@ public class PushAgent {
                 case 0:
                     logs = "Set tag and alias success";
                     LingManager.getInstance().getLingLog().LOGD(TAG, logs);
+                    SharedPreferences sp1 = mContext.getSharedPreferences(mContext.getString(R.string.app_name), Context.MODE_PRIVATE);
+                    sp1.edit().putString(PREF_PUSH_SERVICE_TOKEN, alias).apply();
+                    sp1.edit().putString(PREF_INSTANCE_ID, alias).apply();
                     break;
-
                 case 6002:
                     logs = "Failed to set alias and tags due to timeout. Try again after 60s.";
+                    SharedPreferences sp2 = mContext.getSharedPreferences(mContext.getString(R.string.app_name), Context.MODE_PRIVATE);
+                    sp2.edit().putString(PREF_PUSH_SERVICE_TOKEN, "").apply();
+                    sp2.edit().putString(PREF_INSTANCE_ID, "").apply();
                     LingManager.getInstance().getLingLog().LOGD(TAG, logs);
                     if (ExampleUtil.isConnected(mContext)) {
                         mHandler.sendMessageDelayed(mHandler.obtainMessage(MSG_SET_ALIAS, alias), 1000 * 60);
@@ -308,7 +316,7 @@ public class PushAgent {
      * 在之前调用过后，如果需要再次改变别名与标签，只需要重新调用此 API 即可。
      * <p>
      */
-    private final Handler mHandler = new Handler() {
+    private final Handler mHandler = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(android.os.Message msg) {
             super.handleMessage(msg);

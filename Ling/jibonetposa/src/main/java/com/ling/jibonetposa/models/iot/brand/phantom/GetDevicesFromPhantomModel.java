@@ -1,4 +1,4 @@
-package com.ling.jibonetposa.models.iot.phantom;
+package com.ling.jibonetposa.models.iot.brand.phantom;
 
 import android.util.Log;
 
@@ -16,7 +16,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.ling.jibonetposa.constants.IOTApiConstant.API_PATH_PHANTON_DEV;
+import static com.ling.jibonetposa.constants.APIConstant.API_PATH_PHANTON_DEV;
 
 /**
  * Created by mhz小志 on 2017/3/17.

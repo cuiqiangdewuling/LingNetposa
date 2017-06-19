@@ -17,15 +17,17 @@ public class DevicesEntity extends BaseEntity implements Parcelable {
     private String userid;
     private List<BrandBean> brand_list;
     private List<DeviceBean> repeatDev;// 重名的设备
-    private DeviceInfoEntity currentDev; // 用户当前选择的设备
-
-    protected DevicesEntity(Parcel in) {
-        userid = in.readString();
-        currentDev = in.readParcelable(DeviceInfoEntity.class.getClassLoader());
-    }
+    private List<DeviceBean> nameNotFitRulesDevList;// 名字不规范的设备
+    private DeviceBean currentDev; // 用户当前选择的设备
 
     public DevicesEntity() {
     }
+
+    protected DevicesEntity(Parcel in) {
+        userid = in.readString();
+        currentDev = in.readParcelable(DeviceBean.class.getClassLoader());
+    }
+
 
     public static final Creator<DevicesEntity> CREATOR = new Creator<DevicesEntity>() {
         @Override
@@ -49,11 +51,19 @@ public class DevicesEntity extends BaseEntity implements Parcelable {
                 '}';
     }
 
-    public DeviceInfoEntity getCurrentDev() {
+    public List<DeviceBean> getNameNotFitRulesDevList() {
+        return nameNotFitRulesDevList;
+    }
+
+    public void setNameNotFitRulesDevList(List<DeviceBean> nameNotFitRulesDevList) {
+        this.nameNotFitRulesDevList = nameNotFitRulesDevList;
+    }
+
+    public DeviceBean getCurrentDev() {
         return currentDev;
     }
 
-    public void setCurrentDev(DeviceInfoEntity currentDev) {
+    public void setCurrentDev(DeviceBean currentDev) {
         this.currentDev = currentDev;
     }
 
@@ -89,6 +99,5 @@ public class DevicesEntity extends BaseEntity implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(userid);
-        dest.writeParcelable(currentDev, flags);
     }
 }

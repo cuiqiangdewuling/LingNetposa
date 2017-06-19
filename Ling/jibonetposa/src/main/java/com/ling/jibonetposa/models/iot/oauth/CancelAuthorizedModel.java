@@ -1,4 +1,4 @@
-package com.ling.jibonetposa.models.iot;
+package com.ling.jibonetposa.models.iot.oauth;
 
 import com.ling.jibonetposa.base.BaseRequestModel;
 import com.ling.jibonetposa.entities.iot.ResultCancelAuthEntity;
@@ -7,7 +7,7 @@ import com.ling.jibonetposa.iretrofit.iot.ICancelPhantomAuthorized;
 
 import retrofit2.Call;
 
-import static com.ling.jibonetposa.constants.IOTApiConstant.API_PATH_JIBO;
+import static com.ling.jibonetposa.constants.APIConstant.API_PATH_JIBO;
 
 /**
  * Created by mhz小志 on 2017/3/18.

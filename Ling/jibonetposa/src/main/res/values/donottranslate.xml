@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Jibo</string>
+    <string name="data_provider_label">Jibo app data provider</string>
+    <string name="db_authority">com.jibo.provider.db</string>
+    <string name="db_messages_authority">com.jibo.provider.db.messages</string>
+
+    <string name="privacy_policy_link">https://www.jibo.com/privacy</string>
+    <string name="terms_link">https://www.jibo.com/legal</string>
+    <string name="jibo_com_link">https://www.jibo.com/</string>
+
+</resources>

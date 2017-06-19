@@ -1,4 +1,4 @@
-package com.ling.jibonetposa.models.iot.haier;
+package com.ling.jibonetposa.models.iot.brand.haier;
 
 import android.content.Context;
 

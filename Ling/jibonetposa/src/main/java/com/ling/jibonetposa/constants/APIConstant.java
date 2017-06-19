@@ -4,7 +4,13 @@ package com.ling.jibonetposa.constants;
  * Created by mhz小志 on 2017/3/17.
  */
 
-public class IOTApiConstant {
+public class APIConstant {
+
+    //Location Api
+    public static final String API_PATH_JIBO_LOCATION = "/jibo/geo";
+    public static final String API_PATH_JIBO_CITY = "/jibo/area";
+    public static final String API_PATH_JIBO_CITY_DATA = "/jibo/devices/factory";
+
 
     // Ling服务ApiPath
     public static final String API_PATH_JIBO = "http://101.201.72.216:8082";
@@ -16,16 +22,12 @@ public class IOTApiConstant {
     public static final String API_PATH_JIBO_BRANDS = "/jibo/devices/factory";
     public static final String API_PATH_JIBO_BRANDS_CONFIGURE = "/jibo/app/configure";
     public static final String API_PATH_JIBO_SCENARIOS = "/jibo/scenarios";
-    public static final String API_PATH_JIBO_INFORMATION = " /jibo/information";
+    public static final String API_PATH_JIBO_INFORMATION = "/jibo/information";
 
+    public static final String API_PATH_JIBO_SCENARIOS_CUSTOM = "/jibo/scenario/custom";
+    public static final String API_PATH_JIBO_SCENARIOS_CUSTOM_DEVICES = "/jibo/scenario/custom/devices";
 
-
-    //Location Api
-    public static final String API_PATH_JIBO_LOCATION = "/jibo/geo";
-    public static final String API_PATH_JIBO_CITY = "/jibo/area";
-    public static final String API_PATH_JIBO_CITY_DATA = "/jibo/devices/factory";
-
-
+    // 授权回调URI
     public static final String OAUTH_REDIRECT_URI = "http://101.201.72.216:8082/test/code";
 
     //幻腾授权ApiPath
@@ -50,7 +52,6 @@ public class IOTApiConstant {
     public static final String BROADLINK_CLIENT_SECRET = "17b49a2098c5dca76c7fede2b1278337";
     public static final String BROADLINK_LID = "00fa61bc922b61025371f83488ed4575";
     public static final String BROADLINK_LICENSE = "APphvJIrYQJTcfg0iO1FdZLds65vQxUhghUgauRDiASyy3PzyhSet3WvMQtZQuZTs4nUWAAAAAAHTXzp5cOJ2xstSmsrCVqCQ3nC07KRDxTf6OoLdox8o+EHrb3OJc5vpM3pvCQs83cNVuCt0jv3kkHMReLOissKXMLuZLzUf3626inKQwTo2AAAAAA=";
-
     public static final String API_PATH_BROADLINK_DEVICE = "https://00fa61bc922b61025371f83488ed4575cloudauthorize.ibroadlink.com:15334";
     public static final String API_PATH_BROADLINK_VERIFY = "/dnaproxy/ v1/accesskey/specify";
 

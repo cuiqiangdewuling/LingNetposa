@@ -1,4 +1,4 @@
-package com.ling.jibonetposa.models.iot;
+package com.ling.jibonetposa.models.iot.scenarios;
 
 import com.ling.jibonetposa.base.BaseRequestModel;
 import com.ling.jibonetposa.entities.iot.ResultGetScenariosEntity;
@@ -7,7 +7,7 @@ import com.ling.jibonetposa.iretrofit.iot.IIOTGetScenarios;
 
 import retrofit2.Call;
 
-import static com.ling.jibonetposa.constants.IOTApiConstant.API_PATH_JIBO;
+import static com.ling.jibonetposa.constants.APIConstant.API_PATH_JIBO;
 
 /**
  * Created by mhz小志 on 2017/4/18.

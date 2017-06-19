@@ -9,22 +9,24 @@ import com.ling.jibonetposa.entities.iot.DevicesEntity;
 import com.ling.jibonetposa.entities.iot.PutUpdateDevNameEntity;
 import com.ling.jibonetposa.entities.iot.ResultGetBrandEntity;
 import com.ling.jibonetposa.entities.iot.ResultGetDevicesEntity;
+import com.ling.jibonetposa.entities.iot.ResultGetScenariosEntity;
 import com.ling.jibonetposa.entities.iot.SaveAuthDataEntity;
+import com.ling.jibonetposa.entities.iot.ScenariosListEntity;
 import com.ling.jibonetposa.iretrofit.IRequestCallback;
 import com.ling.jibonetposa.models.GetTipsModel;
-import com.ling.jibonetposa.models.iot.CancelAuthorizedModel;
-import com.ling.jibonetposa.models.iot.CheckBrandsFromServerModel;
-import com.ling.jibonetposa.models.iot.GetBrandConfigureModel;
-import com.ling.jibonetposa.models.iot.GetDevicesFromServerModel;
-import com.ling.jibonetposa.models.iot.GetScenariosFromServerModel;
-import com.ling.jibonetposa.models.iot.GetTokenFromServerModel;
-import com.ling.jibonetposa.models.iot.SaveTokenToServerModel;
-import com.ling.jibonetposa.models.iot.UpdateDevNameModel;
-import com.ling.jibonetposa.models.iot.broadlink.GetBroadLinkTokenModel;
-import com.ling.jibonetposa.models.iot.broadlink.UpdataBLGetAccessKeyModel;
-import com.ling.jibonetposa.models.iot.haier.HEModel;
-import com.ling.jibonetposa.models.iot.phantom.GetPhantomTokenModel;
-import com.ling.jibonetposa.models.iot.phantom.UpdatePhantomNameModel;
+import com.ling.jibonetposa.models.iot.brand.broadlink.GetBroadLinkTokenModel;
+import com.ling.jibonetposa.models.iot.brand.broadlink.UpdataBLGetAccessKeyModel;
+import com.ling.jibonetposa.models.iot.brand.haier.HEModel;
+import com.ling.jibonetposa.models.iot.brand.phantom.GetPhantomTokenModel;
+import com.ling.jibonetposa.models.iot.brand.phantom.UpdatePhantomNameModel;
+import com.ling.jibonetposa.models.iot.devices.CheckBrandsFromServerModel;
+import com.ling.jibonetposa.models.iot.devices.GetDevicesFromServerModel;
+import com.ling.jibonetposa.models.iot.devices.UpdateDevNameModel;
+import com.ling.jibonetposa.models.iot.oauth.CancelAuthorizedModel;
+import com.ling.jibonetposa.models.iot.oauth.GetBrandOAuthConfigureModel;
+import com.ling.jibonetposa.models.iot.oauth.GetTokenFromServerModel;
+import com.ling.jibonetposa.models.iot.oauth.SaveTokenToServerModel;
+import com.ling.jibonetposa.models.iot.scenarios.GetScenariosFromServerModel;
 import com.ling.jibonetposa.utils.NetWorkUtil;
 
 import java.util.ArrayList;
@@ -33,14 +35,17 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static com.ling.jibonetposa.base.BaseRequestModel.RETROFIT_SUCCESS;
-import static com.ling.jibonetposa.constants.IOTApiConstant.API_PATH_PHANTON_AUTHORIZE;
-import static com.ling.jibonetposa.constants.IOTApiConstant.BROADLINK_API_PATH;
-import static com.ling.jibonetposa.constants.IOTApiConstant.BROADLINK_CLIENT_ID;
-import static com.ling.jibonetposa.constants.IOTApiConstant.OAUTH_REDIRECT_URI;
-import static com.ling.jibonetposa.constants.IOTApiConstant.PHANTON_APP_ID;
-import static com.ling.jibonetposa.constants.IOTApiConstant.PHANTON_SCOPE;
+import static com.ling.jibonetposa.constants.APIConstant.API_PATH_PHANTON_AUTHORIZE;
+import static com.ling.jibonetposa.constants.APIConstant.BROADLINK_API_PATH;
+import static com.ling.jibonetposa.constants.APIConstant.BROADLINK_CLIENT_ID;
+import static com.ling.jibonetposa.constants.APIConstant.OAUTH_REDIRECT_URI;
+import static com.ling.jibonetposa.constants.APIConstant.PHANTON_APP_ID;
+import static com.ling.jibonetposa.constants.APIConstant.PHANTON_SCOPE;
+import static com.ling.jibonetposa.constants.IOTDevConstant.REGEX_NAME;
 
 /**
  * Created by mhz小志 on 2017/3/17.
@@ -79,6 +84,16 @@ public class IOTAgent {
     }
 
     /**
+     * 根据网络请求回来的数据，整理成我们需要的数据
+     */
+    public DevicesEntity getDevicesEntity(String userid, ResultGetDevicesEntity getBrandEntity) {
+        DevicesEntity devicesEntity = new DevicesEntity();
+        devicesEntity.setUserid(userid);
+        devicesEntity.setBrand_list(getBrandEntity.getData());
+        return devicesEntity;
+    }
+
+    /**
      * 检查品牌的绑定信息
      *
      * @param userid
@@ -107,6 +122,20 @@ public class IOTAgent {
             }
         }).getBrands(userid);
     }
+
+    /**
+     * 根据网络请求回来的数据，整理成我们需要的数据
+     */
+    public BrandStatusEntity getBrandStatusEntity(ResultGetBrandEntity getBrandEntity) {
+        BrandStatusEntity brandStatusEntity = new BrandStatusEntity();
+        List<BrandStatusEntity.Brand> brand_list = new ArrayList<>();
+        for (BrandBean brandBean : getBrandEntity.getData()) {
+            brand_list.add(new BrandStatusEntity.Brand(brandBean.getKey(), brandBean.getName(), brandBean.getCode()));
+        }
+        brandStatusEntity.setBrand_list(brand_list);
+        return doSoreBrandList(brandStatusEntity);
+    }
+
 
     /**
      * 取消用户授权
@@ -166,16 +195,43 @@ public class IOTAgent {
         new SaveTokenToServerModel(requestCallback).saveToken(tokenEntity);
     }
 
-
     /**
      * 获取场景列表
      */
-    public void getScenariosFromServer(String userid, IRequestCallback requestCallback) {
+    public void getScenariosFromServer(String userid, final IRequestCallback requestCallback) {
         if (LingManager.getInstance().isUseTestUserid()) {
             userid = LingManager.getInstance().getTestUserId();
         }
         LingManager.getInstance().getLingLog().LOGD("finalUserid: " + userid);
-        new GetScenariosFromServerModel(requestCallback).execute(userid);
+        final String finalUserid = userid;
+        new GetScenariosFromServerModel(new IRequestCallback() {
+            @Override
+            public void responsedCallback(BaseEntity entity, int errorCode, Throwable error) {
+                if (errorCode == RETROFIT_SUCCESS) {
+                    ResultGetScenariosEntity brandEntity = (ResultGetScenariosEntity) entity;
+                    if (brandEntity != null) {
+                        ScenariosListEntity scenariosListEntity = getScenariosListEntity(finalUserid, brandEntity);
+                        requestCallback.responsedCallback(scenariosListEntity, errorCode, error);
+                    } else {
+                        requestCallback.responsedCallback(null, errorCode, error);
+                    }
+                } else {
+                    requestCallback.responsedCallback(null, errorCode, error);
+                }
+            }
+        }).execute(userid);
+    }
+
+    /**
+     * 根据网络请求回来的数据，整理成我们需要的数据
+     */
+    public ScenariosListEntity getScenariosListEntity(String userid, ResultGetScenariosEntity scenariosEntity) {
+        ScenariosListEntity devicesEntity = new ScenariosListEntity();
+        devicesEntity.setUserId(userid);
+        if (scenariosEntity != null && scenariosEntity.getData() != null && scenariosEntity.getData().size() > 0 && scenariosEntity.getData().get(0).getVal() != null) {
+            devicesEntity.setScenarioList(scenariosEntity.getData().get(0).getVal());
+        }
+        return devicesEntity;
     }
 
     /**
@@ -194,29 +250,6 @@ public class IOTAgent {
      */
     public void getIOTTips(IRequestCallback requestCallback) {
         new GetTipsModel(requestCallback).getIOTTip(1);
-    }
-
-    /**
-     * 根据网络请求回来的数据，整理成我们需要的数据
-     */
-    public BrandStatusEntity getBrandStatusEntity(ResultGetBrandEntity getBrandEntity) {
-        BrandStatusEntity brandStatusEntity = new BrandStatusEntity();
-        List<BrandStatusEntity.Brand> brand_list = new ArrayList<>();
-        for (BrandBean brandBean : getBrandEntity.getData()) {
-            brand_list.add(new BrandStatusEntity.Brand(brandBean.getKey(), brandBean.getName(), brandBean.getCode()));
-        }
-        brandStatusEntity.setBrand_list(brand_list);
-        return doSoreBrandList(brandStatusEntity);
-    }
-
-    /**
-     * 根据网络请求回来的数据，整理成我们需要的数据
-     */
-    public DevicesEntity getDevicesEntity(String userid, ResultGetDevicesEntity getBrandEntity) {
-        DevicesEntity devicesEntity = new DevicesEntity();
-        devicesEntity.setUserid(userid);
-        devicesEntity.setBrand_list(getBrandEntity.getData());
-        return devicesEntity;
     }
 
     /**
@@ -269,7 +302,7 @@ public class IOTAgent {
      * 获取各品牌授权所需的数据、基本参数
      */
     public void getBrandConfigure(IRequestCallback requestCallback) {
-        new GetBrandConfigureModel(requestCallback).getBrandConfigure();
+        new GetBrandOAuthConfigureModel(requestCallback).getBrandConfigure();
     }
 
     /**
@@ -280,32 +313,58 @@ public class IOTAgent {
     public void checkDevicesName(DevicesEntity devicesEntity) {
         if (devicesEntity == null || devicesEntity.getBrand_list() == null || !(devicesEntity.getBrand_list().size() > 0))
             return;
-        List<DeviceBean> repeatDev = new ArrayList<>();
-
-        List<DeviceBean> allDev = new ArrayList<>();
+        List<DeviceBean> nameRepeatDevList = new ArrayList<>(); // 名字重复的数据
+        List<DeviceBean> devDataForQueryList = new ArrayList<>();// 要进行 名字查重 的数据
+        List<DeviceBean> nameNotFitRulesDevList = new ArrayList<>();// 不符合规则的名字（名字不被NLU识别）
 
         for (BrandBean brandBean : devicesEntity.getBrand_list()) {
             if (brandBean.getVal() != null && brandBean.getVal().size() > 0) {
                 for (DeviceBean deviceBean : brandBean.getVal()) {
+                    deviceBean.setBrand_id(brandBean.getKey());
+                    deviceBean.setBrand_name(brandBean.getName());
                     deviceBean.setBrand_status(brandBean.getCode());
-                    allDev.add(deviceBean);
+                    if (brandBean.getCode() == 0) {  //授权状态正常时，才进行名字查重
+
+                        // 拿到每一个设备，单独进行判断
+                        if (match(REGEX_NAME, deviceBean.getDevice_name())) {
+                            // 设备名符合规则 才进行查重
+                            deviceBean.setDevice_code(0);
+                            devDataForQueryList.add(deviceBean);
+                        } else {
+                            // 设备名不符合规则
+                            deviceBean.setDevice_code(-1);
+                            nameNotFitRulesDevList.add(deviceBean);
+                        }
+                    }
                 }
             }
         }
         a:
-        for (int i = 0; i < allDev.size(); i++) {
+        for (int i = 0; i < devDataForQueryList.size(); i++) {
             b:
-            for (int j = 0; j < allDev.size(); j++) {
+            for (int j = 0; j < devDataForQueryList.size(); j++) {
                 if (i != j) {
-                    boolean equals = allDev.get(i).getDevice_name().equals(allDev.get(j).getDevice_name());
+                    boolean equals = devDataForQueryList.get(i).getDevice_name().equals(devDataForQueryList.get(j).getDevice_name());
                     if (equals) {
-                        repeatDev.add(allDev.get(i));
+                        nameRepeatDevList.add(devDataForQueryList.get(i));
                         break b;
                     }
                 }
             }
         }
-        devicesEntity.setRepeatDev(repeatDev);
+        devicesEntity.setRepeatDev(nameRepeatDevList);// 保存重名的设备集合
+        devicesEntity.setNameNotFitRulesDevList(nameNotFitRulesDevList);// 保存不符合命名规则的设备集合
+    }
+
+    /**
+     * @param regex 正则表达式字符串
+     * @param str   要匹配的字符串
+     * @return 如果str 符合 regex的正则表达式格式,返回true, 否则返回 false;
+     */
+    private static boolean match(String regex, String str) {
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(str);
+        return matcher.matches();
     }
 
     /**
@@ -354,6 +413,19 @@ public class IOTAgent {
                             return true;
                         }
                     }
+                }
+            }
+        return false;
+    }
+
+    /**
+     * 判断在已有的场景列表中，是否有重名
+     */
+    public boolean hasSameName(String devName, ScenariosListEntity scenariosEntity) {
+        if (scenariosEntity != null && scenariosEntity.getScenarioList() != null && (scenariosEntity.getScenarioList().size() > 0))
+            for (DeviceBean brandBean : scenariosEntity.getScenarioList()) {
+                if (devName.equals(brandBean.getDevice_name())) {
+                    return true;
                 }
             }
         return false;

@@ -12,6 +12,7 @@ public class BrandBean {
     private String name;
     private int code;
     private List<DeviceBean> val;
+//    private Permissions permissions;
 
     @Override
     public String toString() {
@@ -54,4 +55,12 @@ public class BrandBean {
     public void setVal(List<DeviceBean> val) {
         this.val = val;
     }
+
+//    public static class Permissions{
+//        private boolean oauth;
+//        private boolean device-list;
+//        private boolean device-rename;
+//        private boolean scenario-list;
+//        private boolean device-control;
+//    }
 }

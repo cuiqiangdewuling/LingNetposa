@@ -9,7 +9,7 @@ import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.POST;
 
-import static com.ling.jibonetposa.constants.IOTApiConstant.API_PATH_PHANTON_TOKEN;
+import static com.ling.jibonetposa.constants.APIConstant.API_PATH_PHANTON_TOKEN;
 
 /**
  * Created by mhz小志 on 2017/3/17.

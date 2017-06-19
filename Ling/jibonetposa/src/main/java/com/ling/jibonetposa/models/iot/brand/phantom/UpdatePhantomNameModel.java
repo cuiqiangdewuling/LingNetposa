@@ -1,4 +1,4 @@
-package com.ling.jibonetposa.models.iot.phantom;
+package com.ling.jibonetposa.models.iot.brand.phantom;
 
 import com.ling.jibonetposa.LingManager;
 import com.ling.jibonetposa.base.BaseRequestModel;
@@ -9,8 +9,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.ling.jibonetposa.constants.IOTApiConstant.API_PATH_PHANTON_DEV;
-import static com.ling.jibonetposa.constants.IOTApiConstant.API_PATH_PHANTON_UPDATE_NAME;
+import static com.ling.jibonetposa.constants.APIConstant.API_PATH_PHANTON_DEV;
+import static com.ling.jibonetposa.constants.APIConstant.API_PATH_PHANTON_UPDATE_NAME;
 
 /**
  * Created by mhz小志 on 2017/5/4.

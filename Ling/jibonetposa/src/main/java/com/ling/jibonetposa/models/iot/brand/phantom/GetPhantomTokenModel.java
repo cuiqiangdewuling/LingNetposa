@@ -1,4 +1,4 @@
-package com.ling.jibonetposa.models.iot.phantom;
+package com.ling.jibonetposa.models.iot.brand.phantom;
 
 import com.ling.jibonetposa.base.BaseRequestModel;
 import com.ling.jibonetposa.entities.iot.PhantomTokenEntity;
@@ -7,10 +7,10 @@ import com.ling.jibonetposa.iretrofit.iot.IIOTGetPhantomTokenFromPhantom;
 
 import retrofit2.Call;
 
-import static com.ling.jibonetposa.constants.IOTApiConstant.API_PATH_PHANTON;
-import static com.ling.jibonetposa.constants.IOTApiConstant.PHANTON_APP_ID;
-import static com.ling.jibonetposa.constants.IOTApiConstant.PHANTON_APP_SECRET;
-import static com.ling.jibonetposa.constants.IOTApiConstant.OAUTH_REDIRECT_URI;
+import static com.ling.jibonetposa.constants.APIConstant.API_PATH_PHANTON;
+import static com.ling.jibonetposa.constants.APIConstant.PHANTON_APP_ID;
+import static com.ling.jibonetposa.constants.APIConstant.PHANTON_APP_SECRET;
+import static com.ling.jibonetposa.constants.APIConstant.OAUTH_REDIRECT_URI;
 
 /**
  * Created by mhz小志 on 2017/3/17.

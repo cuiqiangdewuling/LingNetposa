@@ -24,7 +24,6 @@ import butterknife.ButterKnife;
 
 import static com.ling.jibonetposa.base.BaseRequestModel.ERROR_PASS_MISTAKE;
 import static com.ling.jibonetposa.base.BaseRequestModel.RETROFIT_SUCCESS;
-import static com.ling.jibonetposa.constants.IOTDevConstant.DEV_FLUSH_TYOE_AUTO;
 
 /**
  * Created by mhz小志 on 2017/4/13.
@@ -184,7 +183,7 @@ public class IOTTestActivity extends Activity implements View.OnClickListener {
     }
 
     private void getDev() {
-        LingManager.getInstance().getIOTAgent().getAllDevices("jibo", DEV_FLUSH_TYOE_AUTO, new IRequestCallback() {
+        LingManager.getInstance().getIOTAgent().getAllDevices("jibo", 0, new IRequestCallback() {
             @Override
             public void responsedCallback(BaseEntity entity, int errorCode, Throwable error) {
                 if (errorCode == RETROFIT_SUCCESS) {

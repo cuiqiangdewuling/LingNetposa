@@ -1,6 +1,6 @@
-package com.ling.jibonetposa.iretrofit.location;
+package com.ling.jibonetposa.iretrofit.iot;
 
-import com.ling.jibonetposa.entities.locaiton.ResultLocationEntity;
+import com.ling.jibonetposa.entities.iot.scenario.ResultScenarioCustomEntity;
 
 import okhttp3.RequestBody;
 import retrofit2.Call;
@@ -14,9 +14,9 @@ import static com.ling.jibonetposa.constants.APIConstant.API_PATH_JIBO_LOCATION;
  * Created by mhz小志 on 2017/3/17.
  */
 
-public interface ISaveLocationToServer {
+public interface IScenarioEditPOST {
 
     @Headers({"Content-type:application/json"})
     @POST(API_PATH_JIBO_LOCATION)
-    Call<ResultLocationEntity> execute(@Body RequestBody route);
+    Call<ResultScenarioCustomEntity> execute(@Body RequestBody route);
 }

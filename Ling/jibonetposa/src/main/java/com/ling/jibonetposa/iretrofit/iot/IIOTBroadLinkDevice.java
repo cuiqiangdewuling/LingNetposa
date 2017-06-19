@@ -10,7 +10,7 @@ import retrofit2.http.Body;
 import retrofit2.http.HeaderMap;
 import retrofit2.http.POST;
 
-import static com.ling.jibonetposa.constants.IOTApiConstant.API_PATH_BROADLINK_VERIFY;
+import static com.ling.jibonetposa.constants.APIConstant.API_PATH_BROADLINK_VERIFY;
 
 /**
  * Created by mhz小志 on 2017/3/17.

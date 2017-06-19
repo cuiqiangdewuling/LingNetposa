@@ -1,4 +1,4 @@
-package com.ling.jibonetposa.models.iot.broadlink;
+package com.ling.jibonetposa.models.iot.brand.broadlink;
 
 import com.google.gson.Gson;
 import com.ling.jibonetposa.LingManager;
@@ -12,8 +12,8 @@ import java.util.Map;
 
 import retrofit2.Call;
 
-import static com.ling.jibonetposa.constants.IOTApiConstant.API_PATH_BROADLINK_DEVICE;
-import static com.ling.jibonetposa.constants.IOTApiConstant.BROADLINK_LICENSE;
+import static com.ling.jibonetposa.constants.APIConstant.API_PATH_BROADLINK_DEVICE;
+import static com.ling.jibonetposa.constants.APIConstant.BROADLINK_LICENSE;
 
 /**
  * Created by mhz小志 on 2017/5/20.

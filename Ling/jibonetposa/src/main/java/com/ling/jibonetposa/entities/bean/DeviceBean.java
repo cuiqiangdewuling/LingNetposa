@@ -11,10 +11,11 @@ public class DeviceBean {
     private String device_name;
     private String device_on;
     private String device_type;
-    private String image_type;
-    private int device_code;
-    private int brand_status;
     private String brand_id;
+    private String brand_name;
+    private int image_type;
+    private int device_code;  // 0: 正常显示    1: 设备名称不符合规则    2：改名失败   -1:不支持改名
+    private int brand_status;
 
     @Override
     public String toString() {
@@ -24,11 +25,20 @@ public class DeviceBean {
                 ", device_name='" + device_name + '\'' +
                 ", device_on='" + device_on + '\'' +
                 ", device_type='" + device_type + '\'' +
-                ", image_type='" + image_type + '\'' +
-                ", device_code='" + device_code + '\'' +
-                ", brand_status=" + brand_status +
                 ", brand_id='" + brand_id + '\'' +
+                ", brand_name='" + brand_name + '\'' +
+                ", image_type=" + image_type +
+                ", device_code=" + device_code +
+                ", brand_status=" + brand_status +
                 '}';
+    }
+
+    public String getBrand_name() {
+        return brand_name;
+    }
+
+    public void setBrand_name(String brand_name) {
+        this.brand_name = brand_name;
     }
 
     public String getBrand_id() {
@@ -47,11 +57,11 @@ public class DeviceBean {
         this.device_code = device_code;
     }
 
-    public String getImage_type() {
+    public int getImage_type() {
         return image_type;
     }
 
-    public void setImage_type(String image_type) {
+    public void setImage_type(int image_type) {
         this.image_type = image_type;
     }
 

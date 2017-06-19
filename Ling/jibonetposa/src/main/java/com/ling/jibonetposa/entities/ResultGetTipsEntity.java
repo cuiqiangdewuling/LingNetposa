@@ -88,17 +88,67 @@ public class ResultGetTipsEntity extends BaseEntity {
     public static class Information {
         private int id;
         private int type;
+        private int sortno;
+        private int class_id;
         private String title;
+        private String summary;
         private String content;
+        private String created_at;
+        private String updated_at;
 
         @Override
         public String toString() {
             return "Information{" +
                     "id=" + id +
                     ", type=" + type +
+                    ", sortno=" + sortno +
+                    ", class_id=" + class_id +
                     ", title='" + title + '\'' +
+                    ", summary='" + summary + '\'' +
                     ", content='" + content + '\'' +
+                    ", created_at='" + created_at + '\'' +
+                    ", updated_at='" + updated_at + '\'' +
                     '}';
+        }
+
+        public int getSortno() {
+            return sortno;
+        }
+
+        public void setSortno(int sortno) {
+            this.sortno = sortno;
+        }
+
+        public int getClass_id() {
+            return class_id;
+        }
+
+        public void setClass_id(int class_id) {
+            this.class_id = class_id;
+        }
+
+        public String getSummary() {
+            return summary;
+        }
+
+        public void setSummary(String summary) {
+            this.summary = summary;
+        }
+
+        public String getCreated_at() {
+            return created_at;
+        }
+
+        public void setCreated_at(String created_at) {
+            this.created_at = created_at;
+        }
+
+        public String getUpdated_at() {
+            return updated_at;
+        }
+
+        public void setUpdated_at(String updated_at) {
+            this.updated_at = updated_at;
         }
 
         public int getId() {

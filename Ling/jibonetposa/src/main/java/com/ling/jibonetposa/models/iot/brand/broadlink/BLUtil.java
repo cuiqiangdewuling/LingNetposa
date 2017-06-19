@@ -1,8 +1,8 @@
-package com.ling.jibonetposa.models.iot.broadlink;
+package com.ling.jibonetposa.models.iot.brand.broadlink;
 
 import java.security.MessageDigest;
 
-import static com.ling.jibonetposa.constants.IOTApiConstant.BROADLINK_LID;
+import static com.ling.jibonetposa.constants.APIConstant.BROADLINK_LID;
 
 /**
  * Created by mhz小志 on 2017/5/19.

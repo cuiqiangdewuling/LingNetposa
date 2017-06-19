@@ -8,7 +8,7 @@ import retrofit2.http.Body;
 import retrofit2.http.Headers;
 import retrofit2.http.PUT;
 
-import static com.ling.jibonetposa.constants.IOTApiConstant.API_PATH_JIBO_DEVICES;
+import static com.ling.jibonetposa.constants.APIConstant.API_PATH_JIBO_DEVICES;
 
 /**
  * Created by mhz小志 on 2017/3/17.
