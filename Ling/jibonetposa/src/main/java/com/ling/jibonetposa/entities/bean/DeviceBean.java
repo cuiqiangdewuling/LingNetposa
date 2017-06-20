@@ -1,5 +1,7 @@
 package com.ling.jibonetposa.entities.bean;
 
+import com.ling.jibonetposa.entities.iot.scenario.config.DeviceConfigBean;
+
 /**
  * Created by mhz小志 on 2017/4/22.
  */
@@ -13,9 +15,12 @@ public class DeviceBean {
     private String device_type;
     private String brand_id;
     private String brand_name;
+    private String device_flag;
     private int image_type;
-    private int device_code;  // 0: 正常显示    1: 设备名称不符合规则    2：改名失败   -1:不支持改名
+    private int device_code;  // 0: 正常显示    1: 设备名称不符合规则    2：改名失败   1:不支持改名
     private int brand_status;
+    private int id;
+    private DeviceConfigBean control_config;
 
     @Override
     public String toString() {
@@ -27,10 +32,37 @@ public class DeviceBean {
                 ", device_type='" + device_type + '\'' +
                 ", brand_id='" + brand_id + '\'' +
                 ", brand_name='" + brand_name + '\'' +
+                ", device_flag='" + device_flag + '\'' +
                 ", image_type=" + image_type +
                 ", device_code=" + device_code +
                 ", brand_status=" + brand_status +
+                ", id=" + id +
+                ", control_config=" + control_config +
                 '}';
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getDevice_flag() {
+        return device_flag;
+    }
+
+    public void setDevice_flag(String device_flag) {
+        this.device_flag = device_flag;
+    }
+
+    public DeviceConfigBean getControl_config() {
+        return control_config;
+    }
+
+    public void setControl_config(DeviceConfigBean control_config) {
+        this.control_config = control_config;
     }
 
     public String getBrand_name() {

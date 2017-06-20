@@ -6,19 +6,19 @@ import com.ling.jibonetposa.base.BaseEntity;
  * Created by mhz小志 on 2017/6/15.
  */
 
-public class ScenarioDeviceEditPOSTEntity extends BaseEntity {
+public class ScenarioEditNameImagePOSTEntity extends BaseEntity {
 
     private Data data;
 
-    public ScenarioDeviceEditPOSTEntity(String userid, String id, String device_id, String type, Object control_config) {
+    public ScenarioEditNameImagePOSTEntity(String userid, String id, String name, String image_type) {
         this.data = new Data();
-        this.data.setType("scenario-custom-devices");
-        this.data.setAttributes(new Attributes(userid, id, device_id, type, control_config));
+        this.data.setType("scenario-custom");
+        this.data.setAttributes(new Attributes(userid, id, name, image_type));
     }
 
     @Override
     public String toString() {
-        return "ScenarioCreatePOSTEntity{" +
+        return "ScenarioEditPOSTEntity{" +
                 "data=" + data +
                 '}';
     }
@@ -60,31 +60,28 @@ public class ScenarioDeviceEditPOSTEntity extends BaseEntity {
         }
     }
 
-    
     public static class Attributes {
+
         private String userid;
         private String id;
-        private String device_id;
-        private String type;
-        private Object control_config;
-
-        public Attributes(String userid, String id, String device_id, String type, Object control_config) {
-            this.userid = userid;
-            this.id = id;
-            this.device_id = device_id;
-            this.type = type;
-            this.control_config = control_config;
-        }
+        private String name;
+        private String image_type;
 
         @Override
         public String toString() {
             return "Attributes{" +
                     "userid='" + userid + '\'' +
                     ", id='" + id + '\'' +
-                    ", device_id='" + device_id + '\'' +
-                    ", type='" + type + '\'' +
-                    ", control_config=" + control_config +
+                    ", name='" + name + '\'' +
+                    ", image_type='" + image_type + '\'' +
                     '}';
+        }
+
+        public Attributes(String userid, String id, String name, String image_type) {
+            this.userid = userid;
+            this.id = id;
+            this.name = name;
+            this.image_type = image_type;
         }
 
         public String getUserid() {
@@ -103,28 +100,21 @@ public class ScenarioDeviceEditPOSTEntity extends BaseEntity {
             this.id = id;
         }
 
-        public String getDevice_id() {
-            return device_id;
+        public String getName() {
+            return name;
         }
 
-        public void setDevice_id(String device_id) {
-            this.device_id = device_id;
+        public void setName(String name) {
+            this.name = name;
         }
 
-        public String getType() {
-            return type;
+        public String getImage_type() {
+            return image_type;
         }
 
-        public void setType(String type) {
-            this.type = type;
+        public void setImage_type(String image_type) {
+            this.image_type = image_type;
         }
 
-        public Object getControl_config() {
-            return control_config;
-        }
-
-        public void setControl_config(Object control_config) {
-            this.control_config = control_config;
-        }
     }
 }

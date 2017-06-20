@@ -15,10 +15,17 @@ import com.ling.jibonetposa.entities.iot.HaierAccountEntity;
 import com.ling.jibonetposa.entities.iot.PutUpdateDevNameEntity;
 import com.ling.jibonetposa.entities.iot.ResultSaveAuthDataEntity;
 import com.ling.jibonetposa.entities.iot.SaveAuthDataEntity;
+import com.ling.jibonetposa.entities.iot.scenario.ScenarioCreatePOSTEntity;
+import com.ling.jibonetposa.entities.iot.scenario.ScenarioDeletePOSTEntity;
+import com.ling.jibonetposa.entities.iot.scenario.ScenarioEditNameImagePOSTEntity;
+import com.ling.jibonetposa.entities.iot.scenario.ScenarioEditPOSTEntity;
+import com.ling.jibonetposa.entities.iot.scenario.config.DeviceAction;
 import com.ling.jibonetposa.iretrofit.IRequestCallback;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.ButterKnife;
 
@@ -56,6 +63,12 @@ public class IOTTestActivity extends Activity implements View.OnClickListener {
         findViewById(R.id.btn_updatedevname).setOnClickListener(this);
         findViewById(R.id.btn_getscenarios).setOnClickListener(this);
         findViewById(R.id.btn_getiottips).setOnClickListener(this);
+        findViewById(R.id.btn_getdeviceconfigure).setOnClickListener(this);
+        findViewById(R.id.btn_scenarioEdit).setOnClickListener(this);
+        findViewById(R.id.btn_scenarioDelete).setOnClickListener(this);
+        findViewById(R.id.btn_scenarioCreate).setOnClickListener(this);
+        findViewById(R.id.btn_getscenarioDev).setOnClickListener(this);
+        findViewById(R.id.scenarioEditNameImage).setOnClickListener(this);
     }
 
     @Override
@@ -104,11 +117,150 @@ public class IOTTestActivity extends Activity implements View.OnClickListener {
             case R.id.btn_getbrandconfigure:
                 getBrandConfigure();
                 break;
+            case R.id.btn_getdeviceconfigure:
+                getDevicesConfigure();
+                break;
+            case R.id.btn_scenarioEdit:
+                scenarioEditModel();
+                break;
+            case R.id.btn_scenarioDelete:
+                scenarioDeleteModel();
+                break;
+            case R.id.btn_scenarioCreate:
+                scenarioCreateModel();
+                break;
+            case R.id.btn_getscenarioDev:
+                getscenarioDev();
+                break;
+            case R.id.scenarioEditNameImage:
+                scenarioEditNameImage();
+                break;
         }
+    }
+
+    private void getscenarioDev() {
+        LingManager.getInstance().getIOTAgent().scenarioGetDevicesModel("jibo", "438", new IRequestCallback() {
+            @Override
+            public void responsedCallback(BaseEntity entity, int errorCode, Throwable error) {
+                if (errorCode == BaseRequestModel.RETROFIT_SUCCESS) {
+                    Log.d(TAG, "entity  " + entity.toString());
+                } else {
+                    Log.d(TAG, "errorCode  " + errorCode);
+                    if (error != null) error.printStackTrace();
+                }
+            }
+        });
+    }
+
+    private void scenarioEditNameImage() {
+        ScenarioEditNameImagePOSTEntity scenarioEditNameImagePOSTEntity = new ScenarioEditNameImagePOSTEntity("jibo", "438", "修改名字", "0");
+        LingManager.getInstance().getIOTAgent().PostScenarioEditNameImageModel(scenarioEditNameImagePOSTEntity, new IRequestCallback() {
+            @Override
+            public void responsedCallback(BaseEntity entity, int errorCode, Throwable error) {
+                if (errorCode == BaseRequestModel.RETROFIT_SUCCESS) {
+                    Log.d(TAG, "entity  " + entity.toString());
+                } else {
+                    Log.d(TAG, "errorCode  " + errorCode);
+                    if (error != null) error.printStackTrace();
+                }
+            }
+        });
+    }
+
+    private void scenarioEditModel() {
+        String userId = "jibo";
+        String id = "438";
+        String name = "回家场景";
+        String image_type = "1";
+        List<DeviceAction> devices = new ArrayList<>();
+        Map<String, String> config = new HashMap<>();
+        config.put("onoff", "on");
+        DeviceAction deviceAction = new DeviceAction("13341", "0", config);// String device_id, String type, Map<String, String> config
+        devices.add(deviceAction);
+        //String userid, String id, String name, String image_type, List<DeviceAction> devices
+        ScenarioEditPOSTEntity scenarioSaveAllPOSTEntity = new ScenarioEditPOSTEntity(userId, id, name, image_type, devices);
+
+        LingManager.getInstance().getIOTAgent().scenarioEditModel(scenarioSaveAllPOSTEntity, new IRequestCallback() {
+            @Override
+            public void responsedCallback(BaseEntity entity, int errorCode, Throwable error) {
+                if (errorCode == BaseRequestModel.RETROFIT_SUCCESS) {
+                    Log.d(TAG, "entity  " + entity.toString());
+                } else {
+                    Log.d(TAG, "errorCode  " + errorCode);
+                    if (error != null) error.printStackTrace();
+                }
+            }
+        });
+    }
+
+    private void scenarioDeleteModel() {
+        String userId = "jibo";
+        String id = "438";
+        String name = "回家场景";
+        String image_type = "1";
+        List<DeviceAction> devices = new ArrayList<>();
+        Map<String, String> config = new HashMap<>();
+        config.put("onoff", "on");
+        DeviceAction deviceAction = new DeviceAction("13341", "0", config);// String device_id, String type, Map<String, String> config
+        devices.add(deviceAction);
+        //String userid, String id, String name, String image_type, List<DeviceAction> devices
+        ScenarioDeletePOSTEntity scenarioSaveAllPOSTEntity = new ScenarioDeletePOSTEntity(userId, id);
+
+        LingManager.getInstance().getIOTAgent().scenarioDeleteModel(scenarioSaveAllPOSTEntity, new IRequestCallback() {
+            @Override
+            public void responsedCallback(BaseEntity entity, int errorCode, Throwable error) {
+                if (errorCode == BaseRequestModel.RETROFIT_SUCCESS) {
+                    Log.d(TAG, "entity  " + entity.toString());
+                } else {
+                    Log.d(TAG, "errorCode  " + errorCode);
+                    if (error != null) error.printStackTrace();
+                }
+            }
+        });
+    }
+
+    private void scenarioCreateModel() {
+        String userId = "jibo";
+        String id = "438";
+        String name = "回家场景";
+        String image_type = "1";
+        List<DeviceAction> devices = new ArrayList<>();
+        Map<String, String> config = new HashMap<>();
+        config.put("onoff", "on");
+        DeviceAction deviceAction = new DeviceAction("13341", "0", config);// String device_id, String type, Map<String, String> config
+        devices.add(deviceAction);
+        //String userid, String id, String name, String image_type, List<DeviceAction> devices
+        ScenarioCreatePOSTEntity scenarioSaveAllPOSTEntity = new ScenarioCreatePOSTEntity(userId, name, image_type, devices);
+
+        LingManager.getInstance().getIOTAgent().scenarioCreateModel(scenarioSaveAllPOSTEntity, new IRequestCallback() {
+            @Override
+            public void responsedCallback(BaseEntity entity, int errorCode, Throwable error) {
+                if (errorCode == BaseRequestModel.RETROFIT_SUCCESS) {
+                    Log.d(TAG, "entity  " + entity.toString());
+                } else {
+                    Log.d(TAG, "errorCode  " + errorCode);
+                    if (error != null) error.printStackTrace();
+                }
+            }
+        });
     }
 
     private void getScenarios() {
         LingManager.getInstance().getIOTAgent().getScenariosFromServer("jibo", new IRequestCallback() {
+            @Override
+            public void responsedCallback(BaseEntity entity, int errorCode, Throwable error) {
+                if (errorCode == BaseRequestModel.RETROFIT_SUCCESS) {
+                    Log.d(TAG, "entity  " + entity.toString());
+                } else {
+                    Log.d(TAG, "errorCode  " + errorCode);
+                    if (error != null) error.printStackTrace();
+                }
+            }
+        });
+    }
+
+    private void getDevicesConfigure() {
+        LingManager.getInstance().getIOTAgent().getDevicesConfigure(new IRequestCallback() {
             @Override
             public void responsedCallback(BaseEntity entity, int errorCode, Throwable error) {
                 if (errorCode == BaseRequestModel.RETROFIT_SUCCESS) {
@@ -137,8 +289,9 @@ public class IOTTestActivity extends Activity implements View.OnClickListener {
             }
         });
     }
+
     private void getIOTTips() {
-        LingManager.getInstance().getIOTAgent().getIOTTips( new IRequestCallback() {
+        LingManager.getInstance().getIOTAgent().getIOTTips(new IRequestCallback() {
             @Override
             public void responsedCallback(BaseEntity entity, int errorCode, Throwable error) {
                 if (errorCode == BaseRequestModel.RETROFIT_SUCCESS) {

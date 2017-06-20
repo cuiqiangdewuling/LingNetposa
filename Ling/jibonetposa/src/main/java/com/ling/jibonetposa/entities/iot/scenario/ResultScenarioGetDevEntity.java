@@ -1,6 +1,9 @@
 package com.ling.jibonetposa.entities.iot.scenario;
 
 import com.ling.jibonetposa.base.BaseEntity;
+import com.ling.jibonetposa.entities.bean.DeviceBean;
+
+import java.util.List;
 
 /**
  * Created by mhz小志 on 2017/4/17.
@@ -14,10 +17,19 @@ public class ResultScenarioGetDevEntity extends BaseEntity {
 
     @Override
     public String toString() {
-        return "ResultGetScenariosEntity{" +
+        return "ResultScenarioGetDevEntity{" +
                 "errno=" + errno +
                 ", errmsg='" + errmsg + '\'' +
+                ", data=" + data +
                 '}';
+    }
+
+    public Data getData() {
+        return data;
+    }
+
+    public void setData(Data data) {
+        this.data = data;
     }
 
     public String getErrmsg() {
@@ -37,7 +49,22 @@ public class ResultScenarioGetDevEntity extends BaseEntity {
     }
 
     public static class Data {
+        private List<DeviceBean> devices;
 
+        @Override
+        public String toString() {
+            return "Data{" +
+                    "devices=" + devices +
+                    '}';
+        }
+
+        public List<DeviceBean> getDevices() {
+            return devices;
+        }
+
+        public void setDevices(List<DeviceBean> devices) {
+            this.devices = devices;
+        }
     }
 
 }

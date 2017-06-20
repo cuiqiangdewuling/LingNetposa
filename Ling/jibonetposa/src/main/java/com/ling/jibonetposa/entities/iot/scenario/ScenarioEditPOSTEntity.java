@@ -1,6 +1,9 @@
 package com.ling.jibonetposa.entities.iot.scenario;
 
 import com.ling.jibonetposa.base.BaseEntity;
+import com.ling.jibonetposa.entities.iot.scenario.config.DeviceAction;
+
+import java.util.List;
 
 /**
  * Created by mhz小志 on 2017/6/15.
@@ -10,10 +13,10 @@ public class ScenarioEditPOSTEntity extends BaseEntity {
 
     private Data data;
 
-    public ScenarioEditPOSTEntity(String userid, String id, String name, String image_type) {
+    public ScenarioEditPOSTEntity(String userid, String id, String name, String image_type, List<DeviceAction> devices) {
         this.data = new Data();
         this.data.setType("scenario-custom");
-        this.data.setAttributes(new Attributes(userid, id, name, image_type));
+        this.data.setAttributes(new Attributes(userid, id, name, image_type, devices));
     }
 
     @Override
@@ -66,12 +69,33 @@ public class ScenarioEditPOSTEntity extends BaseEntity {
         private String id;
         private String name;
         private String image_type;
+        private List<DeviceAction> devices;
 
-        public Attributes(String userid, String id, String name, String image_type) {
+        @Override
+        public String toString() {
+            return "Attributes{" +
+                    "userid='" + userid + '\'' +
+                    ", id='" + id + '\'' +
+                    ", name='" + name + '\'' +
+                    ", image_type='" + image_type + '\'' +
+                    ", devices=" + devices +
+                    '}';
+        }
+
+        public Attributes(String userid, String id, String name, String image_type, List<DeviceAction> devices) {
             this.userid = userid;
             this.id = id;
             this.name = name;
             this.image_type = image_type;
+            this.devices = devices;
+        }
+
+        public List<DeviceAction> getDevices() {
+            return devices;
+        }
+
+        public void setDevices(List<DeviceAction> devices) {
+            this.devices = devices;
         }
 
         public String getUserid() {
@@ -106,14 +130,5 @@ public class ScenarioEditPOSTEntity extends BaseEntity {
             this.image_type = image_type;
         }
 
-        @Override
-        public String toString() {
-            return "Attributes{" +
-                    "userid='" + userid + '\'' +
-                    ", id='" + id + '\'' +
-                    ", name='" + name + '\'' +
-                    ", image_type='" + image_type + '\'' +
-                    '}';
-        }
     }
 }

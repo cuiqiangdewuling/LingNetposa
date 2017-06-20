@@ -22,8 +22,9 @@ public class APIConstant {
     public static final String API_PATH_JIBO_BRANDS = "/jibo/devices/factory";
     public static final String API_PATH_JIBO_BRANDS_CONFIGURE = "/jibo/app/configure";
     public static final String API_PATH_JIBO_SCENARIOS = "/jibo/scenarios";
+    public static final String API_PATH_JIBO_DEVICES_CONFIGURE = "/jibo/scenario/custom/configure";
     public static final String API_PATH_JIBO_INFORMATION = "/jibo/information";
-
+    public static final String API_PATH_JIBO_SCENARIO_ALL = "/jibo/scenario/custom/all";
     public static final String API_PATH_JIBO_SCENARIOS_CUSTOM = "/jibo/scenario/custom";
     public static final String API_PATH_JIBO_SCENARIOS_CUSTOM_DEVICES = "/jibo/scenario/custom/devices";
 

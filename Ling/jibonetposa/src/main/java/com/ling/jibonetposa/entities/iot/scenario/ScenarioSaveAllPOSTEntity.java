@@ -1,19 +1,22 @@
 package com.ling.jibonetposa.entities.iot.scenario;
 
 import com.ling.jibonetposa.base.BaseEntity;
+import com.ling.jibonetposa.entities.iot.scenario.config.DeviceAction;
+
+import java.util.List;
 
 /**
  * Created by mhz小志 on 2017/6/15.
  */
 
-public class ScenarioDeviceDeletePOSTEntity extends BaseEntity {
+public class ScenarioSaveAllPOSTEntity extends BaseEntity {
 
     private Data data;
 
-    public ScenarioDeviceDeletePOSTEntity(String userid, String id, String device_id, String type) {
+    public ScenarioSaveAllPOSTEntity(String userid, String id, String name, String image_type, List<DeviceAction> devices) {
         this.data = new Data();
         this.data.setType("scenario-custom");
-        this.data.setAttributes(new Attributes(userid, id, device_id, type));
+        this.data.setAttributes(new Attributes(userid, id, name, image_type, devices));
     }
 
     @Override
@@ -63,14 +66,16 @@ public class ScenarioDeviceDeletePOSTEntity extends BaseEntity {
     public static class Attributes {
         private String userid;
         private String id;
-        private String device_id;
-        private String type;
+        private String name;
+        private String image_type;
+        private List<DeviceAction> devices;
 
-        public Attributes(String userid, String id, String device_id, String type) {
+        public Attributes(String userid, String id, String name, String image_type, List<DeviceAction> devices) {
             this.userid = userid;
             this.id = id;
-            this.device_id = device_id;
-            this.type = type;
+            this.name = name;
+            this.image_type = image_type;
+            this.devices = devices;
         }
 
         @Override
@@ -78,8 +83,9 @@ public class ScenarioDeviceDeletePOSTEntity extends BaseEntity {
             return "Attributes{" +
                     "userid='" + userid + '\'' +
                     ", id='" + id + '\'' +
-                    ", device_id='" + device_id + '\'' +
-                    ", type='" + type + '\'' +
+                    ", name='" + name + '\'' +
+                    ", image_type='" + image_type + '\'' +
+                    ", devices=" + devices +
                     '}';
         }
 
@@ -99,20 +105,28 @@ public class ScenarioDeviceDeletePOSTEntity extends BaseEntity {
             this.id = id;
         }
 
-        public String getDevice_id() {
-            return device_id;
+        public String getName() {
+            return name;
         }
 
-        public void setDevice_id(String device_id) {
-            this.device_id = device_id;
+        public void setName(String name) {
+            this.name = name;
         }
 
-        public String getType() {
-            return type;
+        public String getImage_type() {
+            return image_type;
         }
 
-        public void setType(String type) {
-            this.type = type;
+        public void setImage_type(String image_type) {
+            this.image_type = image_type;
+        }
+
+        public List<DeviceAction> getDevices() {
+            return devices;
+        }
+
+        public void setDevices(List<DeviceAction> devices) {
+            this.devices = devices;
         }
     }
 }

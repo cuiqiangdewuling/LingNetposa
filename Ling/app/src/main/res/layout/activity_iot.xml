@@ -41,6 +41,36 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="获取品牌参数"/>
+            <Button
+                android:id="@+id/btn_getdeviceconfigure"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="获取设备控制参数"/>
+            <Button
+                android:id="@+id/btn_scenarioEdit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="修改场景信息"/>
+            <Button
+                android:id="@+id/btn_scenarioDelete"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="删除场景信息"/>
+            <Button
+                android:id="@+id/btn_scenarioCreate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="创建场景信息"/>
+            <Button
+                android:id="@+id/btn_getscenarioDev"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="获取场景下设备"/>
+            <Button
+                android:id="@+id/scenarioEditNameImage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="修改场景名称"/>
 
             <Button
                 android:id="@+id/btn_getscenarios"

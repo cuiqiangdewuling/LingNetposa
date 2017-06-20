@@ -1,7 +1,10 @@
 package com.ling.jibonetposa.modules;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.ling.jibonetposa.LingManager;
 import com.ling.jibonetposa.base.BaseEntity;
+import com.ling.jibonetposa.base.BaseRequestModel;
 import com.ling.jibonetposa.entities.bean.BrandBean;
 import com.ling.jibonetposa.entities.bean.DeviceBean;
 import com.ling.jibonetposa.entities.iot.BrandStatusEntity;
@@ -12,6 +15,11 @@ import com.ling.jibonetposa.entities.iot.ResultGetDevicesEntity;
 import com.ling.jibonetposa.entities.iot.ResultGetScenariosEntity;
 import com.ling.jibonetposa.entities.iot.SaveAuthDataEntity;
 import com.ling.jibonetposa.entities.iot.ScenariosListEntity;
+import com.ling.jibonetposa.entities.iot.scenario.ResultDevicesConfigureEntity;
+import com.ling.jibonetposa.entities.iot.scenario.ScenarioCreatePOSTEntity;
+import com.ling.jibonetposa.entities.iot.scenario.ScenarioDeletePOSTEntity;
+import com.ling.jibonetposa.entities.iot.scenario.ScenarioEditNameImagePOSTEntity;
+import com.ling.jibonetposa.entities.iot.scenario.ScenarioEditPOSTEntity;
 import com.ling.jibonetposa.iretrofit.IRequestCallback;
 import com.ling.jibonetposa.models.GetTipsModel;
 import com.ling.jibonetposa.models.iot.brand.broadlink.GetBroadLinkTokenModel;
@@ -26,13 +34,20 @@ import com.ling.jibonetposa.models.iot.oauth.CancelAuthorizedModel;
 import com.ling.jibonetposa.models.iot.oauth.GetBrandOAuthConfigureModel;
 import com.ling.jibonetposa.models.iot.oauth.GetTokenFromServerModel;
 import com.ling.jibonetposa.models.iot.oauth.SaveTokenToServerModel;
+import com.ling.jibonetposa.models.iot.scenarios.GetDevicesConfigureModel;
+import com.ling.jibonetposa.models.iot.scenarios.GetScenariosDevicesModel;
 import com.ling.jibonetposa.models.iot.scenarios.GetScenariosFromServerModel;
+import com.ling.jibonetposa.models.iot.scenarios.PostScenarioCreateModel;
+import com.ling.jibonetposa.models.iot.scenarios.PostScenarioDeleteModel;
+import com.ling.jibonetposa.models.iot.scenarios.PostScenarioEditModel;
+import com.ling.jibonetposa.models.iot.scenarios.PostScenarioEditNameImageModel;
 import com.ling.jibonetposa.utils.NetWorkUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.IllegalFormatException;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -52,6 +67,8 @@ import static com.ling.jibonetposa.constants.IOTDevConstant.REGEX_NAME;
  */
 
 public class IOTAgent {
+
+    // ============= 设备相关 ====================
 
     /**
      * 获取所有设备
@@ -73,10 +90,12 @@ public class IOTAgent {
                     if (brandEntity != null) {
                         DevicesEntity devicesEntity = getDevicesEntity(finalUserid, brandEntity);
                         checkDevicesName(devicesEntity);
-                        requestCallback.responsedCallback(devicesEntity, errorCode, error);
+                        if (requestCallback != null)
+                            requestCallback.responsedCallback(devicesEntity, errorCode, error);
                     }
                 } else {
-                    requestCallback.responsedCallback(entity, errorCode, error);
+                    if (requestCallback != null)
+                        requestCallback.responsedCallback(entity, errorCode, error);
                 }
 
             }
@@ -91,6 +110,17 @@ public class IOTAgent {
         devicesEntity.setUserid(userid);
         devicesEntity.setBrand_list(getBrandEntity.getData());
         return devicesEntity;
+    }
+
+    /**
+     * 修改设备名称列表
+     */
+    public void updateDevName(PutUpdateDevNameEntity putUpdateNameEntity, IRequestCallback requestCallback) {
+        if (LingManager.getInstance().isUseTestUserid()) {
+            putUpdateNameEntity.getData().getAttributes().setUserid(LingManager.getInstance().getTestUserId());
+        }
+        LingManager.getInstance().getLingLog().LOGD("finalUserid: " + putUpdateNameEntity.getData().getAttributes().getUserid());
+        new UpdateDevNameModel(requestCallback).execute(putUpdateNameEntity);
     }
 
     /**
@@ -112,12 +142,15 @@ public class IOTAgent {
                     if (brandEntity != null) {
                         BrandStatusEntity brandStatusEntity = getBrandStatusEntity(brandEntity);
                         brandStatusEntity.setUserid(finalUserid);
-                        requestCallback.responsedCallback(brandStatusEntity, errorCode, error);
+                        if (requestCallback != null)
+                            requestCallback.responsedCallback(brandStatusEntity, errorCode, error);
                     } else {
-                        requestCallback.responsedCallback(null, errorCode, error);
+                        if (requestCallback != null)
+                            requestCallback.responsedCallback(null, errorCode, error);
                     }
                 } else {
-                    requestCallback.responsedCallback(null, errorCode, error);
+                    if (requestCallback != null)
+                        requestCallback.responsedCallback(null, errorCode, error);
                 }
             }
         }).getBrands(userid);
@@ -136,6 +169,15 @@ public class IOTAgent {
         return doSoreBrandList(brandStatusEntity);
     }
 
+
+    /**
+     * 获取到IOT的TipList
+     */
+    public void getIOTTips(IRequestCallback requestCallback) {
+        new GetTipsModel(requestCallback).getIOTTip(1);
+    }
+
+    // ============= 授权相关 ====================
 
     /**
      * 取消用户授权
@@ -196,63 +238,6 @@ public class IOTAgent {
     }
 
     /**
-     * 获取场景列表
-     */
-    public void getScenariosFromServer(String userid, final IRequestCallback requestCallback) {
-        if (LingManager.getInstance().isUseTestUserid()) {
-            userid = LingManager.getInstance().getTestUserId();
-        }
-        LingManager.getInstance().getLingLog().LOGD("finalUserid: " + userid);
-        final String finalUserid = userid;
-        new GetScenariosFromServerModel(new IRequestCallback() {
-            @Override
-            public void responsedCallback(BaseEntity entity, int errorCode, Throwable error) {
-                if (errorCode == RETROFIT_SUCCESS) {
-                    ResultGetScenariosEntity brandEntity = (ResultGetScenariosEntity) entity;
-                    if (brandEntity != null) {
-                        ScenariosListEntity scenariosListEntity = getScenariosListEntity(finalUserid, brandEntity);
-                        requestCallback.responsedCallback(scenariosListEntity, errorCode, error);
-                    } else {
-                        requestCallback.responsedCallback(null, errorCode, error);
-                    }
-                } else {
-                    requestCallback.responsedCallback(null, errorCode, error);
-                }
-            }
-        }).execute(userid);
-    }
-
-    /**
-     * 根据网络请求回来的数据，整理成我们需要的数据
-     */
-    public ScenariosListEntity getScenariosListEntity(String userid, ResultGetScenariosEntity scenariosEntity) {
-        ScenariosListEntity devicesEntity = new ScenariosListEntity();
-        devicesEntity.setUserId(userid);
-        if (scenariosEntity != null && scenariosEntity.getData() != null && scenariosEntity.getData().size() > 0 && scenariosEntity.getData().get(0).getVal() != null) {
-            devicesEntity.setScenarioList(scenariosEntity.getData().get(0).getVal());
-        }
-        return devicesEntity;
-    }
-
-    /**
-     * 修改设备名称列表
-     */
-    public void updateDevName(PutUpdateDevNameEntity putUpdateNameEntity, IRequestCallback requestCallback) {
-        if (LingManager.getInstance().isUseTestUserid()) {
-            putUpdateNameEntity.getData().getAttributes().setUserid(LingManager.getInstance().getTestUserId());
-        }
-        LingManager.getInstance().getLingLog().LOGD("finalUserid: " + putUpdateNameEntity.getData().getAttributes().getUserid());
-        new UpdateDevNameModel(requestCallback).execute(putUpdateNameEntity);
-    }
-
-    /**
-     * 获取到IOT的TipList
-     */
-    public void getIOTTips(IRequestCallback requestCallback) {
-        new GetTipsModel(requestCallback).getIOTTip(1);
-    }
-
-    /**
      * 对品牌列表排序，将已绑定的品牌放在集合最前面
      */
     public BrandStatusEntity doSoreBrandList(BrandStatusEntity brandStatusEntity) {
@@ -304,6 +289,8 @@ public class IOTAgent {
     public void getBrandConfigure(IRequestCallback requestCallback) {
         new GetBrandOAuthConfigureModel(requestCallback).getBrandConfigure();
     }
+
+    // ============= 名字查重相关 ======
 
     /**
      * 检查设备是否重名，并返回重名的设备列表
@@ -416,6 +403,134 @@ public class IOTAgent {
                 }
             }
         return false;
+    }
+
+    // ============= 场景相关 ======
+
+
+    /**
+     * 获取场景列表
+     */
+    public void getScenariosFromServer(String userid, final IRequestCallback requestCallback) {
+        if (LingManager.getInstance().isUseTestUserid()) {
+            userid = LingManager.getInstance().getTestUserId();
+        }
+        LingManager.getInstance().getLingLog().LOGD("finalUserid: " + userid);
+        final String finalUserid = userid;
+        new GetScenariosFromServerModel(new IRequestCallback() {
+            @Override
+            public void responsedCallback(BaseEntity entity, int errorCode, Throwable error) {
+                if (errorCode == RETROFIT_SUCCESS) {
+                    ResultGetScenariosEntity brandEntity = (ResultGetScenariosEntity) entity;
+                    if (brandEntity != null) {
+                        ScenariosListEntity scenariosListEntity = getScenariosListEntity(finalUserid, brandEntity);
+                        if (requestCallback != null)
+                            requestCallback.responsedCallback(scenariosListEntity, errorCode, error);
+                    } else {
+                        if (requestCallback != null)
+                            requestCallback.responsedCallback(null, errorCode, error);
+                    }
+                } else {
+                    if (requestCallback != null)
+                        requestCallback.responsedCallback(null, errorCode, error);
+                }
+            }
+        }).execute(userid);
+    }
+
+    /**
+     * 根据网络请求回来的数据，整理成我们需要的数据
+     */
+    public ScenariosListEntity getScenariosListEntity(String userid, ResultGetScenariosEntity scenariosEntity) {
+        ScenariosListEntity devicesEntity = new ScenariosListEntity();
+        devicesEntity.setUserId(userid);
+        if (scenariosEntity != null && scenariosEntity.getData() != null && scenariosEntity.getData().size() > 0 && scenariosEntity.getData().get(0).getVal() != null) {
+            devicesEntity.setScenarioList(scenariosEntity.getData().get(0).getVal());
+        }
+        return devicesEntity;
+    }
+
+    /**
+     * 自定义场景
+     */
+    public void scenarioGetDevicesModel(String userid, String id, final IRequestCallback requestCallback) {
+        if (LingManager.getInstance().isUseTestUserid()) {
+            userid = LingManager.getInstance().getTestUserId();
+        }
+        LingManager.getInstance().getLingLog().LOGD("finalUserid: " + userid);
+        new GetScenariosDevicesModel(requestCallback).execute(userid, id);
+    }
+
+    /**
+     * 获取场景下 品牌设备控制参数属性
+     */
+    public void getDevicesConfigure(final IRequestCallback requestCallback) {
+        new GetDevicesConfigureModel(new IRequestCallback() {
+            @Override
+            public void responsedCallback(BaseEntity entity, int errorCode, Throwable error) {
+                if (errorCode == BaseRequestModel.RETROFIT_SUCCESS) {
+                    ResultDevicesConfigureEntity configureEntity = (ResultDevicesConfigureEntity) entity;
+                    try {
+                        HashMap<String, String> dictionariesMap = new Gson().fromJson(String.valueOf(configureEntity.getData().getDictionaries()), new TypeToken<HashMap<String, String>>() {
+                        }.getType());
+                        configureEntity.getData().setDictionariesMap(dictionariesMap);
+                        if (requestCallback != null)
+                            requestCallback.responsedCallback(configureEntity, errorCode, error);
+                    } catch (IllegalFormatException e) {
+                        if (requestCallback != null)
+                            requestCallback.responsedCallback(null, errorCode, error);
+                    }
+                } else {
+                    if (requestCallback != null)
+                        requestCallback.responsedCallback(null, errorCode, error);
+                }
+            }
+        }).execute();
+
+    }
+
+    /**
+     * 自定义场景
+     */
+    public void scenarioCreateModel(ScenarioCreatePOSTEntity tokenEntity, final IRequestCallback requestCallback) {
+        if (LingManager.getInstance().isUseTestUserid()) {
+            tokenEntity.getData().getAttributes().setUserid(LingManager.getInstance().getTestUserId());
+        }
+        LingManager.getInstance().getLingLog().LOGD("finalUserid: " + tokenEntity.getData().getAttributes().getUserid());
+        new PostScenarioCreateModel(requestCallback).execute(tokenEntity);
+    }
+
+    /**
+     * 删除场景
+     */
+    public void scenarioDeleteModel(ScenarioDeletePOSTEntity tokenEntity, final IRequestCallback requestCallback) {
+        if (LingManager.getInstance().isUseTestUserid()) {
+            tokenEntity.getData().getAttributes().setUserid(LingManager.getInstance().getTestUserId());
+        }
+        LingManager.getInstance().getLingLog().LOGD("finalUserid: " + tokenEntity.getData().getAttributes().getUserid());
+        new PostScenarioDeleteModel(requestCallback).execute(tokenEntity);
+    }
+
+    /**
+     * 修改场景
+     */
+    public void scenarioEditModel(ScenarioEditPOSTEntity tokenEntity, final IRequestCallback requestCallback) {
+        if (LingManager.getInstance().isUseTestUserid()) {
+            tokenEntity.getData().getAttributes().setUserid(LingManager.getInstance().getTestUserId());
+        }
+        LingManager.getInstance().getLingLog().LOGD("finalUserid: " + tokenEntity.getData().getAttributes().getUserid());
+        new PostScenarioEditModel(requestCallback).execute(tokenEntity);
+    }
+
+    /**
+     * 修改场景名称和图标
+     */
+    public void PostScenarioEditNameImageModel(ScenarioEditNameImagePOSTEntity tokenEntity, final IRequestCallback requestCallback) {
+        if (LingManager.getInstance().isUseTestUserid()) {
+            tokenEntity.getData().getAttributes().setUserid(LingManager.getInstance().getTestUserId());
+        }
+        LingManager.getInstance().getLingLog().LOGD("finalUserid: " + tokenEntity.getData().getAttributes().getUserid());
+        new PostScenarioEditNameImageModel(requestCallback).execute(tokenEntity);
     }
 
     /**
