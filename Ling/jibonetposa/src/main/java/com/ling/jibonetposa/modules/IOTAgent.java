@@ -311,7 +311,6 @@ public class IOTAgent {
                     deviceBean.setBrand_name(brandBean.getName());
                     deviceBean.setBrand_status(brandBean.getCode());
                     if (brandBean.getCode() == 0) {  //授权状态正常时，才进行名字查重
-
                         // 拿到每一个设备，单独进行判断
                         if (match(REGEX_NAME, deviceBean.getDevice_name())) {
                             // 设备名符合规则 才进行查重
@@ -319,9 +318,11 @@ public class IOTAgent {
                             devDataForQueryList.add(deviceBean);
                         } else {
                             // 设备名不符合规则
-                            deviceBean.setDevice_code(-1);
+                            deviceBean.setDevice_code(1);
                             nameNotFitRulesDevList.add(deviceBean);
                         }
+                    }else {
+                        deviceBean.setDevice_code(-1);
                     }
                 }
             }

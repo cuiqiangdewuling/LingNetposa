@@ -1,12 +1,17 @@
 package com.ling.jibonetposa.entities.bean;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.ling.jibonetposa.entities.iot.scenario.config.DeviceConfigBean;
+
+import java.io.Serializable;
 
 /**
  * Created by mhz小志 on 2017/4/22.
  */
 
-public class DeviceBean {
+public class DeviceBean   implements Parcelable, Serializable {
 
     private String device_id;
     private String device_ident;
@@ -17,10 +22,38 @@ public class DeviceBean {
     private String brand_name;
     private String device_flag;
     private int image_type;
-    private int device_code;  // 0: 正常显示    1: 设备名称不符合规则    2：改名失败   1:不支持改名
+    private int device_code;  // 0: 正常显示    1: 设备名称不符合规则    2：改名失败   3:不支持改名
     private int brand_status;
     private int id;
     private DeviceConfigBean control_config;
+
+    protected DeviceBean(Parcel in) {
+        device_id = in.readString();
+        device_ident = in.readString();
+        device_name = in.readString();
+        device_on = in.readString();
+        device_type = in.readString();
+        brand_id = in.readString();
+        brand_name = in.readString();
+        device_flag = in.readString();
+        image_type = in.readInt();
+        device_code = in.readInt();
+        brand_status = in.readInt();
+        id = in.readInt();
+        control_config = in.readParcelable(DeviceConfigBean.class.getClassLoader());
+    }
+
+    public static final Creator<DeviceBean> CREATOR = new Creator<DeviceBean>() {
+        @Override
+        public DeviceBean createFromParcel(Parcel in) {
+            return new DeviceBean(in);
+        }
+
+        @Override
+        public DeviceBean[] newArray(int size) {
+            return new DeviceBean[size];
+        }
+    };
 
     @Override
     public String toString() {
@@ -167,5 +200,27 @@ public class DeviceBean {
 
     public void setDevice_type(String device_type) {
         this.device_type = device_type;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(device_id);
+        dest.writeString(device_ident);
+        dest.writeString(device_name);
+        dest.writeString(device_on);
+        dest.writeString(device_type);
+        dest.writeString(brand_id);
+        dest.writeString(brand_name);
+        dest.writeString(device_flag);
+        dest.writeInt(image_type);
+        dest.writeInt(device_code);
+        dest.writeInt(brand_status);
+        dest.writeInt(id);
+        dest.writeParcelable(control_config, flags);
     }
 }

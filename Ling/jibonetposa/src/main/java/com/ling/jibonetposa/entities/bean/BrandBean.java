@@ -1,18 +1,41 @@
 package com.ling.jibonetposa.entities.bean;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by mhz小志 on 2017/4/22.
  */
 
-public class BrandBean {
+public class BrandBean  implements Parcelable, Serializable {
 
     private String key;
     private String name;
     private int code;
     private List<DeviceBean> val;
     private Permissions permissions;
+
+    protected BrandBean(Parcel in) {
+        key = in.readString();
+        name = in.readString();
+        code = in.readInt();
+        val = in.createTypedArrayList(DeviceBean.CREATOR);
+    }
+
+    public static final Creator<BrandBean> CREATOR = new Creator<BrandBean>() {
+        @Override
+        public BrandBean createFromParcel(Parcel in) {
+            return new BrandBean(in);
+        }
+
+        @Override
+        public BrandBean[] newArray(int size) {
+            return new BrandBean[size];
+        }
+    };
 
     @Override
     public String toString() {
@@ -63,6 +86,19 @@ public class BrandBean {
 
     public void setVal(List<DeviceBean> val) {
         this.val = val;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(key);
+        dest.writeString(name);
+        dest.writeInt(code);
+        dest.writeTypedList(val);
     }
 
     public static class Permissions {

@@ -15,9 +15,10 @@ import java.util.List;
 public class ScenariosListEntity extends BaseEntity implements Parcelable {
 
     private String userId;
+    private int type;
     private List<DeviceBean> scenarioList;
     private DeviceBean currentScenario; // 用户当前选择的场景
-    private int type;
+    private List<DeviceBean> scenarioDeviceList;// 当前场景下的设备列表
 
     public ScenariosListEntity() {
     }
@@ -26,6 +27,28 @@ public class ScenariosListEntity extends BaseEntity implements Parcelable {
         this.userId = userId;
         this.scenarioList = val;
         this.currentScenario = currentScenario;
+    }
+
+    protected ScenariosListEntity(Parcel in) {
+        userId = in.readString();
+        type = in.readInt();
+        scenarioList = in.createTypedArrayList(DeviceBean.CREATOR);
+        currentScenario = in.readParcelable(DeviceBean.class.getClassLoader());
+        scenarioDeviceList = in.createTypedArrayList(DeviceBean.CREATOR);
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(userId);
+        dest.writeInt(type);
+        dest.writeTypedList(scenarioList);
+        dest.writeParcelable(currentScenario, flags);
+        dest.writeTypedList(scenarioDeviceList);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
     public static final Creator<ScenariosListEntity> CREATOR = new Creator<ScenariosListEntity>() {
@@ -44,11 +67,21 @@ public class ScenariosListEntity extends BaseEntity implements Parcelable {
     public String toString() {
         return "ScenariosListEntity{" +
                 "userId='" + userId + '\'' +
+                ", type=" + type +
                 ", scenarioList=" + scenarioList +
                 ", currentScenario=" + currentScenario +
-                ", type=" + type +
+                ", scenarioDeviceList=" + scenarioDeviceList +
                 '}';
     }
+
+    public List<DeviceBean> getScenarioDeviceList() {
+        return scenarioDeviceList;
+    }
+
+    public void setScenarioDeviceList(List<DeviceBean> scenarioDeviceList) {
+        this.scenarioDeviceList = scenarioDeviceList;
+    }
+
 
     public int getType() {
         return type;
@@ -56,10 +89,6 @@ public class ScenariosListEntity extends BaseEntity implements Parcelable {
 
     public void setType(int type) {
         this.type = type;
-    }
-
-    protected ScenariosListEntity(Parcel in) {
-        userId = in.readString();
     }
 
     public String getUserId() {
@@ -86,14 +115,4 @@ public class ScenariosListEntity extends BaseEntity implements Parcelable {
         this.currentScenario = currentScenario;
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(userId);
-        dest.writeInt(type);
-    }
 }

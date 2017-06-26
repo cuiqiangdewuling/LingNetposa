@@ -25,9 +25,11 @@ public class DevicesEntity extends BaseEntity implements Parcelable {
 
     protected DevicesEntity(Parcel in) {
         userid = in.readString();
+        brand_list = in.createTypedArrayList(BrandBean.CREATOR);
+        repeatDev = in.createTypedArrayList(DeviceBean.CREATOR);
+        nameNotFitRulesDevList = in.createTypedArrayList(DeviceBean.CREATOR);
         currentDev = in.readParcelable(DeviceBean.class.getClassLoader());
     }
-
 
     public static final Creator<DevicesEntity> CREATOR = new Creator<DevicesEntity>() {
         @Override
@@ -99,5 +101,9 @@ public class DevicesEntity extends BaseEntity implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(userid);
+        dest.writeTypedList(brand_list);
+        dest.writeTypedList(repeatDev);
+        dest.writeTypedList(nameNotFitRulesDevList);
+        dest.writeParcelable(currentDev, flags);
     }
 }

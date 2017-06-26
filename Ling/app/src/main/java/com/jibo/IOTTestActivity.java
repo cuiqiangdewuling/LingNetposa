@@ -153,7 +153,7 @@ public class IOTTestActivity extends Activity implements View.OnClickListener {
     }
 
     private void scenarioEditNameImage() {
-        ScenarioEditNameImagePOSTEntity scenarioEditNameImagePOSTEntity = new ScenarioEditNameImagePOSTEntity("jibo", "438", "修改名字", "0");
+        ScenarioEditNameImagePOSTEntity scenarioEditNameImagePOSTEntity = new ScenarioEditNameImagePOSTEntity("jibo", "601", "修改名字", "0");
         LingManager.getInstance().getIOTAgent().PostScenarioEditNameImageModel(scenarioEditNameImagePOSTEntity, new IRequestCallback() {
             @Override
             public void responsedCallback(BaseEntity entity, int errorCode, Throwable error) {
@@ -169,7 +169,7 @@ public class IOTTestActivity extends Activity implements View.OnClickListener {
 
     private void scenarioEditModel() {
         String userId = "jibo";
-        String id = "438";
+        String id = "601";
         String name = "回家场景";
         String image_type = "1";
         List<DeviceAction> devices = new ArrayList<>();
@@ -195,17 +195,8 @@ public class IOTTestActivity extends Activity implements View.OnClickListener {
 
     private void scenarioDeleteModel() {
         String userId = "jibo";
-        String id = "438";
-        String name = "回家场景";
-        String image_type = "1";
-        List<DeviceAction> devices = new ArrayList<>();
-        Map<String, String> config = new HashMap<>();
-        config.put("onoff", "on");
-        DeviceAction deviceAction = new DeviceAction("13341", "0", config);// String device_id, String type, Map<String, String> config
-        devices.add(deviceAction);
-        //String userid, String id, String name, String image_type, List<DeviceAction> devices
+        String id = "1212";
         ScenarioDeletePOSTEntity scenarioSaveAllPOSTEntity = new ScenarioDeletePOSTEntity(userId, id);
-
         LingManager.getInstance().getIOTAgent().scenarioDeleteModel(scenarioSaveAllPOSTEntity, new IRequestCallback() {
             @Override
             public void responsedCallback(BaseEntity entity, int errorCode, Throwable error) {
@@ -221,7 +212,7 @@ public class IOTTestActivity extends Activity implements View.OnClickListener {
 
     private void scenarioCreateModel() {
         String userId = "jibo";
-        String id = "438";
+        String id = "601";
         String name = "回家场景";
         String image_type = "1";
         List<DeviceAction> devices = new ArrayList<>();
