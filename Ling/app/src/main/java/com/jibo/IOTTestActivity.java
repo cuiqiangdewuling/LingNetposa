@@ -11,8 +11,8 @@ import com.ling.jibonetposa.base.BaseRequestModel;
 import com.ling.jibonetposa.constants.IOTDevConstant;
 import com.ling.jibonetposa.entities.iot.BrandStatusEntity;
 import com.ling.jibonetposa.entities.iot.DevicesEntity;
-import com.ling.jibonetposa.entities.iot.HaierAccountEntity;
 import com.ling.jibonetposa.entities.iot.PutUpdateDevNameEntity;
+import com.ling.jibonetposa.entities.iot.ResultHaierLogin;
 import com.ling.jibonetposa.entities.iot.ResultSaveAuthDataEntity;
 import com.ling.jibonetposa.entities.iot.SaveAuthDataEntity;
 import com.ling.jibonetposa.entities.iot.scenario.ScenarioCreatePOSTEntity;
@@ -29,7 +29,6 @@ import java.util.Map;
 
 import butterknife.ButterKnife;
 
-import static com.ling.jibonetposa.base.BaseRequestModel.ERROR_PASS_MISTAKE;
 import static com.ling.jibonetposa.base.BaseRequestModel.RETROFIT_SUCCESS;
 
 /**
@@ -69,6 +68,7 @@ public class IOTTestActivity extends Activity implements View.OnClickListener {
         findViewById(R.id.btn_scenarioCreate).setOnClickListener(this);
         findViewById(R.id.btn_getscenarioDev).setOnClickListener(this);
         findViewById(R.id.scenarioEditNameImage).setOnClickListener(this);
+        findViewById(R.id.btn_getbrandsupport).setOnClickListener(this);
     }
 
     @Override
@@ -109,7 +109,6 @@ public class IOTTestActivity extends Activity implements View.OnClickListener {
                 doHELogin();
                 break;
             case R.id.btn_he_updatename:
-                doHEUpdateDate();
                 break;
             case R.id.btn_bl_accesskey:
                 queryKey();
@@ -135,11 +134,28 @@ public class IOTTestActivity extends Activity implements View.OnClickListener {
             case R.id.scenarioEditNameImage:
                 scenarioEditNameImage();
                 break;
+            case R.id.btn_getbrandsupport:
+                getDevicesSupport();
+                break;
         }
     }
 
+    private void getDevicesSupport() {
+        LingManager.getInstance().getIOTAgent().getDevicesSupport("1", new IRequestCallback() {
+            @Override
+            public void responsedCallback(BaseEntity entity, int errorCode, Throwable error) {
+                if (errorCode == BaseRequestModel.RETROFIT_SUCCESS) {
+                    Log.d(TAG, "entity  " + entity.toString());
+                } else {
+                    Log.d(TAG, "errorCode  " + errorCode);
+                    if (error != null) error.printStackTrace();
+                }
+            }
+        });
+    }
+
     private void getscenarioDev() {
-        LingManager.getInstance().getIOTAgent().scenarioGetDevicesModel("jibo", "438", new IRequestCallback() {
+        LingManager.getInstance().getIOTAgent().scenarioGetDevicesModel("jibo", "601", new IRequestCallback() {
             @Override
             public void responsedCallback(BaseEntity entity, int errorCode, Throwable error) {
                 if (errorCode == BaseRequestModel.RETROFIT_SUCCESS) {
@@ -344,36 +360,18 @@ public class IOTTestActivity extends Activity implements View.OnClickListener {
 
 
     private void doHELogin() {
-        String name = "18600941987";
-        String pass = "yt19870301";
+        String name = "13021090723";
+        String pass = "simwq123";
         LingManager.getInstance().getIOTAgent().doHELogin(name, pass, new IRequestCallback() {
             @Override
             public void responsedCallback(BaseEntity entity, int errorCode, Throwable error) {
                 if (errorCode == RETROFIT_SUCCESS) {
-                    HaierAccountEntity accountEntity = (HaierAccountEntity) entity;
+                    ResultHaierLogin accountEntity = (ResultHaierLogin) entity;
                     if (accountEntity != null) {
                         LingManager.getInstance().getLingLog().LOGD(TAG, "doHELogin: accountEntity" + accountEntity.toString());
                     }
-                } else if (errorCode == ERROR_PASS_MISTAKE) {
-
                 } else {
                     LingManager.getInstance().getLingLog().LOGD(TAG, "doHELogin: error" + error.getMessage());
-                }
-            }
-        });
-    }
-
-    private void doHEUpdateDate() {
-        String identId = "88C25542458201000006";
-        String name = "新风系统";
-
-        LingManager.getInstance().getIOTAgent().updateHaierDevName(identId, name, new IRequestCallback() {
-            @Override
-            public void responsedCallback(BaseEntity entity, int errorCode, Throwable error) {
-                if (errorCode == RETROFIT_SUCCESS) {
-                    LingManager.getInstance().getLingLog().LOGD(TAG, "execute: SUCCESS");
-                } else {
-                    LingManager.getInstance().getLingLog().LOGD(TAG, "execute: error" + error.getMessage());
                 }
             }
         });

@@ -2,8 +2,8 @@ package com.ling.jibonetposa.entities.iot.scenario;
 
 import com.ling.jibonetposa.base.BaseEntity;
 
+import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by mhz小志 on 2017/4/17.
@@ -50,33 +50,23 @@ public class ResultDevicesConfigureEntity extends BaseEntity {
 
     public static class Data {
 
-        private Object dictionaries;
-        private Map<String, String> dictionariesMap;
+        private HashMap<String, String> dictionaries;
         private List<Brand> brands;
 
         @Override
         public String toString() {
             return "Data{" +
                     "dictionaries=" + dictionaries +
-                    ", dictionariesMap=" + dictionariesMap +
                     ", brands=" + brands +
                     '}';
         }
 
-        public Object getDictionaries() {
+        public HashMap getDictionaries() {
             return dictionaries;
         }
 
-        public void setDictionaries(Object dictionaries) {
+        public void setDictionaries(HashMap dictionaries) {
             this.dictionaries = dictionaries;
-        }
-
-        public Map<String, String> getDictionariesMap() {
-            return dictionariesMap;
-        }
-
-        public void setDictionariesMap(Map<String, String> dictionariesMap) {
-            this.dictionariesMap = dictionariesMap;
         }
 
         public List<Brand> getBrands() {
@@ -120,13 +110,65 @@ public class ResultDevicesConfigureEntity extends BaseEntity {
     public static class Devices {
         private Device light;
         private Device curtain;
+        private Device socket;
+        private Device backgroundmusic;
+        private Device QBL;
+        private Device washingmachine;
+        private Device exhausthood;
+        private Device waterheater;
+        private Device xinfeng;
+        private Device underfloorheating;
+        private Device TV;
+        private Device winecabinet;
+        private Device aircondition;
+        private Device infrared;
+        private Device humidifier;
+        private Device aircleaner;
 
         @Override
         public String toString() {
             return "Devices{" +
-                    "light=" + light +
-                    ", curtain=" + curtain +
+                    "\n light=" + light +
+                    ",\n curtain=" + curtain +
+                    ",\n socket=" + socket +
+                    ",\n backgroundmusic=" + backgroundmusic +
+                    ",\n QBL=" + QBL +
+                    ",\n washingmachine=" + washingmachine +
+                    ",\n exhausthood=" + exhausthood +
+                    ",\n waterheater=" + waterheater +
+                    ",\n xinfeng=" + xinfeng +
+                    ",\n underfloorheating=" + underfloorheating +
+                    ",\n TV=" + TV +
+                    ",\n winecabinet=" + winecabinet +
+                    ",\n aircondition=" + aircondition +
+                    ",\n infrared=" + infrared +
+                    ",\n humidifier=" + humidifier +
+                    ",\n aircleaner=" + aircleaner +
                     '}';
+        }
+
+        public Device getInfrared() {
+            return infrared;
+        }
+
+        public void setInfrared(Device infrared) {
+            this.infrared = infrared;
+        }
+
+        public Device getHumidifier() {
+            return humidifier;
+        }
+
+        public void setHumidifier(Device humidifier) {
+            this.humidifier = humidifier;
+        }
+
+        public Device getAircleaner() {
+            return aircleaner;
+        }
+
+        public void setAircleaner(Device aircleaner) {
+            this.aircleaner = aircleaner;
         }
 
         public Device getLight() {
@@ -144,23 +186,106 @@ public class ResultDevicesConfigureEntity extends BaseEntity {
         public void setCurtain(Device curtain) {
             this.curtain = curtain;
         }
+
+        public Device getSocket() {
+            return socket;
+        }
+
+        public void setSocket(Device socket) {
+            this.socket = socket;
+        }
+
+        public Device getBackgroundmusic() {
+            return backgroundmusic;
+        }
+
+        public void setBackgroundmusic(Device backgroundmusic) {
+            this.backgroundmusic = backgroundmusic;
+        }
+
+        public Device getQBL() {
+            return QBL;
+        }
+
+        public void setQBL(Device QBL) {
+            this.QBL = QBL;
+        }
+
+        public Device getWashingmachine() {
+            return washingmachine;
+        }
+
+        public void setWashingmachine(Device washingmachine) {
+            this.washingmachine = washingmachine;
+        }
+
+        public Device getExhausthood() {
+            return exhausthood;
+        }
+
+        public void setExhausthood(Device exhausthood) {
+            this.exhausthood = exhausthood;
+        }
+
+        public Device getWaterheater() {
+            return waterheater;
+        }
+
+        public void setWaterheater(Device waterheater) {
+            this.waterheater = waterheater;
+        }
+
+        public Device getXinfeng() {
+            return xinfeng;
+        }
+
+        public void setXinfeng(Device xinfeng) {
+            this.xinfeng = xinfeng;
+        }
+
+        public Device getUnderfloorheating() {
+            return underfloorheating;
+        }
+
+        public void setUnderfloorheating(Device underfloorheating) {
+            this.underfloorheating = underfloorheating;
+        }
+
+        public Device getTV() {
+            return TV;
+        }
+
+        public void setTV(Device TV) {
+            this.TV = TV;
+        }
+
+        public Device getWinecabinet() {
+            return winecabinet;
+        }
+
+        public void setWinecabinet(Device winecabinet) {
+            this.winecabinet = winecabinet;
+        }
+
+        public Device getAircondition() {
+            return aircondition;
+        }
+
+        public void setAircondition(Device aircondition) {
+            this.aircondition = aircondition;
+        }
     }
+
 
     public static class Device {
         private DeviceParam onoff;
-        private DeviceParam bright;
-        private DeviceParam warm;
-        private DeviceParam test01;
-        private DeviceParam test02;
+        private HashMap<String, DeviceParam> status;
 
         @Override
         public String toString() {
             return "Device{" +
-                    "test01=" + test01 +
-                    "test02=" + test02 +
-                    ", warm=" + warm +
-                    ", bright=" + bright +
-                    ", onoff=" + onoff +
+                    "onoff=" + onoff +
+                    ", status=" + status +
                     '}';
         }
 
@@ -172,36 +297,12 @@ public class ResultDevicesConfigureEntity extends BaseEntity {
             this.onoff = onoff;
         }
 
-        public DeviceParam getBright() {
-            return bright;
+        public HashMap<String, DeviceParam> getStatus() {
+            return status;
         }
 
-        public void setBright(DeviceParam bright) {
-            this.bright = bright;
-        }
-
-        public DeviceParam getWarm() {
-            return warm;
-        }
-
-        public void setWarm(DeviceParam warm) {
-            this.warm = warm;
-        }
-
-        public DeviceParam getTest01() {
-            return test01;
-        }
-
-        public void setTest01(DeviceParam test01) {
-            this.test01 = test01;
-        }
-
-        public DeviceParam getTest02() {
-            return test02;
-        }
-
-        public void setTest02(DeviceParam test02) {
-            this.test02 = test02;
+        public void setStatus(HashMap<String, DeviceParam> status) {
+            this.status = status;
         }
     }
 
@@ -246,7 +347,33 @@ public class ResultDevicesConfigureEntity extends BaseEntity {
         }
 
         public String getDefault_value() {
-            return default_value;
+            try {
+                int val = Integer.valueOf(default_value);
+                if ("input".equals(display_type) || "slider".equals(display_type)) {
+                    String[] split = value.split("\\|");
+                    if (split.length >= 2) {
+                        int a = 0, b = 0;
+                        int min = 0, max = 0;
+                        a = Integer.valueOf(split[0]);
+                        b = Integer.valueOf(split[1]);
+                        if (a < b) {
+                            min = a;
+                            max = b;
+                        } else {
+                            min = b;
+                            max = a;
+                        }
+                        if (val < min) {
+                            val = min;
+                        } else if (val > max) {
+                            val = max;
+                        }
+                    }
+                }
+                return String.valueOf(val);
+            } catch (Exception e) {
+                return default_value;
+            }
         }
 
         public void setDefault_value(String default_value) {

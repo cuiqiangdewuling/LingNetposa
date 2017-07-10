@@ -27,6 +27,12 @@ public class APIConstant {
     public static final String API_PATH_JIBO_SCENARIO_ALL = "/jibo/scenario/custom/all";
     public static final String API_PATH_JIBO_SCENARIOS_CUSTOM = "/jibo/scenario/custom";
     public static final String API_PATH_JIBO_SCENARIOS_CUSTOM_DEVICES = "/jibo/scenario/custom/devices";
+    public static final String API_PATH_JIBO_DEVICES_SUPPORT = "/jibo/factory/support";
+
+    // Haier登录
+    public static final String API_PATH_HAIER = "https://uhome.haier.net:6503";
+    public static final String API_PATH_HAIER_LOGIN = "/openapi/v2/user/login";
+
 
     // 授权回调URI
     public static final String OAUTH_REDIRECT_URI = "http://101.201.72.216:8082/test/code";

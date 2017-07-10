@@ -42,6 +42,12 @@
                 android:layout_height="wrap_content"
                 android:text="获取品牌参数"/>
             <Button
+                android:id="@+id/btn_getbrandsupport"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="获取支持列表"/>
+
+            <Button
                 android:id="@+id/btn_getdeviceconfigure"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

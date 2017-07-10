@@ -3,15 +3,14 @@ package com.ling.jibonetposa.entities.bean;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.ling.jibonetposa.entities.iot.scenario.config.DeviceConfigBean;
-
 import java.io.Serializable;
+import java.util.HashMap;
 
 /**
  * Created by mhz小志 on 2017/4/22.
  */
 
-public class DeviceBean   implements Parcelable, Serializable {
+public class DeviceBean implements Parcelable, Serializable {
 
     private String device_id;
     private String device_ident;
@@ -22,10 +21,10 @@ public class DeviceBean   implements Parcelable, Serializable {
     private String brand_name;
     private String device_flag;
     private int image_type;
-    private int device_code;  // 0: 正常显示    1: 设备名称不符合规则    2：改名失败   3:不支持改名
+    private int device_code;  // 0: 正常显示    1: 设备名称不符合规则    2：改名失败
     private int brand_status;
     private int id;
-    private DeviceConfigBean control_config;
+    private HashMap<String, String> control_config;
 
     protected DeviceBean(Parcel in) {
         device_id = in.readString();
@@ -40,7 +39,7 @@ public class DeviceBean   implements Parcelable, Serializable {
         device_code = in.readInt();
         brand_status = in.readInt();
         id = in.readInt();
-        control_config = in.readParcelable(DeviceConfigBean.class.getClassLoader());
+        control_config = in.readHashMap(HashMap.class.getClassLoader());
     }
 
     public static final Creator<DeviceBean> CREATOR = new Creator<DeviceBean>() {
@@ -74,6 +73,14 @@ public class DeviceBean   implements Parcelable, Serializable {
                 '}';
     }
 
+    public HashMap<String, String> getControl_config() {
+        return control_config;
+    }
+
+    public void setControl_config(HashMap<String, String> control_config) {
+        this.control_config = control_config;
+    }
+
     public int getId() {
         return id;
     }
@@ -88,14 +95,6 @@ public class DeviceBean   implements Parcelable, Serializable {
 
     public void setDevice_flag(String device_flag) {
         this.device_flag = device_flag;
-    }
-
-    public DeviceConfigBean getControl_config() {
-        return control_config;
-    }
-
-    public void setControl_config(DeviceConfigBean control_config) {
-        this.control_config = control_config;
     }
 
     public String getBrand_name() {
@@ -221,6 +220,6 @@ public class DeviceBean   implements Parcelable, Serializable {
         dest.writeInt(device_code);
         dest.writeInt(brand_status);
         dest.writeInt(id);
-        dest.writeParcelable(control_config, flags);
+        dest.writeMap(control_config);
     }
 }

@@ -19,6 +19,7 @@ public class ScenariosListEntity extends BaseEntity implements Parcelable {
     private List<DeviceBean> scenarioList;
     private DeviceBean currentScenario; // 用户当前选择的场景
     private List<DeviceBean> scenarioDeviceList;// 当前场景下的设备列表
+    private int saveStatus;
 
     public ScenariosListEntity() {
     }
@@ -35,20 +36,7 @@ public class ScenariosListEntity extends BaseEntity implements Parcelable {
         scenarioList = in.createTypedArrayList(DeviceBean.CREATOR);
         currentScenario = in.readParcelable(DeviceBean.class.getClassLoader());
         scenarioDeviceList = in.createTypedArrayList(DeviceBean.CREATOR);
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(userId);
-        dest.writeInt(type);
-        dest.writeTypedList(scenarioList);
-        dest.writeParcelable(currentScenario, flags);
-        dest.writeTypedList(scenarioDeviceList);
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
+        saveStatus = in.readInt();
     }
 
     public static final Creator<ScenariosListEntity> CREATOR = new Creator<ScenariosListEntity>() {
@@ -71,7 +59,16 @@ public class ScenariosListEntity extends BaseEntity implements Parcelable {
                 ", scenarioList=" + scenarioList +
                 ", currentScenario=" + currentScenario +
                 ", scenarioDeviceList=" + scenarioDeviceList +
+                ", saveStatus=" + saveStatus +
                 '}';
+    }
+
+    public int getSaveStatus() {
+        return saveStatus;
+    }
+
+    public void setSaveStatus(int saveStatus) {
+        this.saveStatus = saveStatus;
     }
 
     public List<DeviceBean> getScenarioDeviceList() {
@@ -115,4 +112,18 @@ public class ScenariosListEntity extends BaseEntity implements Parcelable {
         this.currentScenario = currentScenario;
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(userId);
+        dest.writeInt(type);
+        dest.writeTypedList(scenarioList);
+        dest.writeParcelable(currentScenario, flags);
+        dest.writeTypedList(scenarioDeviceList);
+        dest.writeInt(saveStatus);
+    }
 }

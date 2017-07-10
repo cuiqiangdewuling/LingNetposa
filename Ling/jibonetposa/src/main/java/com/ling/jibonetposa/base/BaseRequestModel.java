@@ -116,7 +116,8 @@ public class BaseRequestModel<T extends BaseEntity> {
             @Override
             public void onResponse(Call<T> call, Response<T> response) {
                 if (response.isSuccessful()) {
-                    LingManager.getInstance().getLingLog().LOGD(TAG, "executeSuccess: " + response.toString() + " / " + response.body().toString());
+                    LingManager.getInstance().getLingLog().LOGD(TAG, "executeSuccess: response -->  " + response.toString() + "    /    body -->  " + response.body().toString());
+                    LingManager.getInstance().getLingLog().LOGD(TAG, "executeSuccess: headers -->  " + response.headers() == null ? "null" : response.headers().toString());
                     if (BaseRequestModel.this.mRequestCallback != null)
                         BaseRequestModel.this.mRequestCallback.responsedCallback(response.body(), RETROFIT_SUCCESS, (Throwable) null);
                 } else {
@@ -131,11 +132,6 @@ public class BaseRequestModel<T extends BaseEntity> {
                 LingManager.getInstance().getLingLog().LOGD(TAG, "throwable: " + throwable.toString());
                 if (BaseRequestModel.this.mRequestCallback != null)
                     BaseRequestModel.this.mRequestCallback.responsedCallback(null, RETROFIT_ERROR, throwable);
-//                if (call.isCanceled()) {
-//                    LingManager.getInstance().getLingLog().LOGD(TAG, "request is canceled");
-//                } else {
-//                    LingManager.getInstance().getLingLog().LOGD(TAG, "error:" + throwable.getMessage());
-//                }
             }
         });
     }

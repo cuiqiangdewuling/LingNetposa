@@ -1,10 +1,7 @@
 package com.ling.jibonetposa.modules;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.ling.jibonetposa.LingManager;
 import com.ling.jibonetposa.base.BaseEntity;
-import com.ling.jibonetposa.base.BaseRequestModel;
 import com.ling.jibonetposa.entities.bean.BrandBean;
 import com.ling.jibonetposa.entities.bean.DeviceBean;
 import com.ling.jibonetposa.entities.iot.BrandStatusEntity;
@@ -13,9 +10,9 @@ import com.ling.jibonetposa.entities.iot.PutUpdateDevNameEntity;
 import com.ling.jibonetposa.entities.iot.ResultGetBrandEntity;
 import com.ling.jibonetposa.entities.iot.ResultGetDevicesEntity;
 import com.ling.jibonetposa.entities.iot.ResultGetScenariosEntity;
+import com.ling.jibonetposa.entities.iot.ResultHaierLogin;
 import com.ling.jibonetposa.entities.iot.SaveAuthDataEntity;
 import com.ling.jibonetposa.entities.iot.ScenariosListEntity;
-import com.ling.jibonetposa.entities.iot.scenario.ResultDevicesConfigureEntity;
 import com.ling.jibonetposa.entities.iot.scenario.ScenarioCreatePOSTEntity;
 import com.ling.jibonetposa.entities.iot.scenario.ScenarioDeletePOSTEntity;
 import com.ling.jibonetposa.entities.iot.scenario.ScenarioEditNameImagePOSTEntity;
@@ -24,10 +21,11 @@ import com.ling.jibonetposa.iretrofit.IRequestCallback;
 import com.ling.jibonetposa.models.GetTipsModel;
 import com.ling.jibonetposa.models.iot.brand.broadlink.GetBroadLinkTokenModel;
 import com.ling.jibonetposa.models.iot.brand.broadlink.UpdataBLGetAccessKeyModel;
-import com.ling.jibonetposa.models.iot.brand.haier.HEModel;
+import com.ling.jibonetposa.models.iot.brand.haier.HaierLoginModel;
 import com.ling.jibonetposa.models.iot.brand.phantom.GetPhantomTokenModel;
 import com.ling.jibonetposa.models.iot.brand.phantom.UpdatePhantomNameModel;
 import com.ling.jibonetposa.models.iot.devices.CheckBrandsFromServerModel;
+import com.ling.jibonetposa.models.iot.devices.DevicesSupportModel;
 import com.ling.jibonetposa.models.iot.devices.GetDevicesFromServerModel;
 import com.ling.jibonetposa.models.iot.devices.UpdateDevNameModel;
 import com.ling.jibonetposa.models.iot.oauth.CancelAuthorizedModel;
@@ -47,12 +45,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.IllegalFormatException;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.ling.jibonetposa.base.BaseRequestModel.RETROFIT_ERROR;
 import static com.ling.jibonetposa.base.BaseRequestModel.RETROFIT_SUCCESS;
 import static com.ling.jibonetposa.constants.APIConstant.API_PATH_PHANTON_AUTHORIZE;
 import static com.ling.jibonetposa.constants.APIConstant.BROADLINK_API_PATH;
@@ -170,6 +168,10 @@ public class IOTAgent {
     }
 
 
+    public void getDevicesSupport(String brandid, final IRequestCallback requestCallback) {
+        new DevicesSupportModel(requestCallback).getSupport(brandid);
+    }
+
     /**
      * 获取到IOT的TipList
      */
@@ -205,7 +207,29 @@ public class IOTAgent {
      * 登录海尔账号  成功后将账号数据存到server
      */
     public void doHELogin(String username, String password, final IRequestCallback requestCallback) {
-        new HEModel(LingManager.getInstance().getAppContext()).doHELogin(username, password, requestCallback);
+        new HaierLoginModel(new IRequestCallback() {
+            @Override
+            public void responsedCallback(BaseEntity entity, int errorCode, Throwable error) {
+                try {
+                    if (errorCode == RETROFIT_SUCCESS) {
+                        ResultHaierLogin accountEntity = (ResultHaierLogin) entity;
+                        if (accountEntity != null && "00000".equals(accountEntity.getRetCode())) {
+                            if (requestCallback != null)
+                                requestCallback.responsedCallback(entity, errorCode, error);
+                            return;
+                        }
+                    }
+                    if (requestCallback != null)
+                        requestCallback.responsedCallback(null, errorCode, error);
+
+
+                } catch (Exception e) {
+                    if (requestCallback != null)
+                        requestCallback.responsedCallback(null, RETROFIT_ERROR, e);
+                }
+            }
+        }).login(username, password);
+
     }
 
     /**
@@ -321,7 +345,7 @@ public class IOTAgent {
                             deviceBean.setDevice_code(1);
                             nameNotFitRulesDevList.add(deviceBean);
                         }
-                    }else {
+                    } else {
                         deviceBean.setDevice_code(-1);
                     }
                 }
@@ -466,28 +490,7 @@ public class IOTAgent {
      * 获取场景下 品牌设备控制参数属性
      */
     public void getDevicesConfigure(final IRequestCallback requestCallback) {
-        new GetDevicesConfigureModel(new IRequestCallback() {
-            @Override
-            public void responsedCallback(BaseEntity entity, int errorCode, Throwable error) {
-                if (errorCode == BaseRequestModel.RETROFIT_SUCCESS) {
-                    ResultDevicesConfigureEntity configureEntity = (ResultDevicesConfigureEntity) entity;
-                    try {
-                        HashMap<String, String> dictionariesMap = new Gson().fromJson(String.valueOf(configureEntity.getData().getDictionaries()), new TypeToken<HashMap<String, String>>() {
-                        }.getType());
-                        configureEntity.getData().setDictionariesMap(dictionariesMap);
-                        if (requestCallback != null)
-                            requestCallback.responsedCallback(configureEntity, errorCode, error);
-                    } catch (IllegalFormatException e) {
-                        if (requestCallback != null)
-                            requestCallback.responsedCallback(null, errorCode, error);
-                    }
-                } else {
-                    if (requestCallback != null)
-                        requestCallback.responsedCallback(null, errorCode, error);
-                }
-            }
-        }).execute();
-
+        new GetDevicesConfigureModel(requestCallback).execute();
     }
 
     /**
@@ -554,13 +557,6 @@ public class IOTAgent {
      */
     public void updatePhantomDevName(String accessToken, String identId, String newName, final IRequestCallback requestCallback) {
         new UpdatePhantomNameModel(requestCallback).updateName(accessToken, identId, newName);
-    }
-
-    /**
-     * 更改海尔设备名称
-     */
-    public void updateHaierDevName(String identId, String newName, final IRequestCallback requestCallback) {
-        new HEModel(LingManager.getInstance().getAppContext()).updateDeviceNickName(identId, newName, requestCallback);
     }
 
     /**

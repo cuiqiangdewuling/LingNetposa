@@ -2,7 +2,6 @@ package com.ling.jibonetposa;
 
 import android.content.Context;
 
-import com.haier.uhome.usdk.api.uSDKManager;
 import com.ling.jibonetposa.modules.IOTAgent;
 import com.ling.jibonetposa.modules.LocationAgent;
 import com.ling.jibonetposa.modules.PushAgent;
@@ -57,18 +56,12 @@ public class LingManager {
         JPushInterface.init(mApplicationContext);            // 初始化 JPush
     }
 
-    private void initHaier() {
-        uSDKManager.getSingleInstance().init(mApplicationContext);
-    }
-
     private void initIOTAgent() {
         mIOTAgent = new IOTAgent();
-        initHaier();
     }
 
     private void initPushAgent() {
         mPushAgent = new PushAgent(mApplicationContext);
-        initHaier();
     }
 
     private void initLocationAgent() {
