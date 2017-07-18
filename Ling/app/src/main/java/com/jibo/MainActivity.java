@@ -86,6 +86,18 @@ public class MainActivity extends Activity {
                 startActivity(new Intent(MainActivity.this, IOTTestActivity.class));
             }
         });
+        findViewById(R.id.btn_usersave_test).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                saveUserTest();
+            }
+        });
+        findViewById(R.id.btn_loopssave_test).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                saveLoopTest();
+            }
+        });
         findViewById(R.id.btn_lication).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -120,6 +132,34 @@ public class MainActivity extends Activity {
             public void onClick(View v) {
                 upgradeRootPermission(getPackageCodePath());
 
+            }
+        });
+    }
+
+    private void saveUserTest() {
+        String userInfo = "{\"accessKeyId\":\"I1PBoDfiPrDI66QOEICK\",\"birthday\":1309737600000,\"email\":\"guoxuzhen@ling.ai\",\"firstName\":\"旭珍\",\"gender\":\"male\",\"id\":\"595b72b3c12c6e001565fcc8\",\"isActive\":true,\"lastName\":\"郭\",\"messagingAllowed\":true,\"secretAccessKey\":\"9t34y6aSjjSZrNKcWZZtlnZ0kF1I1gKKOMvSOcgm\",\"photoUrl\":\"https://s3.cn-north-1.amazonaws.com.cn/cn.jibo.services.prod/account/595b72b3c12c6e001565fcc81499170178019\"}";
+        LingManager.getInstance().getUserLoopAgent().saveCurrentUser(userInfo, new IRequestCallback() {
+            @Override
+            public void responsedCallback(BaseEntity entity, int errorCode, Throwable error) {
+                if (errorCode == 0) {
+                    Log.d(TAG, "entity  " + entity.toString());
+                } else {
+                    Log.d(TAG, "errorCode  " + errorCode);
+                }
+            }
+        });
+    }
+
+    private void saveLoopTest() {
+        String loopsInfo = "";
+        LingManager.getInstance().getUserLoopAgent().saveCurrentLoops(loopsInfo, new IRequestCallback() {
+            @Override
+            public void responsedCallback(BaseEntity entity, int errorCode, Throwable error) {
+                if (errorCode == 0) {
+                    Log.d(TAG, "entity  " + entity.toString());
+                } else {
+                    Log.d(TAG, "errorCode  " + errorCode);
+                }
             }
         });
     }

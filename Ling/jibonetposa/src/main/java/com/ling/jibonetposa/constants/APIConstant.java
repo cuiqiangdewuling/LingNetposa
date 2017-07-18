@@ -28,6 +28,8 @@ public class APIConstant {
     public static final String API_PATH_JIBO_SCENARIOS_CUSTOM = "/jibo/scenario/custom";
     public static final String API_PATH_JIBO_SCENARIOS_CUSTOM_DEVICES = "/jibo/scenario/custom/devices";
     public static final String API_PATH_JIBO_DEVICES_SUPPORT = "/jibo/factory/support";
+    public static final String API_PATH_JIBO_USER = "/jibo/user";
+    public static final String API_PATH_JIBO_LOOP = "/jibo";
 
     // Haier登录
     public static final String API_PATH_HAIER = "https://uhome.haier.net:6503";

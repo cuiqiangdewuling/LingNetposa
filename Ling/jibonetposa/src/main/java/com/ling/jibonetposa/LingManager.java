@@ -5,6 +5,7 @@ import android.content.Context;
 import com.ling.jibonetposa.modules.IOTAgent;
 import com.ling.jibonetposa.modules.LocationAgent;
 import com.ling.jibonetposa.modules.PushAgent;
+import com.ling.jibonetposa.modules.UserInfoAgent;
 import com.ling.jibonetposa.utils.LingLog;
 
 import cn.jpush.android.api.JPushInterface;
@@ -21,6 +22,7 @@ public class LingManager {
     public Context mApplicationContext;
     public IOTAgent mIOTAgent;
     public LocationAgent mLocationAgent;
+    public UserInfoAgent mUserLoopAgent;
     public PushAgent mPushAgent;
     public LingLog mLingLog;
     public String mJiboUserid = "jibo";
@@ -68,10 +70,20 @@ public class LingManager {
         mLocationAgent = new LocationAgent(mApplicationContext);
     }
 
+    private void initUserLoopAgent() {
+        mUserLoopAgent = new UserInfoAgent();
+    }
+
     public IOTAgent getIOTAgent() {
         if (mIOTAgent == null)
             initIOTAgent();
         return mIOTAgent;
+    }
+
+    public UserInfoAgent getUserLoopAgent() {
+        if (mUserLoopAgent == null)
+            initUserLoopAgent();
+        return mUserLoopAgent;
     }
 
 
