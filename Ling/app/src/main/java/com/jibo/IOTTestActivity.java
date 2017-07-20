@@ -343,7 +343,7 @@ public class IOTTestActivity extends Activity implements View.OnClickListener {
     }
 
     private void getDev() {
-        LingManager.getInstance().getIOTAgent().getAllDevices("jibo", 0, new IRequestCallback() {
+        LingManager.getInstance().getIOTAgent().getAllDevices("jibo", 1, new IRequestCallback() {
             @Override
             public void responsedCallback(BaseEntity entity, int errorCode, Throwable error) {
                 if (errorCode == RETROFIT_SUCCESS) {

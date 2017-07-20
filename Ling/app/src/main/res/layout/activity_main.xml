@@ -18,22 +18,22 @@
         android:text="iot_Test"/>
 
     <Button
+        android:id="@+id/btn_location_test"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="location_Test"/>
+
+    <Button
         android:id="@+id/btn_usersave_test"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="saveUser"/>
+        android:text="test"/>
 
     <Button
         android:id="@+id/btn_loopssave_test"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="saveLoops"/>
-
-    <Button
-        android:id="@+id/btn_location_test"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="location_Test"/>
 
     <Button
         android:id="@+id/btn_get"
@@ -82,6 +82,5 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="获取root权限"/>
-
 
 </LinearLayout>

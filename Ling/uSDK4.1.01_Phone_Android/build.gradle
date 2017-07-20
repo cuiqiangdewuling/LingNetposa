@@ -1,2 +1,0 @@
-configurations.maybeCreate("default")
-artifacts.add("default", file('uSDK4.1.01_Phone_Android.aar'))

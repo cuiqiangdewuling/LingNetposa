@@ -13,9 +13,9 @@ import static com.ling.jibonetposa.constants.APIConstant.API_PATH_JIBO;
  * Created by mhz小志 on 2017/4/18.
  */
 public class GetDevicesFromServerModel extends BaseRequestModel<ResultGetDevicesEntity> {
-    
+
     public GetDevicesFromServerModel(IRequestCallback requestCallback) {
-        super(requestCallback);
+        super(requestCallback, 20);
         this.mApiPath = API_PATH_JIBO;
     }
 

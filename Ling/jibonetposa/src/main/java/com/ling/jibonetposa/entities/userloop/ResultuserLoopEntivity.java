@@ -26,9 +26,9 @@ public class ResultuserLoopEntivity extends BaseEntity {
     }
 
     public static class Data {
-        private    String type;
-        private   String id;
-        private   Attributes attributes;
+        private String type;
+        private String id;
+        private Attributes attributes;
 
         @Override
         public String toString() {

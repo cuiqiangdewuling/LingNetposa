@@ -40,6 +40,7 @@ public class BaseRequestModel<T extends BaseEntity> {
     public static final int RETROFIT_ERROR = 1;
     public static final int ERROR_PASS_MISTAKE = -2;//用户名或密码错误 --- 海尔错误码 B22109-22820：用户名密码错误
     public static final int RETROFIT_WRONG = -1;
+    public int mConnectTimeout = 7;
 
     protected IRequestCallback mRequestCallback;
     protected Map<String, Object> mParams = new HashMap<>();
@@ -50,15 +51,28 @@ public class BaseRequestModel<T extends BaseEntity> {
         mRequestCallback = requestCallback;
     }
 
+    public BaseRequestModel(IRequestCallback requestCallback, int timeout) {
+        mRequestCallback = requestCallback;
+        mConnectTimeout = timeout;
+    }
+
     /**
      * 获取Retrofit网络请求对象
      */
     public Retrofit retrofit() {
+        LingManager.getInstance().getLingLog().d(TAG, "init retrofit");
+        OkHttpClient client = (new OkHttpClient.Builder())
+                .readTimeout(mConnectTimeout, TimeUnit.SECONDS)
+                .connectTimeout(mConnectTimeout, TimeUnit.SECONDS)
+                .writeTimeout(mConnectTimeout, TimeUnit.SECONDS) //设置超时
+                .build();
+
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(mApiPath)
-                .addConverterFactory(ScalarsConverterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create())
+                .client(client)
                 .build();
+        LingManager.getInstance().getLingLog().d(TAG, "init retrofit end");
         return retrofit;
     }
 

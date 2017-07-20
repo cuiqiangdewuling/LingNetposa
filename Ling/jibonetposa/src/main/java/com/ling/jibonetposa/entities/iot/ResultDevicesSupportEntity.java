@@ -47,17 +47,27 @@ public class ResultDevicesSupportEntity extends BaseEntity {
     }
 
     public static class Data {
-        String device_type;
-        String device_type_name;
-        String brand_id;
+        private String device_type;
+        private String device_type_name;
+        private String brand_id;
+        private String url;
 
         @Override
         public String toString() {
             return "Data{" +
-                    "brand_id='" + brand_id + '\'' +
+                    "device_type='" + device_type + '\'' +
                     ", device_type_name='" + device_type_name + '\'' +
-                    ", device_type='" + device_type + '\'' +
+                    ", brand_id='" + brand_id + '\'' +
+                    ", url='" + url + '\'' +
                     '}';
+        }
+
+        public String getUrl() {
+            return url;
+        }
+
+        public void setUrl(String url) {
+            this.url = url;
         }
 
         public String getDevice_type() {

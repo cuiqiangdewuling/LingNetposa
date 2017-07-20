@@ -2,7 +2,7 @@ package com.ling.jibonetposa.models.userloop;
 
 import com.ling.jibonetposa.base.BaseRequestModel;
 import com.ling.jibonetposa.entities.userloop.ResultuserLoopEntivity;
-import com.ling.jibonetposa.entities.userloop.UserLoopsSaveEntity;
+import com.ling.jibonetposa.entities.userloop.UserSaveEntity;
 import com.ling.jibonetposa.iretrofit.IRequestCallback;
 import com.ling.jibonetposa.iretrofit.userloop.ISaveUserPOST;
 
@@ -21,8 +21,8 @@ public class SaveUserInfoModel extends BaseRequestModel<ResultuserLoopEntivity> 
         this.mApiPath = API_PATH_JIBO;
     }
 
-    public void saveUserInfo(String attributes) {
-        UserLoopsSaveEntity entity = new UserLoopsSaveEntity("jibo-user", attributes);
+    public void saveUserInfo(Object userInfo) {
+        UserSaveEntity entity = new UserSaveEntity(userInfo);
         ISaveUserPOST saveUser = retrofit().create(ISaveUserPOST.class);
         Call<ResultuserLoopEntivity> call = saveUser.execute(organizeJsonParams(entity));
         execute(call);

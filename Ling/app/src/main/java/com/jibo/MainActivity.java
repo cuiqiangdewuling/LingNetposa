@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.location.Address;
 import android.location.Criteria;
 import android.location.Geocoder;
@@ -137,17 +138,18 @@ public class MainActivity extends Activity {
     }
 
     private void saveUserTest() {
-        String userInfo = "{\"accessKeyId\":\"I1PBoDfiPrDI66QOEICK\",\"birthday\":1309737600000,\"email\":\"guoxuzhen@ling.ai\",\"firstName\":\"旭珍\",\"gender\":\"male\",\"id\":\"595b72b3c12c6e001565fcc8\",\"isActive\":true,\"lastName\":\"郭\",\"messagingAllowed\":true,\"secretAccessKey\":\"9t34y6aSjjSZrNKcWZZtlnZ0kF1I1gKKOMvSOcgm\",\"photoUrl\":\"https://s3.cn-north-1.amazonaws.com.cn/cn.jibo.services.prod/account/595b72b3c12c6e001565fcc81499170178019\"}";
-        LingManager.getInstance().getUserLoopAgent().saveCurrentUser(userInfo, new IRequestCallback() {
-            @Override
-            public void responsedCallback(BaseEntity entity, int errorCode, Throwable error) {
-                if (errorCode == 0) {
-                    Log.d(TAG, "entity  " + entity.toString());
-                } else {
-                    Log.d(TAG, "errorCode  " + errorCode);
-                }
-            }
-        });
+        String url = "tmall://page.tm/itemDetail?itemId=44737476504&_ns=1&ut_sk=4.1500544217328.other.third-download_detail-0";
+//        String url = "openapp.jdmobile://virtual?params={\"category\":\"jump\",\"des\":\"productDetail\",\"skuId\":\"4520197\",\"sourceType\":\"Item\",\"sourceValue\":\"view-ware\",\"M_sourceFrom\":\"mxz\",\"msf_type\":\"click\",\"m_param\":{\"m_source\":\"0\",\"event_series\":{},\"jda\":\"122270672.1500521197599939340906.1500521197.1500521197.1500521197.1\",\"usc\":\"direct\",\"ucp\":\"-\",\"umd\":\"none\",\"utr\":\"-\",\"jdv\":\"122270672%7Cdirect%7C-%7Cnone%7C-%7C1500521197611\",\"ref\":\"https%3A%2F%2Fitem.m.jd.com%2Fproduct%2F4520197.html\",\"psn\":\"1500521197599939340906|1\",\"psq\":2,\"unpl\":\"\",\"pc_source\":\"\",\"mba_muid\":\"1500521197599939340906\",\"mba_sid\":\"15005211976205387630769982934\",\"mt_xid\":\"\",\"mt_subsite\":\"\"},\"SE\":{\"mt_subsite\":\"\",\"__jdv\":\"122270672%7Cdirect%7C-%7Cnone%7C-%7C1500521197611\",\"unpl\":\"\",\"__jda\":\"122270672.1500521197599939340906.1500521197.1500521197.1500521197.1\"}}";
+        PackageManager packageManager = getPackageManager();
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+        List<ResolveInfo> activities = packageManager.queryIntentActivities(intent, 0);
+        boolean isValid = !activities.isEmpty();
+        Log.d("123456", "isValid  " + isValid);
+        try {
+            startActivity(intent);
+        } catch (Exception e) {
+            Log.d("123456", "Exception  " + e);
+        }
     }
 
     private void saveLoopTest() {

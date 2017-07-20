@@ -85,7 +85,7 @@ public class IOTAgent {
             public void responsedCallback(BaseEntity entity, int errorCode, Throwable error) {
                 if (errorCode == RETROFIT_SUCCESS) {
                     ResultGetDevicesEntity brandEntity = (ResultGetDevicesEntity) entity;
-                    if (brandEntity != null) {
+                    if (brandEntity != null && brandEntity.getErrno()==0) {
                         DevicesEntity devicesEntity = getDevicesEntity(finalUserid, brandEntity);
                         checkDevicesName(devicesEntity);
                         if (requestCallback != null)
@@ -137,7 +137,7 @@ public class IOTAgent {
             public void responsedCallback(BaseEntity entity, int errorCode, Throwable error) {
                 if (errorCode == RETROFIT_SUCCESS) {
                     ResultGetBrandEntity brandEntity = (ResultGetBrandEntity) entity;
-                    if (brandEntity != null) {
+                    if (brandEntity != null && brandEntity.getErrno()==0) {
                         BrandStatusEntity brandStatusEntity = getBrandStatusEntity(brandEntity);
                         brandStatusEntity.setUserid(finalUserid);
                         if (requestCallback != null)
